@@ -1,0 +1,19 @@
+site_name: Trused AI
+
+nav:
+    - Home: index.md
+    - Pillars: 
+        - Fairness: Pillars/Fairness.md
+        - Explainability: Pillars/Explainability.md
+        - Robustness: Pillars/Robustness.md
+        - Accountability : Pillars/Accountability.md
+    - Code:
+        - trusted AI algorithm: AI_algo.md
+        - Implementation: code_documentation.md
+    - References:
+       - sources: sources.md
+
+
+theme:
+    name: readthedocs
+    nav_style: dark
