@@ -61,7 +61,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#links">Links</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#metrics">Metrics</a>
+    <li class="toctree-l2"><a class="reference internal" href="#taxonomy">Taxonomy</a>
     </li>
     </ul>
                     </li>
@@ -120,8 +120,54 @@
               
                 <h1 id="explainability">Explainability</h1>
 <h2 id="summary">Summary</h2>
+<p>In many applications, trust in an AI system will come from its ability to ‘explain itself.’ Yet, when it comes to understanding and explaining the inner workings of an algorithm, one size does not fit all. Different stakeholders require explanations for different purposes and objectives, and explanations must be tailored to their needs. A physician might respond best to seeing examples of patient data similar to their patient’s. On the other hand, a developer training a neural net will benefit from seeing how information flows through the algorithm. While a regulator will aim to understand the system as a whole and probe into its logic, consumers affected by a specific decision will be interested only in factors impacting their case – for example, in a loan processing application, they will expect an explanation for why the request was denied and want to understand what changes could lead to approval. IBM Research is creating diverse explanations, including training highly optimized directly interpretable models, creating contrastive explanations of black box models, using information flow in a high-performing complex model to train simpler, interpretable classifiers, learning disentangled representations, and visualizing information flows in neural networks.</p>
 <h2 id="links">Links</h2>
-<h2 id="metrics">Metrics</h2>
+<ul>
+<li>
+<p>IBM explainability: <a href="https://www.research.ibm.com/artificial-intelligence/trusted-ai/#">explainability main page</a></p>
+</li>
+<li>
+<p>AI Explainability 360: <a href="http://aix360-dev.mybluemix.net/?_ga=2.110848204.832936263.1613641869-1548554030.1611998814">Toolkit page</a></p>
+</li>
+</ul>
+<h2 id="taxonomy">Taxonomy</h2>
+<p>Construct a set of measurable metrict which can be used to calculate a score that should indicate how good the explainability of a model is. For The calculation of the score differnt weights can be assigned to the metrics. </p>
+<style>
+table {
+    width:100%;
+}
+</style>
+
+<table>
+<thead>
+<tr>
+<th>metric</th>
+<th align="center">description</th>
+<th>unit</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model type</td>
+<td align="center">some models like linear regression or<br> decision tree are very explainable and<br>models like neural networks rather not</td>
+<td>boolean<br>(0,1)</td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div>
