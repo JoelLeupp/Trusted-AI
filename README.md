@@ -38,3 +38,5 @@ You will always see the output and how the documentation will look in the end an
 3.  deploy the build on GitHub to the branche gh-pages. For this open another termianl at the localtion of the mkdocs folder and enter:
         
         mkdocs gh-deploy
+        
+4. commit and push the changed config or markdown files (keep the source of the build up to date)
