@@ -52,6 +52,12 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#project-documentation">Project Documentation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#mkdocs">mkdocs</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                     </li>
                 </ul>
@@ -131,6 +137,35 @@ different purposes, and explanations must be tailored to their needs.</p>
 ability to satisfy users’ preferences, as well as other properties related to the impact of the
 decision.The previous characteristics are demanded from AI systems. Yet, to achieve trust in AI, more
 efforts and automatic mechanisms able to calculate and communicate trust levels are required.</p>
+<h2 id="project-documentation">Project Documentation</h2>
+<p>The whole documentation of the project can be found on our <a href="https://joelleupp.github.io/Trusted-AI/">GitHub page</a></p>
+<h3 id="mkdocs">mkdocs</h3>
+<p>The documentation is created with mkdocs, which uses simple markdown file and a .yml config file to build and deploy the documentation to GitHub.</p>
+<p>The relevant files to create the documentation are in the <a href="https://github.com/JoelLeupp/Trusted-AI/tree/main/mkdocs">mkdocs folder</a></p>
+<p>The file mkdocs.yml is the config file and has to be adapted if the theme should change or the index changes or new markdowns added. 
+The markdown files are in the folder docs and include the whole documentation.</p>
+<p>installation</p>
+<pre><code class="language-sh">pip install --upgrade pip
+pip install mkdocs
+</code></pre>
+<p>workflow:</p>
+<ol>
+<li>
+<p>At the location of the mkdocs folder open the terminal and enter:</p>
+<pre><code>mkdocs serve
+</code></pre>
+<p>This will build the documentation and host it locally, where the full documentation can be seen.</p>
+</li>
+<li>
+<p>change the config or markdown files. Sinc you are serving the documentation locally you can see the changes in the config or markdown files in real time.
+You will always see the output and how the documentation will look in the end and therefore minimalize syntax errors in markdown for example. </p>
+</li>
+<li>
+<p>deploy the build on GitHub to the branche gh-pages. For this open another termianl at the localtion of the mkdocs folder and enter:</p>
+<pre><code>mkdocs gh-deploy
+</code></pre>
+</li>
+</ol>
               
             </div>
           </div>
@@ -184,5 +219,5 @@ efforts and automatic mechanisms able to calculate and communicate trust levels 
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2021-02-20 08:22:13.740945+00:00
+Build Date UTC : 2021-02-23 19:55:06.431593+00:00
 -->
