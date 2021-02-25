@@ -61,13 +61,29 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#links">Links</a>
+    <li class="toctree-l2"><a class="reference internal" href="#sources">Sources</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#websites">Websites</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#papers">Papers</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#metrics">Metrics</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#empirical-robustness">Empirical Robustness</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#loss-sensitivity">Loss Sensitivity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#clever-score">CLEVER Score</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#loss-sensitivity-vs-clever-score">Loss Sensitivity VS CLEVER Score</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#clique-method-robustness-verification-for-decision-tree-ensembles">Clique Method Robustness Verification for Decision Tree Ensembles</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#crown-framework-for-certifying-neural-networks">CROWN framework for certifying neural networks</a>
     </li>
         </ul>
     </li>
@@ -126,10 +142,75 @@
               
                 <h1 id="robustness">Robustness</h1>
 <h2 id="summary">Summary</h2>
-<h2 id="links">Links</h2>
+<p>Machine Learning models might not be robust against adversarial perturbations. With visually imperceptible adversarial perturbations, attackers may cause an input to be misclassified. These attacks can be generated in both the black-box setting, where the parameters of the model are unknown to the attacker, and the white-box settings, where attacker have the all necessary information about the model. To trust AI we need to be sure that it is robust against adversarial attacks.</p>
+<h2 id="sources">Sources</h2>
+<h3 id="websites">Websites</h3>
+<ul>
+<li>
+<p>IBM Robustness: <a href="https://www.research.ibm.com/artificial-intelligence/publications/?researcharea=robustness">Robustness main page</a></p>
+</li>
+<li>
+<p>Adversarial Robustness 360: <a href="http://art360.mybluemix.net/">Toolbox</a></p>
+</li>
+<li>
+<p>Adversarial Robustness Toolbox Github repo: <a href="https://github.com/Trusted-AI/adversarial-robustness-toolbox">ART v1.5</a></p>
+</li>
+<li>
+<p>CLEVER Github repo: <a href="https://github.com/IBM/CLEVER-Robustness-Score">Robustness Score</a></p>
+</li>
+</ul>
+<h3 id="papers">Papers</h3>
+<ul>
+<li>
+<p><a href="https://arxiv.org/pdf/1807.01069.pdf">Adversarial Robustness Toolbox v1.0.0</a></p>
+</li>
+<li>
+<p><a href="https://openreview.net/pdf?id=BkUHlMZ0b">Evaluating The Robustness of Neural Networks: An Extreme Value Theory Approach</a></p>
+</li>
+<li>
+<p><a href="https://proceedings.neurips.cc/paper/2018/file/d04863f100d59b3eb688a11f95b0ae60-Paper.pdf">Efficient Neural Network Robustness Certification with General Activation Functions</a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/pdf/1909.10147.pdf">Robust Local Features For Improving The Generalization of Adversarial Training</a></p>
+</li>
+<li>
+<p><a href="https://www.research.ibm.com/artificial-intelligence/publications/paper/?id=Analyzing-Federated-Learning-through-an-Adversarial-Lens">Analyzing Federated Learning through an Adversarial Lens</a></p>
+</li>
+<li>
+<p><a href="https://www.ml.uni-saarland.de/Publications/HeiAnd-FormGuarAdvManip.pdf">Formal Guarantees on the Robustness of a Classifier against Adversarial Manipulation</a></p>
+</li>
+</ul>
 <h2 id="metrics">Metrics</h2>
+<p>The main idea of the robustness metrics is to calculate the minimal perturbation that is required to get an input misclassified. In other words to calculate the average sensitivity of the model’s loss function with respect to changes in the inputs.</p>
 <h3 id="empirical-robustness">Empirical Robustness</h3>
+<p>Assesses the robustness of a given classifier with respect to a specific attack and test data set. It is equivalent to the average minimal perturbation that the attacker needs to introduce for a successful attack.</p>
+<p>To be able to calculate empirical robustness we need to know the type and the parameters of the attack.</p>
 <h3 id="loss-sensitivity">Loss Sensitivity</h3>
+<p>Local loss sensitivity quantify the smoothness of a model by estimating its Lipschitz continuity constant. Lipschitz constant measures the largest variation of the output of the model under a small change in its input. The smaller the value, the smoother the function.</p>
+<h3 id="clever-score">CLEVER Score</h3>
+<p>For a given input CLEVER estimates the minimal perturbation that is required to change the classification. The derivation is based on a Lipschitz constant. The CLEVER algorithm uses an estimate based on extreme value theory.</p>
+<p>The CLEVER score can be calculated for both untargeted and targeted attacks. </p>
+<p>A higher CLEVER score indicates better robustness.</p>
+<h4 id="loss-sensitivity-vs-clever-score">Loss Sensitivity VS CLEVER Score</h4>
+<p>CLEVER Score and Loss Sensitivity both uses the same idea of estimating the smoothness by Lipschitz constant. They both are attack-independent. But they have a couple of differences.</p>
+<ul>
+<li>
+<p>Loss sensitivity uses Local Lipschitz constant estimation meanwhile CLEVER uses Cross Lipschitz constant estimation.</p>
+</li>
+<li>
+<p>Even though they try to estimate similar constants, Cross Lipschitz constant calculation includes an additional difference operation. Hence a model with a high CLEVER score would have a low loss sensitivity. For Loss sensitivity; the smaller the value, the smoother the function. For CLEVER score; the greater the value, the more robust the model.</p>
+</li>
+<li>
+<p>As CLEVER uses a sampling based method, the scores may vary slightly for different runs while Loss Sensitivity calculation is determined.</p>
+</li>
+</ul>
+<h3 id="clique-method-robustness-verification-for-decision-tree-ensembles">Clique Method Robustness Verification for Decision Tree Ensembles</h3>
+<p>For decision-tree ensemble models like Gradient Boosted Decision Trees, Random Forest, or Extra Trees robustness can be verified based on clique method.
+For our purposes this measure might be too specific.</p>
+<h3 id="crown-framework-for-certifying-neural-networks">CROWN framework for certifying neural networks</h3>
+<p>CROWN is a framework for efficiently computing a certified lower bound of minimum adversarial distortion given any input data point for neural networks.</p>
+<p>To calculate the lower bound one must know about the activation function used in the Neural Network. Then check where the activation function is concave or convex and choose lower/upper bound functions accordingly.</p>
+<p>Not a fully designed metric, just gives an upper bound with respect to the given data point.</p>
               
             </div>
           </div>
