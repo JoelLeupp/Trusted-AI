@@ -57,15 +57,13 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Explainability</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
+    <li class="toctree-l2"><a class="reference internal" href="#introduction-ibm">Introduction (IBM)</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#sources">sources</a>
+    <li class="toctree-l2"><a class="reference internal" href="#summaries-of-paper-website">Summaries of Paper &amp; Website</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#websites">Websites</a>
+    <li class="toctree-l3"><a class="reference internal" href="#explainable-ai">Explainable AI</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#papers">Papers</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#videos">Videos</a>
+    <li class="toctree-l3"><a class="reference internal" href="#explainable-artificial-intelligence-xai">Explainable Artificial Intelligence (XAI)</a>
     </li>
         </ul>
     </li>
@@ -127,31 +125,87 @@
             <div class="section">
               
                 <h1 id="explainability">Explainability</h1>
-<h2 id="summary">Summary</h2>
-<p>In many applications, trust in an AI system will come from its ability to ‘explain itself.’ Yet, when it comes to understanding and explaining the inner workings of an algorithm, one size does not fit all. Different stakeholders require explanations for different purposes and objectives, and explanations must be tailored to their needs. A physician might respond best to seeing examples of patient data similar to their patient’s. On the other hand, a developer training a neural net will benefit from seeing how information flows through the algorithm. While a regulator will aim to understand the system as a whole and probe into its logic, consumers affected by a specific decision will be interested only in factors impacting their case – for example, in a loan processing application, they will expect an explanation for why the request was denied and want to understand what changes could lead to approval. IBM Research is creating diverse explanations, including training highly optimized directly interpretable models, creating contrastive explanations of black box models, using information flow in a high-performing complex model to train simpler, interpretable classifiers, learning disentangled representations, and visualizing information flows in neural networks.</p>
-<h2 id="sources">sources</h2>
-<h3 id="websites">Websites</h3>
+<h2 id="introduction-ibm">Introduction (IBM)</h2>
+<p>In many applications, trust in an AI system will come from its ability to ‘explain itself.’ Yet, when it comes to understanding and explaining the inner workings of an algorithm, one size does not fit all.Different stakeholders require explanations for different purposes and objectives, and explanations must be tailored to their needs. A physician might respond best to seeing examples of patient data similar to their patient’s. On the other hand, a developer training a neural net will benefit from seeing how information flows through the algorithm. While a regulator will aim to understand the system as a whole and probe into its logic, consumers affected by a specific decision will be interested only in factors impacting their case – for example, in a loan processing application, they will expect an explanation for why the request was denied and want to understand what changes could lead to approval. IBM Research is creating diverse explanations, including training highly optimized directly interpretable models, creating contrastive explanations of black box models, using information flow in a high-performing complex model to train simpler, interpretable classifiers, learning disentangled representations, and visualizing information flows in neural networks.</p>
+<h2 id="summaries-of-paper-website">Summaries of Paper &amp; Website</h2>
+<h3 id="explainable-ai"><a href="https://www.pwc.co.uk/audit-assurance/assets/explainable-ai.pdf">Explainable AI</a></h3>
+<p>The paper is business oriented and talks about why explainability is an advatage to have embedded in AI
+algorithms and in which usecases explainability should have a high priority. </p>
 <ul>
 <li>
-<p>IBM explainability: <a href="https://www.research.ibm.com/artificial-intelligence/trusted-ai/#">explainability main page</a></p>
+<p>(p.8) The need for Explainability: Working as intended?, How sensitive is the impact?, Are you comfortable with
+the level of control?</p>
 </li>
 <li>
-<p>AI Explainability 360: <a href="http://aix360-dev.mybluemix.net/?_ga=2.110848204.832936263.1613641869-1548554030.1611998814">Toolkit page</a></p>
+<p>(p.9) factors to consider: Revenue, Rate, Rigour, Regulation, Reputation and Risk</p>
 </li>
 <li>
-<p>AI Explainability GitHub repo: <a href="https://github.com/Trusted-AI/AIX360">AIX360</a></p>
+<p>(p.12) Explainable by design: Explainability needs to be considered up front and embedded into the design of
+the AI application. It affects the choice ofmachine learning algorithm and mayimpact the way you choose to pre-process data.</p>
+</li>
+<li>
+<p>(p.13) Trade-offs in explainability: Interpretability is a characteristic of a model that is generally considered to come at a cost. As a rule of thumb, the more complex the model, the more accurate it is, but the less interpretable it is. (Decision tree vs. DNN with many layers and features)</p>
+</li>
+<li>
+<p>(p.14) Differnt explaination techniques: Sensitivity analysis,Local Interpretable Model Explanations (LIME), Shapley Additive Explanations (SHAP), Tree interpreters, Neural Network Interpreters</p>
+</li>
+<li>
+<p>(Appendix 2)  Subjective scale of explainability of different classes of algorithms and learning techniques 
+(with 1 being the most difficult and 5 being the easiest to explain) see a compriesed version of the table belwo:</p>
 </li>
 </ul>
-<h3 id="papers">Papers</h3>
-<ul>
-<li>
-<p>towards Robust Interpretability <a href="https://papers.nips.cc/paper/2018/file/3e9f0fc9b2f89e043bc6233994dfcf76-Paper.pdf">paper</a></p>
-</li>
-<li>
-<p>Generating Contrastive Explanations withMonotonic Attribute Functions <a href="https://arxiv.org/pdf/1905.12698.pdf">paper</a></p>
-</li>
-</ul>
-<h3 id="videos">Videos</h3>
+<table>
+<thead>
+<tr>
+<th>Learning technique</th>
+<th align="center">Scale of explainability (1-5)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bayesian belief networks (BNNs)</td>
+<td align="center">3.5</td>
+</tr>
+<tr>
+<td>Decision trees</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td>Logistic regression</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td>Support vector machines (SVMs)</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td>K-means clustering</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td>Neural networks</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td>Random forest/boosting</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td>Q-learning</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td>Hidden Markov models</td>
+<td align="center">3</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h3 id="explainable-artificial-intelligence-xai"><a href="https://www.darpa.mil/program/explainable-artificial-intelligence">Explainable Artificial Intelligence (XAI)</a></h3>
+<p>XAI is a project from Defense Advanced Research Projects Agency which aims to produce more explainable models, while maintaining a high level of learning performance (prediction accuracy)and enable human users to understand, appropriately trust, and effectively manage the emerging generation of artificially intelligent partners</p>
+<p>see their concept here: <a href="https://www.darpa.mil/attachments/XAIIndustryDay_Final.pptx">DARPA slide deck on explainability</a> (two key slides below)</p>
+<p><img alt="DARPA Concept" src="../images/DARPA_concept.png" /></p>
+<p><img alt="DARPA Modles" src="../images/DARPA_explaibale_models.png" /></p>
 <h2 id="taxonomy">Taxonomy</h2>
 <p>Construct a set of measurable metrict which can be used to calculate a score that should indicate how good the explainability of a model is. For The calculation of the score differnt weights can be assigned to the metrics. </p>
 <style>
@@ -172,8 +226,8 @@ table {
 <tbody>
 <tr>
 <td>model type</td>
-<td align="center">some models like linear regression or<br> decision tree are very explainable and<br>models like neural networks rather not</td>
-<td>boolean)</td>
+<td align="center">some models like linear regression or<br> decision tree are very explainable and<br>models like neural networks less</td>
+<td>[1,5]</td>
 <td>0.6</td>
 </tr>
 <tr>
