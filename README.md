@@ -5,6 +5,17 @@
 
 The whole documentation of the project can be found on our [GitHub page](https://joelleupp.github.io/Trusted-AI/)
 
+## Project Time Schedule
+
+- [ ] state of the art of pillars and metrics (12-Mar)
+- [ ] identify missing aspects relevant for calculating AI trust score (26-Mar)
+- [ ] create taxonomy (2-Apr)
+- [ ] Select an application scenario (9-Apr)
+- [ ] Design a trusted AI algorithm (7-Mai)
+- [ ] Implementation (18-Jun)
+- [ ] Evaluation and Discussion (9-Jul)
+- [ ] Documentation and Process (30-Jul)
+
 
 ### mkdocs
 
