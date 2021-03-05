@@ -2,10 +2,21 @@
 
 This is a collection of all material that might be interesting or relevant regarding the project.
 
-## Papers
 
-* AI fairness 360: Bellamy, R. K., et al. (2018). AI Fairness 360: An Extensible Toolkit for Detecting, Understanding,
-and Mitigating Unwanted Algorithmic Bias. arXiv, October 2018, arXiv:1810.01943. [pdf version](https://arxiv.org/pdf/1810.01943.pdf)
+## Websites, papers and videos
+
+### Explainability
+
+* IBM explainability papers: [explainability papers](https://www.research.ibm.com/artificial-intelligence/publications/?researcharea=explainability)
+
+* AI Explainability 360: [Toolkit page](http://aix360-dev.mybluemix.net/?_ga=2.110848204.832936263.1613641869-1548554030.1611998814)
+
+* AI Explainability GitHub repo: [AIX360](https://github.com/Trusted-AI/AIX360)
+
+* towards Robust Interpretability [paper](https://papers.nips.cc/paper/2018/file/3e9f0fc9b2f89e043bc6233994dfcf76-Paper.pdf)
+
+* Generating Contrastive Explanations withMonotonic Attribute Functions [paper](https://arxiv.org/pdf/1905.12698.pdf)
+
 
 ## YouTube Videos
 
