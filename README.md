@@ -5,11 +5,15 @@
 
 The whole documentation of the project can be found on our [GitHub page](https://joelleupp.github.io/Trusted-AI/)
 
-## Project Time Schedule
+## Time Schedule
 
-- [ ] state of the art of pillars and metrics (12-Mar)
-- [ ] identify missing aspects relevant for calculating AI trust score (26-Mar)
-- [ ] create taxonomy (2-Apr)
+- [ ] State of the art of pillars and metrics (12-Mar)
+  - [x] Fairness
+  - [ ] Explainability
+  - [ ] Robustness
+  - [ ] Transparency
+- [ ] Identify missing aspects relevant for calculating AI trust score (26-Mar)
+- [ ] Create taxonomy (2-Apr)
 - [ ] Select an application scenario (9-Apr)
 - [ ] Design a trusted AI algorithm (7-Mai)
 - [ ] Implementation (18-Jun)
