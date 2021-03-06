@@ -17,3 +17,6 @@ nav:
 theme:
     name: readthedocs
     nav_style: dark
+
+markdown_extensions:
+    - admonition
