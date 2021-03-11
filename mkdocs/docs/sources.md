@@ -17,6 +17,7 @@ This is a collection of all material that might be interesting or relevant regar
 
 * Generating Contrastive Explanations withMonotonic Attribute Functions [paper](https://arxiv.org/pdf/1905.12698.pdf)
 
+* [FICO community](https://community.fico.com/s/explainable-machine-learning-challenge?tabset-3158a=a4c37)
 
 ## YouTube Videos
 
