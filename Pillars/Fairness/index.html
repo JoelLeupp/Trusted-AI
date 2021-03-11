@@ -19,7 +19,7 @@
   <script>
     // Current page data
     var mkdocs_page_name = "Fairness";
-    var mkdocs_page_input_path = "Pillars/Fairness.md";
+    var mkdocs_page_input_path = "Pillars/Fairness/index.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -68,6 +68,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#application-examples">Application Examples</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#examples-of-algorithmic-unfairness">Examples of Algorithmic Unfairness</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fairness-within-the-ml-pipeline">Fairness within the ML Pipeline</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#fairness-metrics">Fairness Metrics</a>
         <ul>
@@ -146,7 +148,7 @@
 <h2 id="definition-of-fairness">Definition of Fairness</h2>
 <p>equal in outcomes</p>
 <h3 id="_1"></h3>
-<p><img alt="test" src="../images/fairness-01.png" /></p>
+<p><img alt="Fairness Pipeline" src="Images/fairness-pipeline.png" /></p>
 <h2 id="legally-recognized-protected-classes">Legally recognized 'protected classes'</h2>
 <p>Depending on the context the stakeholders need to decide during the model creation process which systemic difference between groups should be available to the model and which should be excluded. These sensitive features should either not be used or very carefully, since they are protected by law.</p>
 <ul>
@@ -189,6 +191,8 @@
 </ul>
 </li>
 </ol>
+<h2 id="fairness-within-the-ml-pipeline">Fairness within the ML Pipeline</h2>
+<p><img align="center," alt="Data Science Lifecycle" loading="lazy" src="./Images/Data-science-lifecycle.png" width="512px," /></p>
 <h2 id="fairness-metrics">Fairness Metrics</h2>
 <p>(1) and (2) are widely used ideas inspired by anti-discrimnation legislation</p>
 <h3 id="1-disparate-treatment">1. Disparate Treatment</h3>
@@ -247,6 +251,12 @@ Depending on the context certain attributes are considered to be protected. For 
 </thead>
 <tbody>
 <tr>
+<td>Biased Data</td>
+<td align="center"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td>Disparate Treatment</td>
 <td align="center">Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a protected feature for its prediction?</td>
 <td>[0,1]</td>
@@ -259,7 +269,7 @@ Depending on the context certain attributes are considered to be protected. For 
 <td></td>
 </tr>
 <tr>
-<td></td>
+<td>Statistical Parity</td>
 <td align="center"></td>
 <td></td>
 <td></td>
