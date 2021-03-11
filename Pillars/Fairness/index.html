@@ -56,8 +56,30 @@
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Fairness</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#several-definitions-of-fairness">Several definitions of fairness</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#legally-recognized-protected-classes">Legally recognized 'protected classes'</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#application-examples">Application Examples</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples-of-algorithmic-unfairness">Examples of Algorithmic Unfairness</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fairness-metrics">Fairness Metrics</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-disparate-treatment">1. Disparate Treatment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-disparate-impact">2. Disparate Impact</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-statistical-parity">3. Statistical Parity</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#summaries-of-paper-website">Summaries of Paper &amp; Website</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#taxonomy">Taxonomy</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
     </li>
@@ -125,7 +147,116 @@
                 <h1 id="fairness">Fairness</h1>
 <h2 id="introduction">Introduction</h2>
 <p>An increasing number of information systems take decisions based on statistical inference rules, acquired through machine learning techniques. Especially in decision-critical contexts such as predictive policing, lending decisions in credit scoring or triage and allocation of health care resources discrimination is to be avoided. In order to avoid encoding discrimination in automated decisions, multiple fairness aspects needs to be accounted for.</p>
+<h3 id="several-definitions-of-fairness">Several definitions of fairness</h3>
+<p>equal in outcomes</p>
+<p><img alt="test" src="../images/fairness-01.png" /></p>
+<h2 id="legally-recognized-protected-classes">Legally recognized 'protected classes'</h2>
+<p>Depending on the context the stakeholders need to decide during the model creation process which systemic difference between groups should be available to the model and which should be excluded. These sensitive features should either not be used or very carefully, since they are protected by law.</p>
+<ul>
+<li>Race (Civil Rights Act of 1964)</li>
+<li>Color (Civil Rights Act of 1964)</li>
+<li>Sex (Equal Pay Act of 1963; Civil Rights Act of 1964)</li>
+<li>Religion (Civil Rights Act of 1964)</li>
+<li>National Origin (Civil Rights Act of 1964)</li>
+<li>Citizenship (Immigration Reform and Control Act)</li>
+<li>Age (Age Discrimination in Employment Act of 1967)</li>
+<li>Pregnancy (Pregnancy Discrimination Act)</li>
+<li>Family Status (Civil Rights Act of 1968)</li>
+<li>Disability Status (Rehabilitation Act of 1973; Americans with Disabilities Act of 1990)</li>
+<li>Veteran Status (Vietnam Era Veterans Readjustment Assistance Act of 1974)</li>
+<li>Genetic Information (Genetic Information Nondiscrimination Act)</li>
+<li>Sexual orientation (in some jurisdications)</li>
+</ul>
+<h2 id="application-examples">Application Examples</h2>
+<ol>
+<li><strong>Medical Testing and Diagnosis</strong><ul>
+<li>Making decisions about a patient’s treatment may rely on tests providing probability estimates for different diseases and conditions.</li>
+<li>Here too we can ask whether such decision-making is being applied uniformly across different groups of patients.</li>
+</ul>
+</li>
+<li><strong>Hiring</strong></li>
+<li><strong>Lending</strong></li>
+<li><strong>School Admission</strong></li>
+<li><strong>Criminal Justice</strong></li>
+</ol>
+<h2 id="examples-of-algorithmic-unfairness">Examples of Algorithmic Unfairness</h2>
+<ol>
+<li><strong>COMPAS risk tool</strong><ul>
+<li>Assess a defendant’s probability of recidivism.</li>
+<li>Tool’s errors were asymmetric: African-American defendants were more likely to be incorrectly labeled as higher-risk than they actually were, while white defendants were more likely to be incorrectly labeled as lower-risk than they actually were.</li>
+<li>White defendants who went on to commit future crimes were assigned risk scores corresponding to lower probability estimates in aggregate.</li>
+</ul>
+</li>
+</ol>
+<h2 id="fairness-metrics">Fairness Metrics</h2>
+<p>(1) and (2) are widely used ideas inspired by anti-discrimnation legislation</p>
+<h3 id="1-disparate-treatment">1. Disparate Treatment</h3>
+<p>A practice that intentionally disadvantages/discriminates a group based on a protected feature (<em>e.g the pay difference between men and women at the same position, </em>). The treatment or process should not depend on sensitive group membership.</p>
+<h3 id="2-disparate-impact">2. Disparate Impact</h3>
+<p>Is what occurs when an organization’s actions, policies, or some other aspect of their processes inadvertently result in unintentional discrimination against people who are in a protected class. Even though the policy, action, or item in question would otherwise appear to be neutral. What matters is the outcome, not the intent.</p>
+<h3 id="3-statistical-parity">3. Statistical Parity</h3>
 <h2 id="summaries-of-paper-website">Summaries of Paper &amp; Website</h2>
+<table>
+<thead>
+<tr>
+<th>year</th>
+<th align="center">author</th>
+<th>title</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2016</td>
+<td align="center">John Kleinberg</td>
+<td>Inherent Trade-Offs in the Fair Determination of Risk Scores</td>
+<td>.</td>
+</tr>
+<tr>
+<td></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="taxonomy">Taxonomy</h2>
+<table>
+<thead>
+<tr>
+<th>metric</th>
+<th align="center">description</th>
+<th>unit</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model type</td>
+<td align="center">some models like linear regression or<br> decision tree are very explainable and<br>models like neural networks less</td>
+<td>[1,5]</td>
+<td>0.6</td>
+</tr>
+<tr>
+<td>faithfulness<br>relevance</td>
+<td align="center">are the features truly relevant<br>or can some be omitted?</td>
+<td>[0,1]</td>
+<td>0.2</td>
+</tr>
+<tr>
+<td>monotonicity</td>
+<td align="center">monotonic attribute functions<br>most important feature for classification</td>
+<td>[-1,1]</td>
+<td>0.2</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p>Test commit</p>
 <h2 id="summary">Summary</h2>
