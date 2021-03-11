@@ -208,6 +208,7 @@ Depending on the context certain attributes are considered to be protected. For 
 <th align="center">author</th>
 <th>title</th>
 <th>content</th>
+<th>context</th>
 </tr>
 </thead>
 <tbody>
@@ -216,16 +217,19 @@ Depending on the context certain attributes are considered to be protected. For 
 <td align="center">John Kleinberg</td>
 <td>Inherent Trade-Offs in the Fair Determination of Risk Scores</td>
 <td>.</td>
-</tr>
-<tr>
-<td></td>
-<td align="center"></td>
-<td></td>
 <td></td>
 </tr>
 <tr>
 <td></td>
 <td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td align="center"></td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -245,8 +249,8 @@ Depending on the context certain attributes are considered to be protected. For 
 <tr>
 <td>Disparate Treatment</td>
 <td align="center">Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model take</td>
-<td></td>
-<td></td>
+<td>[0,1]</td>
+<td>0.2</td>
 </tr>
 <tr>
 <td>Disparate Impact</td>
