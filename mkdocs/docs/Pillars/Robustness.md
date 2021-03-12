@@ -1,8 +1,17 @@
 # Robustness
 
-## Summary
+## Introduction
 Machine Learning models might not be robust against adversarial perturbations. With visually imperceptible adversarial perturbations, attackers may cause an input to be misclassified. These attacks can be generated in both the black-box setting, where the parameters of the model are unknown to the attacker, and the white-box settings, where attacker have the all necessary information about the model. To trust AI we need to be sure that it is robust against adversarial attacks.
 
+## Key Takeaways, Questions and Limitations
+* *Key Takeaways*
+    * Robustness is a mathematical term and context independent.
+* *Limitations*
+    *  By definition we can only talk about robustness of classifiers.
+    *  Robustness only makes sense if the input to the model is sufficiently large. When the input is adversarially perturbed the difference should be unnoticiable to the human eye but still be large enough to make the input misclassified. This is only possible when the input is high dimensional so that the differences can be hidden. Thats why they usually use Convolutional Neural Networks as an example.
+* *Open Questions*
+    * How should our algorithm act on regression models?
+    *   The topic is well explored on neural network classifiers but there are almost zero sources on different models. How should our algorithm evaluate different classifier models?
 ## Sources
 ### Websites 
 
@@ -72,5 +81,33 @@ CROWN is a framework for efficiently computing a certified lower bound of minimu
 To calculate the lower bound one must know about the activation function used in the Neural Network. Then check where the activation function is concave or convex and choose lower/upper bound functions accordingly.
 
 Not a fully designed metric, just gives an upper bound with respect to the given data point.
+
+##  Attacks
+
+As most of the papers use success rate of attacks as a robustness metric we can use state-of-the-art attacks in our algorithm.
+
+### Carlini Wagner attack
+It is a white-box targeted attack algorithm tailored to three distance metrics (l<sub>2</sub>, l<sub>0</sub>, l<sub>infinity</sub>). It is referred as a state-of-the-art attack. It tries to optimize a minimization problem using gradient descent.
+
+Quite powerful, however it is often much slower than others.
+
+### Basic Iterative Method
+
+It is an extension of the fast gradient attack algorithm. It is a black-box attack and has targeted/untargeted versions. Straightforward and practical.
+
+### DeepFool
+
+An efficient attack for deep neural networks. It is black-box and untargeted. For a given input, it finds the nearest decision boundary in l<sub>2</sub> norm.
+
+## Taxonomy
+
+|model type | metric     	| description 	| unit             	| weight 	|
+|-----------|---------------|:-----------:	|------------------	|--------	|
+|Decision Tree|	Clique Method Robustness Verification|	Gives a lower bound on robustness for decision tree ensembles. Larger value better robustness.| [0 inf]		|100%|
+|Neural Network	|Loss Sensitivity|	Quantify the smoothness of a model. Smaller value better robustness.|	[0 inf]	| 20% |
+|Neural Network	| CLEVER Score| Estimates the minimal perturbation that is required to change the classification. Higher value better robustness.|	[0 inf]	|20%|
+|Neural Network	|Empirical robustness (CW attack)|	Success rate of the CW attack. Smaller value better robustness.	|[0 1]|	20%|
+|Neural Network	|Empirical robustness (Basic Iterative Method)|	Success rate of the Basic Iterative Method. Smaller value better robustness.|	[0 1]|	20%|
+|Neural Network	|Empirical robustness (DeepFool)|	Success rate of the DeepFool attack. Smaller value better robustness.	|[0 1]|	20%|
 
 
