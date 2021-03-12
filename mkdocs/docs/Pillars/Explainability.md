@@ -22,7 +22,7 @@
     * The level of explainability is mainly dominated by its model type and the number of features it uses.
     * The importance of model explainability is highly dependent on the context of the model and its consequences. (Revenue, Rate, Rigour, Regulation, Reputation and Risk)
     * Almost every model can be implemented in a way that makes it explainable and no models are explainable by themself but need an additional layer for the translation of the results to make it explainable for endusers. 
-    * Examples of scenarios where explainability is importent medical diagnosis, loan lending or general assisance in human desicion making. These scenarios are about classification models.
+    * Scenarios where explainability is important: Medical diagnosis, loan lending or general assisance in human desicion making. All scenarios are mainly about **classification models**.
 
 * *Limitations*
     * The scope of explainability is not only defined by the model and data selection / pre processing 
@@ -111,7 +111,7 @@ The papers elaborates metrics for the goodness of explanations, whether users ar
 
 ### [Interpretability to whome?](https://arxiv.org/pdf/1806.07552.pdf)
 
-A machinelearning system’s interpretability should be de-fined in relation to a specific agent or task: weshould not ask if the system is interpretable, butto whomis it interpretable
+A machinelearning system’s interpretability should be de-fined in relation to a specific agent or task: we should not ask if the system is interpretable, but to whom is it interpretable
 
 ### [Explainability in image classification](https://www.research.ibm.com/artificial-intelligence/publications/paper/?id=Sanity-Checks-for-Saliency-Metrics)
 
@@ -119,7 +119,7 @@ Saliency maps are a popular approach to creating post-hoc explanations of image 
 
 ### [Towards A Rigorous Science of Interpretable Machine Learning](https://arxiv.org/pdf/1702.08608.pdf)
 
-The need for interpretabilitystems  from  an incompleteness in  the  problem  formalization. Scensario where this can be the case:
+The need for interpretability stems  from  an incompleteness in  the  problem  formalization. Scensario where this can be the case:
 
 * Scientific Understanding:  The human’s goal is to gain knowledge.  We do not have a completeway of stating what knowledge is;  thus the best we can do is ask for explanations we canconvert into knowledge.
 
@@ -128,6 +128,15 @@ The need for interpretabilitystems  from  an incompleteness in  the  problem  fo
 * Ethics:  The  human  may  want  to  guard  against  certain  kinds  of  discrimination,  and  theirnotion of fairness may be too abstract to be completely encoded into the system.  Even if we can encode protections for specific protected classes into the system, there might be biases that we did not consider a priori 
 
 
+dimensions of interpretability:
+
+* Global vs.  Local: Global interpretability implies knowing what patterns are present in general, while local interpretability implies knowing the reasons for a specific decision (such as why a particular loan application was rejected).The former may be important for when scientific understanding or bias detection is the goal;the latter when one needs a justification for a specific decision
+
+* Area,  Severity of Incompleteness: What part of the problem formulation is incomplete, andhow incomplete is it?
+
+* ime Constraints: How long can the user afford to spend to understand the explanation?  Adecision that needs to be made at the bedside or during the operation of a plant must beunderstood quickly, while in scientific or anti-discrimination applications, the end-user maybe willing to spend hours trying to fully understand an explanation.
+
+* User Expertise: How experienced is the user in the task?
 
 ### [Comprehensible Classification Models](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.599.164&rep=rep1&type=pdf)
 
@@ -141,7 +150,12 @@ The need for interpretabilitystems  from  an incompleteness in  the  problem  fo
 
 Construct a set of measurable metrict which can be used to calculate a score that should indicate how good the explainability of a model is. For The calculation of the score differnt weights can be assigned to the metrics. 
 
-**metrics**: *Model type, monotonicity, relevance, model size* 
+metrics where 5 is the best and 1 the worst: 
+
+* Model type: Different between ML model types and assigne a score to each depending on how easily the result is to explain.
+* Monotonicity: A score from 1 to 5 for indicating how many monotone attributes there are, the higher the fraction the better.
+* Relevance: A score from 1 to 5 how relevant the attributes are. Ideally there are no irrelevant attributes (the definition of relevance depends on the model type)
+* Model size: A score from 1 to 5 where bigger more complex models with many attributes have 
 
 (new metric: uncorrelated dataset?)
 
