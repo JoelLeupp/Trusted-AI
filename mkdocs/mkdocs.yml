@@ -3,7 +3,7 @@ site_name: Trused AI
 nav:
     - Home: index.md
     - Pillars: 
-        - Fairness: Pillars/Fairness.md
+        - Fairness: Pillars/Fairness/index.md
         - Explainability: Pillars/Explainability.md
         - Robustness: Pillars/Robustness.md
         - Accountability : Pillars/Accountability.md
@@ -19,4 +19,10 @@ theme:
     nav_style: dark
 
 markdown_extensions:
+    - attr_list
     - admonition
+
+extra_css:
+    - extra.css
+    - Pillars/Fairness/extra.css
+

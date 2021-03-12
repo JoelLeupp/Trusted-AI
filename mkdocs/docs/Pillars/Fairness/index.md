@@ -3,8 +3,6 @@
 An increasing number of information systems take decisions based on statistical inference rules, acquired through machine learning techniques. Especially in decision-critical contexts such as predictive policing, lending decisions in credit scoring or triage and allocation of health care resources discrimination is to be avoided. In order to avoid encoding discrimination in automated decisions, multiple fairness aspects needs to be accounted for.
 
 ##Definition
-equal in outcomes
-###
 
 ![Fairness Pipeline](Images/fairness-pipeline.png)
 
@@ -47,15 +45,15 @@ Examples of Algorithmic Unfairness
 ## Fairness Metrics within the ML Pipeline
 ![Data Science Lifecycle](./Images/data-science-lifecycle.png){class=center width=512px}
 
-### Business Understanding
-* Ask relevant questions and define objectives for the problem that needs to be tackled
+### 1. Business Understanding
+*Ask relevant questions and define objectives for the problem that needs to be tackled.*
 	
 
-### Data Mining
-*Gather and scrape the data necessary for the project*
+### 2. Data Mining
+*Gather and scrape the data necessary for the project.*
 
-### Data Cleaning
-*Fix the inconsistencies within the data and handle the missing values*
+### 3. Data Cleaning
+*Fix the inconsistencies within the data and handle the missing values.*
 
 * Class imbalance: The number of observations for each class deviates substantially from the proportions 
 * Over- and Undersampling
@@ -63,12 +61,17 @@ Examples of Algorithmic Unfairness
 
 ![Data Science Lifecycle](./Images/unfairness-from-underrepresentation.png){: align=center}
 
-### Data Exploration
-*Form hypotheses about your defined problem by visually analyzing the data*
+### 4. Data Exploration
+*Form hypotheses about your defined problem by visually analyzing the data.*
 
-### Feature Engineering
-### Predictive Modeling
-### Data Visualization
+### 5. Feature Engineering
+*Select important features and construct more meaningful ones using the raw data that you have.*
+
+### 6. Predictive Modeling
+*Train machine learning models, evaluate their performance, and use them to make predictions.*
+
+### 7. Data Visualization
+*Communicate the findings with key stakeholders using plots and interactive visualizations.*
 
 
 ##Fairness Metrics
@@ -80,7 +83,7 @@ A practice that intentionally disadvantages/discriminates a group based on a pro
 Depending on the context certain attributes are considered to be protected. For hiring decisions in Germany for example the exmployer is not allowed to use certain information e.g (pregnancy status, wish for a child, relationship status). The user of our tool could be presented with all attributes the model is taking into consideration. He could then select every attribute he would consider in this context. On the other hand side it would be possible to define a default list of protected attributes (gender, religion, race) and let their use negatively influence the fairness score.
 
 ###2. Disparate Impact 
-Is what occurs when an organization’s actions, policies, or some other aspect of their processes inadvertently result in unintentional discrimination against people who are in a protected class. Even though the policy, action, or item in question would otherwise appear to be neutral. What matters is the outcome, not the intent.
+Is what occurs when an organization’s actions, policies, or some other aspect of their processes inadvertently result in unintentional discrimination against people who are in a protected class. Even though the policy, action, or item in question would otherwise appear to be neutral. What matters is the outcome, not the intent. Equality in outcomes across groups based on protected features has to be assured.
 
 **How to check for Disparate Impact**  
 
@@ -112,14 +115,16 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]
 ##Taxonomy
 | **Stage** | **Metric** | **Description** | **Unit** | **Weight** |
 |---|---|---|---|---|
-|** *Business Understanding* **|*Question Fairness*|Is the question we are trying to answer fair in itself? It would be considered fair to recommend a preferred treatment to a patient, but the application of machine learning for racial profiling would be considered unfair.|[0,1]|0.2|
-|** *Data Mining* **|*Biased<br/>Data*|Does the data possibly contain a bias which was introduced during the data collection? (e.g selection bias)|||
-|** *Data Cleaning* **|*Class Balance*|To what degree does the sample (training dataset) represent the expected class distribution of the real underlying population?|||
-|** *Data Exploration* **|-|-|-|-|
-|** *Feature Engineering* **|-|-|-|-|
-|**Predictive Modeling**|*Disparate Treatment*|Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a at least one protected feature for its prediction?|[0,1]|0.2|
-||*Disparate Impact*||||
-||*Disparate Mistreatment*||||
-||*Statistical Parity*||||
+|** *1. Business Understanding* **|*Question Fairness*|Is the question we are trying to answer fair in itself? It would be considered fair to recommend a preferred treatment to a patient, but the application of machine learning for racial profiling would be considered unfair.|[0,1]|1/n|
+||*Context Criticality*|How important is fairness in the context the model operates in? In a legal context fairness is very important while it is less important for marketing purposes.|[0,1]|1/n|
+|** *2. Data Mining* **|*Biased<br/>Data*|Does the data possibly contain a bias which was introduced during the data collection? (e.g selection bias)|{0,1}|1/n|
+|** *3. Data Cleaning* **|*Class Balance/<br/>Imbalance*|To what degree does the sample (training dataset) represent the expected class distribution of the real underlying population?|[0,1]|1/n|
+|** *4. Data Exploration* **|-|-|-|-|
+|** *5. Feature Engineering* **|-|-|-|-|
+|** *6. Predictive Modeling* **|*Disparate Treatment*|Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a at least one protected feature for its prediction?|[0,1]|1/n|
+||*Disparate Impact*|A practice that intentionally disadvantages/discriminates a group based on a protected feature (e.g the pay difference between men and women at the same position, ). The treatment or process should not depend on a sensitive feature encoding group membership.|[0,1]|1/n|
+||*Disparate Mistreatment*|Check if the prediction error (FPR, FNR) is similar across groups and therefore independant of protected features E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]|[0,1]|1/n|
+||*Statistical Parity*|Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.|[0,1]|1/n|
+|** *7. Data Visualization* **|-|-|-|-|
 
 ##References
