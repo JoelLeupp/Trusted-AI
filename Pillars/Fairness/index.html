@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="../../css/theme.css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../../extra.css" rel="stylesheet" />
+  <link href="extra.css" rel="stylesheet" />
   
   <script>
     // Current page data
@@ -70,6 +72,22 @@
     <li class="toctree-l2"><a class="reference internal" href="#examples-of-algorithmic-unfairness">Examples of Algorithmic Unfairness</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#fairness-within-the-ml-pipeline">Fairness within the ML Pipeline</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#business-understanding">Business Understanding</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-mining">Data Mining</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-cleaning">Data Cleaning</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-exploration">Data Exploration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#feature-engineering">Feature Engineering</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#predictive-modeling">Predictive Modeling</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-visualization">Data Visualization</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#fairness-metrics">Fairness Metrics</a>
         <ul>
@@ -79,11 +97,21 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#3-statistical-parity">3. Statistical Parity</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-envy-free-fairness">4. Envy Free Fairness</a>
+    </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#summaries-of-paper-website">Summaries of Paper &amp; Website</a>
+    <li class="toctree-l2"><a class="reference internal" href="#summaries">Summaries</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#paper-summaries">Paper Summaries</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#website-summaries">Website Summaries</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#taxonomy">Taxonomy</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
     </li>
     </ul>
                     </li>
@@ -190,9 +218,29 @@
 <li>Apple Card's Credit Scoring Algorithm was investigated after discriminating against women.</li>
 </ul>
 </li>
+<li><strong>Apple Credit Card</strong></li>
 </ol>
 <h2 id="fairness-within-the-ml-pipeline">Fairness within the ML Pipeline</h2>
-<p><img align="center," alt="Data Science Lifecycle" loading="lazy" src="./Images/Data-science-lifecycle.png" width="512px," /></p>
+<p><img alt="Data Science Lifecycle" class="center" src="Images/data-science-lifecycle.png" width="512px" /></p>
+<h3 id="business-understanding">Business Understanding</h3>
+<ul>
+<li>Ask relevant questions and define objectives for the problem that needs to be tackled</li>
+</ul>
+<h3 id="data-mining">Data Mining</h3>
+<p><em>Gather and scrape the data necessary for the project</em></p>
+<h3 id="data-cleaning">Data Cleaning</h3>
+<p><em>Fix the inconsistencies within the data and handle the missing values</em></p>
+<ul>
+<li>Class imbalance: The number of observations for each class deviates substantially from the proportions </li>
+<li>Over- and Undersampling</li>
+<li>Unfairness from Underrepresentation</li>
+</ul>
+<p><img align="center" alt="Data Science Lifecycle" src="Images/unfairness-from-underrepresentation.png" /></p>
+<h3 id="data-exploration">Data Exploration</h3>
+<p><em>Form hypotheses about your defined problem by visually analyzing the data</em></p>
+<h3 id="feature-engineering">Feature Engineering</h3>
+<h3 id="predictive-modeling">Predictive Modeling</h3>
+<h3 id="data-visualization">Data Visualization</h3>
 <h2 id="fairness-metrics">Fairness Metrics</h2>
 <p>(1) and (2) are widely used ideas inspired by anti-discrimnation legislation</p>
 <h3 id="1-disparate-treatment">1. Disparate Treatment</h3>
@@ -204,78 +252,123 @@ Depending on the context certain attributes are considered to be protected. For 
 <p><strong>How to check for Disparate Impact</strong>  </p>
 <h3 id="3-statistical-parity">3. Statistical Parity</h3>
 <p>In some cases statistical parity is a central goal (and in some it is legally mandated). Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.</p>
-<h2 id="summaries-of-paper-website">Summaries of Paper &amp; Website</h2>
+<h3 id="4-envy-free-fairness">4. Envy Free Fairness</h3>
+<p>In an envy free assignment every individual does not want to receive the another. E.g cake cutting where the slices have equal size.</p>
+<h2 id="summaries">Summaries</h2>
+<h3 id="paper-summaries">Paper Summaries</h3>
 <table>
 <thead>
 <tr>
-<th>year</th>
-<th align="center">author</th>
-<th>title</th>
-<th>content</th>
-<th>context</th>
+<th>Year</th>
+<th>Author</th>
+<th>Title</th>
+<th>Context</th>
+<th>Content</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>2012</td>
+<td>Martin Glaser</td>
+<td>"Racial profiling is a discriminatory practice that undermines fundamental civil rights while failing to promote law enforcement goals"</td>
+<td>Racial Profiling</td>
+<td>Racial profiling is of unjust nature</td>
+</tr>
+<tr>
+<td>2015</td>
+<td>Amit Datta</td>
+<td>"Automated Experiments on Ad Privacy Settings"</td>
+<td>Advertising</td>
+<td>- Setting the gender to famel results in getting fewer instances of an ad related to high paying jobs than setting it to male.<br/> - The amoral status of an algorithm does not negate its effects on society.<br/>- Manifold interactions can lead to discrimination, whereby not one party can be blamed solely.</td>
+</tr>
+<tr>
 <td>2016</td>
-<td align="center">John Kleinberg</td>
-<td>Inherent Trade-Offs in the Fair Determination of Risk Scores</td>
-<td>.</td>
+<td>John Kleinberg</td>
+<td>"Inherent Trade-Offs in the Fair Determination of Risk Scores"</td>
+<td>Law<br/>Healthcare</td>
+<td>- Three fairness notions are developed and it is shown that under non trivial conditions it is impossible to satisfy all three simultaneously.</td>
+</tr>
+<tr>
+<td>2016</td>
+<td>Muhammad Zafar</td>
+<td>"Fairness Beyond Disparate Treatment &amp; Disparate Impact: Learning Classification without Disparate Mistreatment"</td>
+<td></td>
 <td></td>
 </tr>
 <tr>
-<td></td>
-<td align="center"></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td align="center"></td>
-<td></td>
-<td></td>
-<td></td>
+<td>2019</td>
+<td>Ziad Obermeyer</td>
+<td>Dissecting racial bias in an algorithm used to manage the health of populations</td>
+<td>Healthcare</td>
+<td>- Show that a widely used algorithm, typical of this industry-wide approach and affecting millions of patients, exhibits significant racial bias.<br/>- At a given risk score, Black patients are considerably sicker than White patients, as evidenced by signs of uncontrolled illnesses.</td>
 </tr>
 </tbody>
 </table>
+<h3 id="website-summaries">Website Summaries</h3>
 <h2 id="taxonomy">Taxonomy</h2>
 <table>
 <thead>
 <tr>
-<th>metric</th>
-<th align="center">description</th>
-<th>unit</th>
-<th>weight</th>
+<th><strong>Stage</strong></th>
+<th><strong>Metric</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Weight</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Biased Data</td>
-<td align="center"></td>
+<td><strong> <em>Business Understanding</em> </strong></td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong> <em>Data Mining</em> </strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Biased Data</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Predictive Modeling+</strong></td>
 <td>Disparate Treatment</td>
-<td align="center">Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a protected feature for its prediction?</td>
+<td>Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a protected feature for its prediction?</td>
 <td>[0,1]</td>
 <td>0.2</td>
 </tr>
 <tr>
+<td><strong>Predictive Modeling</strong></td>
 <td>Disparate Impact</td>
-<td align="center"></td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
+<td></td>
 <td>Statistical Parity</td>
-<td align="center"></td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
 </tbody>
 </table>
+<h2 id="references">References</h2>
               
             </div>
           </div>
