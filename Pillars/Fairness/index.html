@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="../../css/theme.css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../../extra.css" rel="stylesheet" />
+  <link href="extra.css" rel="stylesheet" />
   
   <script>
     // Current page data
@@ -52,8 +54,60 @@
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Pillars</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="./">Fairness</a>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Fairness</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#definition">Definition</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#legally-recognized-protected-classes">Legally recognized 'protected classes'</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#application-examples">Application Examples</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#counterexamples">Counterexamples</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fairness-metrics-within-the-ml-pipeline">Fairness Metrics within the ML Pipeline</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-business-understanding">1. Business Understanding</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-data-mining">2. Data Mining</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-data-cleaning">3. Data Cleaning</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-data-exploration">4. Data Exploration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-feature-engineering">5. Feature Engineering</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-predictive-modeling">6. Predictive Modeling</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#7-data-visualization">7. Data Visualization</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fairness-metrics">Fairness Metrics</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-disparate-treatment">1. Disparate Treatment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-disparate-impact">2. Disparate Impact</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-statistical-parity">3. Statistical Parity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-envy-free-fairness">4. Envy Free Fairness</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-disparate-mistreatment">4. Disparate Mistreatment</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#process">Process</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#summaries">Summaries</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#taxonomy">Taxonomy</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../Explainability/">Explainability</a>
                     </li>
@@ -94,6 +148,10 @@
     <li><a href="../..">Docs</a> &raquo;</li>
     
       
+        
+          <li>Pillars &raquo;</li>
+        
+      
     
     <li>Fairness</li>
     <li class="wy-breadcrumbs-aside">
@@ -110,8 +168,6 @@
 <h2 id="introduction">Introduction</h2>
 <p>An increasing number of information systems take decisions based on statistical inference rules, acquired through machine learning techniques. Especially in decision-critical contexts such as predictive policing, lending decisions in credit scoring or triage and allocation of health care resources discrimination is to be avoided. In order to avoid encoding discrimination in automated decisions, multiple fairness aspects needs to be accounted for.</p>
 <h2 id="definition">Definition</h2>
-<p>equal in outcomes</p>
-<h3 id="_1"></h3>
 <p><img alt="Fairness Pipeline" src="Images/fairness-pipeline.png" /></p>
 <h2 id="legally-recognized-protected-classes">Legally recognized 'protected classes'</h2>
 <p>Depending on the context the stakeholders need to decide during the model creation process which systemic difference between groups should be available to the model and which should be excluded. These sensitive features should either not be used or very carefully, since they are protected by law.</p>
@@ -152,26 +208,27 @@
     * Apple Card's Credit Scoring Algorithm was investigated after discriminating against women.
 3. <strong>Apple Credit Card</strong></p>
 <h2 id="fairness-metrics-within-the-ml-pipeline">Fairness Metrics within the ML Pipeline</h2>
-<p><img alt="Data Science Lifecycle" src="Images/data-science-lifecycle.png" />{class=center width=512px}</p>
-<h3 id="business-understanding">Business Understanding</h3>
-<ul>
-<li>Ask relevant questions and define objectives for the problem that needs to be tackled</li>
-</ul>
-<h3 id="data-mining">Data Mining</h3>
-<p><em>Gather and scrape the data necessary for the project</em></p>
-<h3 id="data-cleaning">Data Cleaning</h3>
-<p><em>Fix the inconsistencies within the data and handle the missing values</em></p>
+<p><img alt="Data Science Lifecycle" class="center" src="Images/data-science-lifecycle.png" width="512px" /></p>
+<h3 id="1-business-understanding">1. Business Understanding</h3>
+<p><em>Ask relevant questions and define objectives for the problem that needs to be tackled.</em></p>
+<h3 id="2-data-mining">2. Data Mining</h3>
+<p><em>Gather and scrape the data necessary for the project.</em></p>
+<h3 id="3-data-cleaning">3. Data Cleaning</h3>
+<p><em>Fix the inconsistencies within the data and handle the missing values.</em></p>
 <ul>
 <li>Class imbalance: The number of observations for each class deviates substantially from the proportions </li>
 <li>Over- and Undersampling</li>
 <li>Unfairness from Underrepresentation</li>
 </ul>
-<p><img alt="Data Science Lifecycle" src="Images/unfairness-from-underrepresentation.png" />{: align=center}</p>
-<h3 id="data-exploration">Data Exploration</h3>
-<p><em>Form hypotheses about your defined problem by visually analyzing the data</em></p>
-<h3 id="feature-engineering">Feature Engineering</h3>
-<h3 id="predictive-modeling">Predictive Modeling</h3>
-<h3 id="data-visualization">Data Visualization</h3>
+<p><img align="center" alt="Data Science Lifecycle" src="Images/unfairness-from-underrepresentation.png" /></p>
+<h3 id="4-data-exploration">4. Data Exploration</h3>
+<p><em>Form hypotheses about your defined problem by visually analyzing the data.</em></p>
+<h3 id="5-feature-engineering">5. Feature Engineering</h3>
+<p><em>Select important features and construct more meaningful ones using the raw data that you have.</em></p>
+<h3 id="6-predictive-modeling">6. Predictive Modeling</h3>
+<p><em>Train machine learning models, evaluate their performance, and use them to make predictions.</em></p>
+<h3 id="7-data-visualization">7. Data Visualization</h3>
+<p><em>Communicate the findings with key stakeholders using plots and interactive visualizations.</em></p>
 <h2 id="fairness-metrics">Fairness Metrics</h2>
 <p>(1) and (2) are widely used ideas inspired by anti-discrimnation legislation</p>
 <h3 id="1-disparate-treatment">1. Disparate Treatment</h3>
@@ -179,7 +236,7 @@
 <p><strong>How to check for Disparate Treatment</strong><br />
 Depending on the context certain attributes are considered to be protected. For hiring decisions in Germany for example the exmployer is not allowed to use certain information e.g (pregnancy status, wish for a child, relationship status). The user of our tool could be presented with all attributes the model is taking into consideration. He could then select every attribute he would consider in this context. On the other hand side it would be possible to define a default list of protected attributes (gender, religion, race) and let their use negatively influence the fairness score.</p>
 <h3 id="2-disparate-impact">2. Disparate Impact</h3>
-<p>Is what occurs when an organization’s actions, policies, or some other aspect of their processes inadvertently result in unintentional discrimination against people who are in a protected class. Even though the policy, action, or item in question would otherwise appear to be neutral. What matters is the outcome, not the intent.</p>
+<p>Is what occurs when an organization’s actions, policies, or some other aspect of their processes inadvertently result in unintentional discrimination against people who are in a protected class. Even though the policy, action, or item in question would otherwise appear to be neutral. What matters is the outcome, not the intent. Equality in outcomes across groups based on protected features has to be assured.</p>
 <p><strong>How to check for Disparate Impact</strong>  </p>
 <h3 id="3-statistical-parity">3. Statistical Parity</h3>
 <p>In some cases statistical parity is a central goal (and in some it is legally mandated). Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.</p>
@@ -257,67 +314,81 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 </thead>
 <tbody>
 <tr>
-<td><strong> <em>Business Understanding</em> </strong></td>
+<td><strong> <em>1. Business Understanding</em> </strong></td>
 <td><em>Question Fairness</em></td>
 <td>Is the question we are trying to answer fair in itself? It would be considered fair to recommend a preferred treatment to a patient, but the application of machine learning for racial profiling would be considered unfair.</td>
 <td>[0,1]</td>
-<td>0.2</td>
+<td>1/n</td>
 </tr>
 <tr>
-<td><strong> <em>Data Mining</em> </strong></td>
+<td></td>
+<td><em>Context Criticality</em></td>
+<td>How important is fairness in the context the model operates in? In a legal context fairness is very important while it is less important for marketing purposes.</td>
+<td>[0,1]</td>
+<td>1/n</td>
+</tr>
+<tr>
+<td><strong> <em>2. Data Mining</em> </strong></td>
 <td><em>Biased<br/>Data</em></td>
 <td>Does the data possibly contain a bias which was introduced during the data collection? (e.g selection bias)</td>
-<td></td>
-<td></td>
+<td>{0,1}</td>
+<td>1/n</td>
 </tr>
 <tr>
-<td><strong> <em>Data Cleaning</em> </strong></td>
-<td><em>Class Balance</em></td>
+<td><strong> <em>3. Data Cleaning</em> </strong></td>
+<td><em>Class Balance/<br/>Imbalance</em></td>
 <td>To what degree does the sample (training dataset) represent the expected class distribution of the real underlying population?</td>
-<td></td>
-<td></td>
+<td>[0,1]</td>
+<td>1/n</td>
 </tr>
 <tr>
-<td><strong> <em>Data Exploration</em> </strong></td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-<tr>
-<td><strong> <em>Feature Engineering</em> </strong></td>
+<td><strong> <em>4. Data Exploration</em> </strong></td>
 <td>-</td>
 <td>-</td>
 <td>-</td>
 <td>-</td>
 </tr>
 <tr>
-<td><strong>Predictive Modeling</strong></td>
+<td><strong> <em>5. Feature Engineering</em> </strong></td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong> <em>6. Predictive Modeling</em> </strong></td>
 <td><em>Disparate Treatment</em></td>
 <td>Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a at least one protected feature for its prediction?</td>
 <td>[0,1]</td>
-<td>0.2</td>
+<td>1/n</td>
 </tr>
 <tr>
 <td></td>
 <td><em>Disparate Impact</em></td>
-<td></td>
-<td></td>
-<td></td>
+<td>A practice that intentionally disadvantages/discriminates a group based on a protected feature (e.g the pay difference between men and women at the same position, ). The treatment or process should not depend on a sensitive feature encoding group membership.</td>
+<td>[0,1]</td>
+<td>1/n</td>
 </tr>
 <tr>
 <td></td>
 <td><em>Disparate Mistreatment</em></td>
-<td></td>
-<td></td>
-<td></td>
+<td>Check if the prediction error (FPR, FNR) is similar across groups and therefore independant of protected features E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</td>
+<td>[0,1]</td>
+<td>1/n</td>
 </tr>
 <tr>
 <td></td>
 <td><em>Statistical Parity</em></td>
-<td></td>
-<td></td>
-<td></td>
+<td>Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.</td>
+<td>[0,1]</td>
+<td>1/n</td>
+</tr>
+<tr>
+<td><strong> <em>7. Data Visualization</em> </strong></td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -326,6 +397,15 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Explainability/" class="btn btn-neutral float-right" title="Explainability">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -349,6 +429,10 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
+        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Explainability/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
