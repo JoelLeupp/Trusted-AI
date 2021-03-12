@@ -15,8 +15,6 @@
   <link rel="stylesheet" href="../../css/theme.css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
-  <link href="../../extra.css" rel="stylesheet" />
-  <link href="../Fairness/extra.css" rel="stylesheet" />
   
   <script>
     // Current page data
@@ -70,6 +68,16 @@
     <li class="toctree-l3"><a class="reference internal" href="#explainable-artificial-intelligence-xai">Explainable Artificial Intelligence (XAI)</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#improving-transparency-of-models">Improving transparency of models</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#metrics-for-explainable-ai-xai">Metrics for Explainable AI (XAI)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interpretability-to-whome">Interpretability to whome?</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#explainability-in-image-classification">Explainability in image classification</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#towards-a-rigorous-science-of-interpretable-machine-learning">Towards A Rigorous Science of Interpretable Machine Learning</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#comprehensible-classification-models">Comprehensible Classification Models</a>
     </li>
         </ul>
     </li>
@@ -131,8 +139,9 @@
             <div class="section">
               
                 <h1 id="explainability">Explainability</h1>
-<div class="admonition abstract">
-<p class="admonition-title">Abstract</p>
+<div class="admonition explainability">
+<p class="admonition-title">Explainability</p>
+<p>The level to which a system can provideclarification for the cause of its decisions/outputs.</p>
 <p>Interpretability has become a well-recognized goal for machine learning models. The need for
 interpretable models is certain to increase as machine learning pushes further into domains such as
 medicine, criminal justice, and business, where such models complement human decision-makers and
@@ -150,20 +159,23 @@ decisions. <a href="https://drive.google.com/drive/folders/1t74vQL453WeyKLj8fjkI
 <li>There is a tradeoff between explainability and accuracy (complex models with many features tend to be more accurate but at the same time less transparent)</li>
 <li>The level of explainability is mainly dominated by its model type and the number of features it uses.</li>
 <li>The importance of model explainability is highly dependent on the context of the model and its consequences. (Revenue, Rate, Rigour, Regulation, Reputation and Risk)</li>
+<li>Almost every model can be implemented in a way that makes it explainable and no models are explainable by themself but need an additional layer for the translation of the results to make it explainable for endusers. </li>
+<li>Scenarios where explainability is important: Medical diagnosis, loan lending or general assisance in human desicion making. All scenarios are mainly about <strong>classification models</strong>.</li>
 </ul>
 </li>
 <li>
 <p><em>Limitations</em></p>
 <ul>
-<li>The scope of explainability is not only the model and data selection / pre processing 
+<li>The scope of explainability is not only defined by the model and data selection / pre processing 
 but often has to be embedded in the application as a whole (Build an explianable AI system with an explanation userinterface for example)</li>
-<li>Explainability needs accessible. Even models which actions could be displayed need to have a method the extract these information and make it the explantaion explicite.</li>
+<li>Explainability needs to be accessible. Even models which would be interpretable need to have a method the extract these information and make the explantaion explicite.</li>
 </ul>
 </li>
 <li>
 <p><em>Open Qustions</em></p>
 <ul>
 <li>How to treat techniques (from outside: model inducion, from inside: deep explanation) which enhance explainability in models which would be less explainable by nature? </li>
+<li>What should our score on explainability tell? How easily the model could be interpreted and an XAI system could be build with it?</li>
 </ul>
 </li>
 </ul>
@@ -258,8 +270,60 @@ planning (Strickland 2019), hiring and promotion decisions
 mendations (Larson et al. 2016).</p>
 <p>Recent work has outlined the need for increased transparency in AI for data sets(Gebru et al. 2018;
 Bender and Friedman 2018; Holland et al. 2018), models (Mitchell et al. 2019),and services (Arnold et al. 2019).</p>
+<h3 id="metrics-for-explainable-ai-xai"><a href="https://arxiv.org/pdf/1812.04608.pdf">Metrics for Explainable AI (XAI)</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Explaibale AI is much more than just having an easily interpretable model but about a whole system that 
+is able to explain itself and interact with the user to create a full unterstanding tailored to the user needs.</p>
+</div>
+<p>The papers elaborates metrics for the goodness of explanations, whether users are satisfied by explanations, how well  users  understand  the  AI  systems,  how  curiosity  motivates  the  search  for explanations, whether  the  user's  trust  and  reliance  on  the  AI  are  appropriate.</p>
+<p><img alt="XAI user goals" src="../images/XAI_user_goals.png" /></p>
+<h3 id="interpretability-to-whome"><a href="https://arxiv.org/pdf/1806.07552.pdf">Interpretability to whome?</a></h3>
+<p>A machinelearning system’s interpretability should be de-fined in relation to a specific agent or task: we should not ask if the system is interpretable, but to whom is it interpretable</p>
+<h3 id="explainability-in-image-classification"><a href="https://www.research.ibm.com/artificial-intelligence/publications/paper/?id=Sanity-Checks-for-Saliency-Metrics">Explainability in image classification</a></h3>
+<p>Saliency maps are a popular approach to creating post-hoc explanations of image classifier outputs. These methods produce estimates of the relevance of each pixel to the classification output score, which can be displayed as a saliency map that highlights important pixels.</p>
+<h3 id="towards-a-rigorous-science-of-interpretable-machine-learning"><a href="https://arxiv.org/pdf/1702.08608.pdf">Towards A Rigorous Science of Interpretable Machine Learning</a></h3>
+<p>The need for interpretability stems  from  an incompleteness in  the  problem  formalization. Scensario where this can be the case:</p>
+<ul>
+<li>
+<p>Scientific Understanding:  The human’s goal is to gain knowledge.  We do not have a completeway of stating what knowledge is;  thus the best we can do is ask for explanations we canconvert into knowledge.</p>
+</li>
+<li>
+<p>Safety:  For complex tasks,  the end-to-end system is almost never completely testable;  onecannot  create  a  complete  list  of  scenarios  in  which  the  system  may  fail.   Enumerating  allpossible outputs given all possible inputs be computationally or logistically infeasible, and wemay be unable to flag all undesirable outputs.</p>
+</li>
+<li>
+<p>Ethics:  The  human  may  want  to  guard  against  certain  kinds  of  discrimination,  and  theirnotion of fairness may be too abstract to be completely encoded into the system.  Even if we can encode protections for specific protected classes into the system, there might be biases that we did not consider a priori </p>
+</li>
+</ul>
+<p>dimensions of interpretability:</p>
+<ul>
+<li>
+<p>Global vs.  Local: Global interpretability implies knowing what patterns are present in general, while local interpretability implies knowing the reasons for a specific decision (such as why a particular loan application was rejected).The former may be important for when scientific understanding or bias detection is the goal;the latter when one needs a justification for a specific decision</p>
+</li>
+<li>
+<p>Area,  Severity of Incompleteness: What part of the problem formulation is incomplete, andhow incomplete is it?</p>
+</li>
+<li>
+<p>ime Constraints: How long can the user afford to spend to understand the explanation?  Adecision that needs to be made at the bedside or during the operation of a plant must beunderstood quickly, while in scientific or anti-discrimination applications, the end-user maybe willing to spend hours trying to fully understand an explanation.</p>
+</li>
+<li>
+<p>User Expertise: How experienced is the user in the task?</p>
+</li>
+</ul>
+<h3 id="comprehensible-classification-models"><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.599.164&amp;rep=rep1&amp;type=pdf">Comprehensible Classification Models</a></h3>
+<p>(p.2-5) Decision trees,  classification  rules,  decision  tables,  nearest  neighbors,  and Bayesian network classifiers, with respect to their interpretability</p>
+<p>(p.6) The Drawbacks of Model Size as the Single Measure of Comprehensibility. Big decision trees with easily understandable features can be more comprehensible than small trees with less intuitive features. Models that are too small can also be to simple for users to accept and not lead to less comprehensibility and general trust in the model.</p>
+<p>(p.7) Monotonicity Constraints in Classification Models. Users are more like to trust and accept classification models when they  are built by respecting monotonicity constraints in  the  application domain. A monotonic  relationship  between  a  feature and  the  class  attribute  occurs  when  increasing  the  value  of  the feature  tends  to  either  monotonically  increase  or  monotonically decrease the probability of an instance’s membership to a class</p>
 <h2 id="taxonomy">Taxonomy</h2>
 <p>Construct a set of measurable metrict which can be used to calculate a score that should indicate how good the explainability of a model is. For The calculation of the score differnt weights can be assigned to the metrics. </p>
+<p>metrics where 5 is the best and 1 the worst: </p>
+<ul>
+<li>Model type: Different between ML model types and assigne a score to each depending on how easily the result is to explain.</li>
+<li>Monotonicity: A score from 1 to 5 for indicating how many monotone attributes there are, the higher the fraction the better.</li>
+<li>Relevance: A score from 1 to 5 how relevant the attributes are. Ideally there are no irrelevant attributes (the definition of relevance depends on the model type)</li>
+<li>Model size: A score from 1 to 5 where bigger more complex models with many attributes have </li>
+</ul>
+<p>(new metric: uncorrelated dataset?)</p>
 <style>
 table {
     width:100%;
@@ -280,19 +344,25 @@ table {
 <td>model type</td>
 <td align="center">some models like linear regression or<br> decision tree are very explainable and<br>models like neural networks less</td>
 <td>[1,5]</td>
-<td>0.6</td>
+<td>0.5</td>
 </tr>
 <tr>
 <td>faithfulness<br>relevance</td>
 <td align="center">are the features truly relevant<br>or can some be omitted?</td>
-<td>[0,1]</td>
+<td>[1,5]</td>
 <td>0.2</td>
 </tr>
 <tr>
 <td>monotonicity</td>
 <td align="center">monotonic attribute functions<br>most important feature for classification</td>
-<td>[-1,1]</td>
+<td>[1,5]</td>
 <td>0.2</td>
+</tr>
+<tr>
+<td>model size</td>
+<td align="center">more features add to the complexity and may decrease comprehensibility</td>
+<td>[1,5]</td>
+<td>0.1</td>
 </tr>
 </tbody>
 </table>

@@ -15,8 +15,6 @@
   <link rel="stylesheet" href="../../css/theme.css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
-  <link href="../../extra.css" rel="stylesheet" />
-  <link href="../Fairness/extra.css" rel="stylesheet" />
   
   <script>
     // Current page data
@@ -61,7 +59,9 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Robustness</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
+    <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#key-takeaways-questions-and-limitations">Key Takeaways, Questions and Limitations</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#sources">Sources</a>
         <ul>
@@ -88,6 +88,18 @@
     <li class="toctree-l3"><a class="reference internal" href="#crown-framework-for-certifying-neural-networks">CROWN framework for certifying neural networks</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#attacks">Attacks</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#carlini-wagner-attack">Carlini Wagner attack</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#basic-iterative-method">Basic Iterative Method</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#deepfool">DeepFool</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#taxonomy">Taxonomy</a>
     </li>
     </ul>
                     </li>
@@ -143,8 +155,25 @@
             <div class="section">
               
                 <h1 id="robustness">Robustness</h1>
-<h2 id="summary">Summary</h2>
+<h2 id="introduction">Introduction</h2>
 <p>Machine Learning models might not be robust against adversarial perturbations. With visually imperceptible adversarial perturbations, attackers may cause an input to be misclassified. These attacks can be generated in both the black-box setting, where the parameters of the model are unknown to the attacker, and the white-box settings, where attacker have the all necessary information about the model. To trust AI we need to be sure that it is robust against adversarial attacks.</p>
+<h2 id="key-takeaways-questions-and-limitations">Key Takeaways, Questions and Limitations</h2>
+<ul>
+<li><em>Key Takeaways</em><ul>
+<li>Robustness is a mathematical term and context independent.</li>
+</ul>
+</li>
+<li><em>Limitations</em><ul>
+<li>By definition we can only talk about robustness of classifiers.</li>
+<li>Robustness only makes sense if the input to the model is sufficiently large. When the input is adversarially perturbed the difference should be unnoticiable to the human eye but still be large enough to make the input misclassified. This is only possible when the input is high dimensional so that the differences can be hidden. Thats why they usually use Convolutional Neural Networks as an example.</li>
+</ul>
+</li>
+<li><em>Open Questions</em><ul>
+<li>How should our algorithm act on regression models?</li>
+<li>The topic is well explored on neural network classifiers but there are almost zero sources on different models. How should our algorithm evaluate different classifier models?</li>
+</ul>
+</li>
+</ul>
 <h2 id="sources">Sources</h2>
 <h3 id="websites">Websites</h3>
 <ul>
@@ -213,6 +242,71 @@ For our purposes this measure might be too specific.</p>
 <p>CROWN is a framework for efficiently computing a certified lower bound of minimum adversarial distortion given any input data point for neural networks.</p>
 <p>To calculate the lower bound one must know about the activation function used in the Neural Network. Then check where the activation function is concave or convex and choose lower/upper bound functions accordingly.</p>
 <p>Not a fully designed metric, just gives an upper bound with respect to the given data point.</p>
+<h2 id="attacks">Attacks</h2>
+<p>As most of the papers use success rate of attacks as a robustness metric we can use state-of-the-art attacks in our algorithm.</p>
+<h3 id="carlini-wagner-attack">Carlini Wagner attack</h3>
+<p>It is a white-box targeted attack algorithm tailored to three distance metrics (l<sub>2</sub>, l<sub>0</sub>, l<sub>infinity</sub>). It is referred as a state-of-the-art attack. It tries to optimize a minimization problem using gradient descent.</p>
+<p>Quite powerful, however it is often much slower than others.</p>
+<h3 id="basic-iterative-method">Basic Iterative Method</h3>
+<p>It is an extension of the fast gradient attack algorithm. It is a black-box attack and has targeted/untargeted versions. Straightforward and practical.</p>
+<h3 id="deepfool">DeepFool</h3>
+<p>An efficient attack for deep neural networks. It is black-box and untargeted. For a given input, it finds the nearest decision boundary in l<sub>2</sub> norm.</p>
+<h2 id="taxonomy">Taxonomy</h2>
+<table>
+<thead>
+<tr>
+<th>model type</th>
+<th>metric</th>
+<th align="center">description</th>
+<th>unit</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decision Tree</td>
+<td>Clique Method Robustness Verification</td>
+<td align="center">Gives a lower bound on robustness for decision tree ensembles. Larger value better robustness.</td>
+<td>[0 inf]</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Neural Network</td>
+<td>Loss Sensitivity</td>
+<td align="center">Quantify the smoothness of a model. Smaller value better robustness.</td>
+<td>[0 inf]</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Neural Network</td>
+<td>CLEVER Score</td>
+<td align="center">Estimates the minimal perturbation that is required to change the classification. Higher value better robustness.</td>
+<td>[0 inf]</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Neural Network</td>
+<td>Empirical robustness (CW attack)</td>
+<td align="center">Success rate of the CW attack. Smaller value better robustness.</td>
+<td>[0 1]</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Neural Network</td>
+<td>Empirical robustness (Basic Iterative Method)</td>
+<td align="center">Success rate of the Basic Iterative Method. Smaller value better robustness.</td>
+<td>[0 1]</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Neural Network</td>
+<td>Empirical robustness (DeepFool)</td>
+<td align="center">Success rate of the DeepFool attack. Smaller value better robustness.</td>
+<td>[0 1]</td>
+<td>20%</td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div>
