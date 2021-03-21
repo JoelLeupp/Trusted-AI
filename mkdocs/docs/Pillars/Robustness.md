@@ -6,12 +6,13 @@ Machine Learning models might not be robust against adversarial perturbations. W
 ## Key Takeaways, Questions and Limitations
 * *Key Takeaways*
     * Robustness is a mathematical term and context independent.
+    * Mostly measured by a specific adversarial attack's success rate on the model.
 * *Limitations*
-    *  By definition we can only talk about robustness of classifiers.
+    * Robustness can be defined as vulnerability to adversarial examples. An adversarial example is an instance with small, intentional feature perturbations that cause a machine learning model to make a false prediction. Hence robustness is defined on models where the "False Prediction" is clearly defined and where true and false predictions are sufficiently different. For example we can talk about robustness of classifiers. However it is quite difficult to talk about robustness of regression models.  
     *  Robustness only makes sense if the input to the model is sufficiently large. When the input is adversarially perturbed the difference should be unnoticiable to the human eye but still be large enough to make the input misclassified. This is only possible when the input is high dimensional so that the differences can be hidden. Thats why they usually use Convolutional Neural Networks as an example.
-* *Open Questions*
-    * How should our algorithm act on regression models?
-    *   The topic is well explored on neural network classifiers but there are almost zero sources on different models. How should our algorithm evaluate different classifier models?
+    * The topic is well explored on neural network classifiers. For the other models I was able to find a paper proposing an attack working for neural networks, logistic regression models and SVM's. With the help of the same paper, I learned that 2 other attacks can be modified to work for logistic regression, SVM and neural networks. We should narrow down the possible different classifier models that can be used with our algorithm.
+
+
 ## Sources
 ### Websites 
 
@@ -23,20 +24,24 @@ Machine Learning models might not be robust against adversarial perturbations. W
 
 * CLEVER Github repo: [Robustness Score](https://github.com/IBM/CLEVER-Robustness-Score)
 
-### Papers
 
-* [Adversarial Robustness Toolbox v1.0.0](https://arxiv.org/pdf/1807.01069.pdf)
+### Papers and Summaries
+| Year | Author | Title | Content |
+|------|--------|-------|---------|
+| 2019 |Maria-Irina Nicolae et al.|[Adversarial Robustness Toolbox v1.0.0](https://arxiv.org/pdf/1807.01069.pdf)| Adversarial Robustness Toolbox is an open-source Python library. It offers adversarial attack/defense implementations, runtime detection methods, poisoning detection and robustness metrics.|
+| 2018| Tsui-Wei Weng et al.| [Evaluating The Robustness of Neural Networks: An Extreme Value Theory Approach](https://openreview.net/pdf?id=BkUHlMZ0b)| They propose a robustness metric called CLEVER (Cross Lipschitz Extreme Value for nEtwork Robustness). |
+|2018| Huan Zhang et al.| [Efficient Neural Network Robustness Certification with General Activation Functions](https://proceedings.neurips.cc/paper/2018/file/d04863f100d59b3eb688a11f95b0ae60-Paper.pdf)|CROWN, a framework to certify robustness of neural networks for given input data points. <br/> Decision of linear and quadratic functions are made according to the activation function. They provide calculation details of tanh, sigmoid, arctan and RELU and claim that the calculations can be generalized. |
+| 2019| Hongge Chen et al.| [Robustness Verification of Tree-based Models](https://arxiv.org/abs/1906.03849)| Robustness verification of decision tree ensembles involves finding the exact minimal adversarial perturbation. It can be done  with maximum clique searching algorithms.|
+|2019 | Elham Tabassi et al| [A Taxonomy and Terminology of Adversarial Machine Learning](https://nvlpubs.nist.gov/nistpubs/ir/2019/NIST.IR.8269-draft.pdf)| They present a taxonomy of concepts and define terminology in the field of Adversarial ML. It is arranged in a conceptual hierarchy that includes key types of attacks, defenses, and consequences. |
+|2014|Ian Goodfellow et al.|[Explaining and Harnessing Adversarial Examples](https://www.researchgate.net/publication/269935591_Explaining_and_Harnessing_Adversarial_Examples)|They come up with a fast method to generate adversarial examples. They show that "a simple linear model can have adversarial examples if its input has sufficient dimensionality." Their attack works for logistic regression, SVM's and neural networks. |
+|2017| Nicholas Carlini et al| [Towards Evaluating the Robustness of Neural Networks](https://arxiv.org/abs/1608.04644)| They introduce a new white-box targeted attack algorithm tailored to three distance metrics.|
+| 2017| Alexey Kurakin et al| [Adversarial Examples In The Physical World](https://arxiv.org/abs/1607.02533)| They prove that systems operating in the physical world, using signals from cameras and other sensors as input can be a target for adversarial attacks. While doing so they introduce a new attack called “Basic Iterative Method”.|
+| 2016| Seyed-Mohsen Moosavi-Dezfooli et al.| [Deepfool: A Simple and Accurate Method to Fool Deep neural networks](https://arxiv.org/abs/1511.04599)| They claim that they present an accurate method for computing and comparing the robustness of different classifiers. They do it using the DeepFool algorithm with creates adversarial samples.|
+|2019|Arjun Nitin Bhagoji et al| [Analyzing Federated Learning through an Adversarial Lens](https://www.research.ibm.com/artificial-intelligence/publications/paper/?id=Analyzing-Federated-Learning-through-an-Adversarial-Lens)| They explore the threat of poisoning attacks on federated learning. They explore several strategies to carry out this attack and try to increase attack stealth.|
+|2017| Matthias Hein et al|[Formal Guarantees on the Robustness of a Classifier against Adversarial Manipulation](https://www.ml.uni-saarland.de/Publications/HeiAnd-FormGuarAdvManip.pdf)|They propose the Cross-Lipschitz regularization functional. This form of regularization in neural networks improves the robustness of the classifier with no loss in performance.|
+|2020|Chuanbiao Song et al| [Robust Local Features For Improving The Generalization of Adversarial Training](https://arxiv.org/pdf/1909.10147.pdf)|They investigate the relationship between the generalization of adversarial training and the robust local features, try to make models learn robust local features from adversarial training.|
 
-* [Evaluating The Robustness of Neural Networks: An Extreme Value Theory Approach](https://openreview.net/pdf?id=BkUHlMZ0b)
-
-* [Efficient Neural Network Robustness Certification with General Activation Functions](https://proceedings.neurips.cc/paper/2018/file/d04863f100d59b3eb688a11f95b0ae60-Paper.pdf)
-
-* [Robust Local Features For Improving The Generalization of Adversarial Training](https://arxiv.org/pdf/1909.10147.pdf)
-
-* [Analyzing Federated Learning through an Adversarial Lens](https://www.research.ibm.com/artificial-intelligence/publications/paper/?id=Analyzing-Federated-Learning-through-an-Adversarial-Lens)
-
-* [Formal Guarantees on the Robustness of a Classifier against Adversarial Manipulation](https://www.ml.uni-saarland.de/Publications/HeiAnd-FormGuarAdvManip.pdf)
-
+<br>
 
 ##  Metrics
 
@@ -91,23 +96,27 @@ It is a white-box targeted attack algorithm tailored to three distance metrics (
 
 Quite powerful, however it is often much slower than others.
 
-### Basic Iterative Method
+Even though it is developed for Neural Networks, it can be modified to be effective on Logistic Regression models and Support Vector Classifiers.
 
-It is an extension of the fast gradient attack algorithm. It is a black-box attack and has targeted/untargeted versions. Straightforward and practical.
+### Fast Gradient Attack
+
+It is a white-box attack and has targeted/untargeted versions. Straightforward and practical.
+It is effective on Logistic Regression models, Support Vector Classifiers and Neural Networks.
 
 ### DeepFool
 
-An efficient attack for deep neural networks. It is black-box and untargeted. For a given input, it finds the nearest decision boundary in l<sub>2</sub> norm.
+An efficient attack for deep neural networks. It is white-box and untargeted. For a given input, it finds the nearest decision boundary in l<sub>2</sub> norm. It can be modified to be effective on Logistic Regression models and Support Vector Classifiers.
+
 
 ## Taxonomy
 
-|model type | metric     	| description 	| unit             	| weight 	|
-|-----------|---------------|:-----------:	|------------------	|--------	|
-|Decision Tree|	Clique Method Robustness Verification|	Gives a lower bound on robustness for decision tree ensembles. Larger value better robustness.| [0 inf]		|100%|
-|Neural Network	|Loss Sensitivity|	Quantify the smoothness of a model. Smaller value better robustness.|	[0 inf]	| 20% |
-|Neural Network	| CLEVER Score| Estimates the minimal perturbation that is required to change the classification. Higher value better robustness.|	[0 inf]	|20%|
-|Neural Network	|Empirical robustness (CW attack)|	Success rate of the CW attack. Smaller value better robustness.	|[0 1]|	20%|
-|Neural Network	|Empirical robustness (Basic Iterative Method)|	Success rate of the Basic Iterative Method. Smaller value better robustness.|	[0 1]|	20%|
-|Neural Network	|Empirical robustness (DeepFool)|	Success rate of the DeepFool attack. Smaller value better robustness.	|[0 1]|	20%|
+|model type | metric     	| description 	| unit             	|
+|-----------|---------------|:-----------:	|------------------	|
+|Decision Tree|	Clique Method Robustness Verification|	Gives a lower bound on robustness for decision tree ensembles. Larger value better robustness.| [0 inf]		|
+|Neural Network	|Loss Sensitivity|	Quantify the smoothness of a model. Smaller value better robustness.|	[0 inf]	| 
+|Neural Network	| CLEVER Score| Estimates the minimal perturbation that is required to change the classification. Higher value better robustness.|	[0 inf]	|
+|Neural Network, Logistic Regression, SVM	|Empirical robustness (CW attack)|	Success rate of the CW attack. Smaller value better robustness.	|[0 1]|
+|Neural Network, Logistic Regression, SVM	|Empirical robustness (Fast Gradient Method)|	Success rate of the Fast Gradient Attack. Smaller value better robustness.|	[0 1]|
+|Neural Network, Logistic Regression, SVM	|Empirical robustness (DeepFool)|	Success rate of the DeepFool attack. Smaller value better robustness.	|[0 1]|
 
 
