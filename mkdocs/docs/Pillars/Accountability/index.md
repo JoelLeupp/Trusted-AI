@@ -1,4 +1,8 @@
 # Accountability and Transparency
+Safety, fairness, explainability and robustness are characteristics we demand from an AI system. Yet, to achieve trust in AI, engineering these traits into a final solution will not be enough; it must be accompanied with the ability to measure and communicate the performance levels of a system on each of these dimensions. IBM Research AI is working toward this objective. By demonstrating how to effectively capture events and performance metrics of an AI system on hyperledger fabric, and introduce the concept of factsheets for AI services, which outlines how these metrics can be communicated to end-users as a way of informing their understanding of how the service works, evaluating its functionality, and comprehending its strengths and limitations.
+
+Many decision making processes can be suported by machine learning models. For example if someone should go to jail or should be released until their trial. Or if an employee will perform well and therefore should be hired or not? The involvment of the machine can reduce the humane workload, ncrease accuracy and enlarge fairness.
+
 
 ## Summary
 

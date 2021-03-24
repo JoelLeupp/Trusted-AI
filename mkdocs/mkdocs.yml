@@ -6,7 +6,7 @@ nav:
         - Fairness: Pillars/Fairness/index.md
         - Explainability: Pillars/Explainability.md
         - Robustness: Pillars/Robustness.md
-        - Accountability : Pillars/Accountability.md
+        - Accountability : Pillars/Accountability/index.md
     - Code:
         - trusted AI algorithm: AI_algo.md
         - Implementation: code_documentation.md
