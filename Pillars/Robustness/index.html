@@ -288,7 +288,8 @@
 <p>Assesses the robustness of a given classifier with respect to a specific attack and test data set. It is equivalent to the average minimal perturbation that the attacker needs to introduce for a successful attack.</p>
 <p>To be able to calculate empirical robustness we need to know the type and the parameters of the attack.</p>
 <h3 id="model-uncertainty-confidence-score">Model Uncertainty &amp; Confidence Score</h3>
-<p>The model uncertainty can be estimated by computing the variance of the model’s predicted probability of the i-th data over multiple runs. For the same input the model is expected to predict multiple times. If it returns similar probabilities for classes every time, the model is said to be <strong>stable</strong> and robust. The <a href="https://arxiv.org/pdf/2006.16375.pdf">experiment</a> results show that the Model Uncertainty and Confidence Scores are inversely related where the Confidence Score is defined as average prediction probability given a set of data.</p>
+<p>The model uncertainty can be estimated by computing the variance of M independently trained models predicted probability of a data point. For the same input the all of the model's predict probabilities for classes. If they returns similar probabilities, the model architecture is said to be stable and robust. The <a href="https://arxiv.org/pdf/2006.16375.pdf">experiment</a> results show that the Model Uncertainty and Confidence Scores are inversely related where the Confidence Score is defined as average prediction probability of the group of models.</p>
+<p>For one model we can define Confidence Score as the ratio of probabilities of the predicted class and the second close class. Larger ratio can imply a more robust model.</p>
 <h3 id="loss-sensitivity">Loss Sensitivity</h3>
 <p>Local loss sensitivity quantify the smoothness of a model by estimating its Lipschitz continuity constant. Lipschitz constant measures the largest variation of the output of the model under a small change in its input. The smaller the value, the smoother the function.</p>
 <h3 id="clever-score">CLEVER Score</h3>
@@ -339,7 +340,7 @@ It is effective on Logistic Regression models, Support Vector Classifiers and Ne
 <tbody>
 <tr>
 <td>All models that we have access to the prediction probabilities</td>
-<td>Model Uncertainty &amp; Confidence Score</td>
+<td>Confidence Score</td>
 <td align="center">Measures the stability and robustness of the model. Larger confidence better robustness.</td>
 <td>[0 1]</td>
 </tr>
