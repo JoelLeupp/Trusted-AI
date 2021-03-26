@@ -1,12 +1,18 @@
 site_name: Trused AI
 
 nav:
-    - Home: index.md
+    - Home: 
+        - Documentation: documentation.md
+        - Introduction: introduction.md
+
     - Pillars: 
         - Fairness: Pillars/Fairness/index.md
         - Explainability: Pillars/Explainability.md
         - Robustness: Pillars/Robustness.md
         - Accountability : Pillars/Accountability/index.md
+    - Tools:
+        - IBM FactSheets 360: Tools/IBM-FactSheets/index.md
+        - Another Tool: Tools/another-tool.md
     - Code:
         - trusted AI algorithm: AI_algo.md
         - Implementation: code_documentation.md
@@ -21,8 +27,15 @@ theme:
 markdown_extensions:
     - attr_list
     - admonition
+    - mdx_math
+    - pymdownx.arithmatex :
+        generic: true
 
 extra_css:
     - extra.css
     - Pillars/Fairness/extra.css
 
+extra_javascript:
+    - javascripts/config.js
+    - https://polyfill.io/v3/polyfill.min.js?features=es6
+    - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
