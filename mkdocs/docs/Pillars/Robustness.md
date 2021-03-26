@@ -56,7 +56,9 @@ To be able to calculate empirical robustness we need to know the type and the pa
 
 ### Model Uncertainty & Confidence Score
 
-The model uncertainty can be estimated by computing the variance of the model’s predicted probability of the i-th data over multiple runs. For the same input the model is expected to predict multiple times. If it returns similar probabilities for classes every time, the model is said to be **stable** and robust. The [experiment](https://arxiv.org/pdf/2006.16375.pdf) results show that the Model Uncertainty and Confidence Scores are inversely related where the Confidence Score is defined as average prediction probability given a set of data.
+The model uncertainty can be estimated by computing the variance of M independently trained models predicted probability of a data point. For the same input the all of the model's predict probabilities for classes. If they returns similar probabilities, the model architecture is said to be stable and robust. The [experiment](https://arxiv.org/pdf/2006.16375.pdf) results show that the Model Uncertainty and Confidence Scores are inversely related where the Confidence Score is defined as average prediction probability of the group of models.
+
+For one model we can define Confidence Score as the ratio of probabilities of the predicted class and the second close class. Larger ratio can imply a more robust model.
 
 ### Loss Sensitivity
 Local loss sensitivity quantify the smoothness of a model by estimating its Lipschitz continuity constant. Lipschitz constant measures the largest variation of the output of the model under a small change in its input. The smaller the value, the smoother the function.
@@ -117,7 +119,7 @@ An efficient attack for deep neural networks. It is white-box and untargeted. Fo
 
 |model type | metric     	| description 	| unit             	|
 |-----------|---------------|:-----------:	|------------------	|
-|All models that we have access to the prediction probabilities|Model Uncertainty & Confidence Score| Measures the stability and robustness of the model. Larger confidence better robustness.|[0 1]|
+|All models that we have access to the prediction probabilities|Confidence Score| Measures the stability and robustness of the model. Larger confidence better robustness.|[0 1]|
 |Decision Tree|	Clique Method Robustness Verification|	Gives a lower bound on robustness for decision tree ensembles. Larger value better robustness.| [0 inf]		|
 |Neural Network	|Loss Sensitivity|	Quantify the smoothness of a model. Smaller value better robustness.|	[0 inf]	| 
 |Neural Network	| CLEVER Score| Estimates the minimal perturbation that is required to change the classification. Higher value better robustness.|	[0 inf]	|
