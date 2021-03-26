@@ -9,7 +9,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Implementation - Trused AI</title>
+  <title>Additional Aspects - Trused AI</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
   <link rel="stylesheet" href="../css/theme.css" />
@@ -20,8 +20,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Implementation";
-    var mkdocs_page_input_path = "code_documentation.md";
+    var mkdocs_page_name = "Additional Aspects";
+    var mkdocs_page_input_path = "Other_aspects.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -64,27 +64,25 @@
                     <li class="toctree-l1"><a class="reference internal" href="../Pillars/Accountability/">Accountability</a>
                     </li>
                 </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../Other_aspects/">Additional Aspects</a>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Additional Aspects</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#privacy">Privacy</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ethics-governance-and-compliance">Ethics, Governance and Compliance</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#accuracy-on-train-and-test-datasets">Accuracy on Train and Test Datasets</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#data-quality">Data Quality</a>
+    </li>
+    </ul>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Code</span></p>
-                <ul class="current">
+                <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../AI_algo/">trusted AI algorithm</a>
                     </li>
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Implementation</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#general-architecture">General Architecture</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#file-structure">File Structure</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#build">Build</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#evaluation-and-results">Evaluation and Results</a>
-    </li>
-    </ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../code_documentation/">Implementation</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">References</span></p>
@@ -112,12 +110,8 @@
     <li><a href="..">Docs</a> &raquo;</li>
     
       
-        
-          <li>Code &raquo;</li>
-        
-      
     
-    <li>Implementation</li>
+    <li>Additional Aspects</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -128,12 +122,17 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="implementation-of-the-trusted-ai-algorithm">Implementation of the trusted AI Algorithm</h1>
-<h2 id="general-architecture">General Architecture</h2>
-<h2 id="file-structure">File Structure</h2>
-<h2 id="build">Build</h2>
-<h2 id="how-it-works">How it works</h2>
-<h2 id="evaluation-and-results">Evaluation and Results</h2>
+                <h1 id="other-aspects-to-consider-for-trusted-ai-algorithm">Other Aspects To Consider For Trusted AI Algorithm</h1>
+<h2 id="privacy">Privacy</h2>
+<p>Joel said there are metrics to measure privacy.</p>
+<h2 id="ethics-governance-and-compliance">Ethics, Governance and Compliance</h2>
+<p>They are important to consider but no metrics.</p>
+<h2 id="accuracy-on-train-and-test-datasets">Accuracy on Train and Test Datasets</h2>
+<p>We have to consider the accuracy as the higher accuracy implies a better/more trustworthy model. IBM considers accuracy as one of the main aspects on its display of Factsheets with Explainability, Fairness and Robustness.</p>
+<p>However solely showing the test accuracy is not enough. The difference between the train accuracy and the test accuracy displays the quality of the model. If the train accuracy is high but the test accuracy is relatively low we could say that the model is overfitting. Hence we need to consider the difference of accuracies. </p>
+<h2 id="data-quality">Data Quality</h2>
+<p>We can try to analyze data quality. We can consider the amount of data used, the proportions and the distributions of train and test datasets.
+We can check for bias (correlated with fairness). </p>
               
             </div>
           </div>
@@ -141,10 +140,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../sources/" class="btn btn-neutral float-right" title="sources">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../AI_algo/" class="btn btn-neutral float-right" title="trusted AI algorithm">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../AI_algo/" class="btn btn-neutral" title="trusted AI algorithm"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Pillars/Accountability/" class="btn btn-neutral" title="Accountability"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -170,10 +169,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../AI_algo/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../Pillars/Accountability/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../sources/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../AI_algo/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

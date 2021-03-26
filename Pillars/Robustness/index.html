@@ -77,6 +77,8 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#empirical-robustness">Empirical Robustness</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#model-uncertainty-confidence-score">Model Uncertainty &amp; Confidence Score</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#loss-sensitivity">Loss Sensitivity</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#clever-score">CLEVER Score</a>
@@ -106,6 +108,10 @@
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../Accountability/">Accountability</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Other_aspects/">Additional Aspects</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Code</span></p>
@@ -164,12 +170,13 @@
 <li><em>Key Takeaways</em><ul>
 <li>Robustness is a mathematical term and context independent.</li>
 <li>Mostly measured by a specific adversarial attack's success rate on the model.</li>
+<li>Stability and robustness are related to models confidence score.</li>
 </ul>
 </li>
 <li><em>Limitations</em><ul>
 <li>Robustness can be defined as vulnerability to adversarial examples. An adversarial example is an instance with small, intentional feature perturbations that cause a machine learning model to make a false prediction. Hence robustness is defined on models where the "False Prediction" is clearly defined and where true and false predictions are sufficiently different. For example we can talk about robustness of classifiers. However it is quite difficult to talk about robustness of regression models.  </li>
 <li>Robustness only makes sense if the input to the model is sufficiently large. When the input is adversarially perturbed the difference should be unnoticiable to the human eye but still be large enough to make the input misclassified. This is only possible when the input is high dimensional so that the differences can be hidden. Thats why they usually use Convolutional Neural Networks as an example.</li>
-<li>The topic is well explored on neural network classifiers. For the other models I was able to find a paper proposing an attack working for neural networks, logistic regression models and SVM's. With the help of the same paper, I learned that 2 other attacks can be modified to work for logistic regression, SVM and neural networks. We should narrow down the possible different classifier models that can be used with our algorithm.</li>
+<li>The topic is well explored on neural network classifiers. For the other models I was able to find a paper proposing an attack working for neural networks, logistic regression models and SVM's. With the help of the same paper, I learned that 2 other attacks can be modified to work for logistic regression, SVM and neural networks. </li>
 </ul>
 </li>
 </ul>
@@ -280,6 +287,8 @@
 <h3 id="empirical-robustness">Empirical Robustness</h3>
 <p>Assesses the robustness of a given classifier with respect to a specific attack and test data set. It is equivalent to the average minimal perturbation that the attacker needs to introduce for a successful attack.</p>
 <p>To be able to calculate empirical robustness we need to know the type and the parameters of the attack.</p>
+<h3 id="model-uncertainty-confidence-score">Model Uncertainty &amp; Confidence Score</h3>
+<p>The model uncertainty can be estimated by computing the variance of the model’s predicted probability of the i-th data over multiple runs. For the same input the model is expected to predict multiple times. If it returns similar probabilities for classes every time, the model is said to be <strong>stable</strong> and robust. The <a href="https://arxiv.org/pdf/2006.16375.pdf">experiment</a> results show that the Model Uncertainty and Confidence Scores are inversely related where the Confidence Score is defined as average prediction probability given a set of data.</p>
 <h3 id="loss-sensitivity">Loss Sensitivity</h3>
 <p>Local loss sensitivity quantify the smoothness of a model by estimating its Lipschitz continuity constant. Lipschitz constant measures the largest variation of the output of the model under a small change in its input. The smaller the value, the smoother the function.</p>
 <h3 id="clever-score">CLEVER Score</h3>
@@ -328,6 +337,12 @@ It is effective on Logistic Regression models, Support Vector Classifiers and Ne
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>All models that we have access to the prediction probabilities</td>
+<td>Model Uncertainty &amp; Confidence Score</td>
+<td align="center">Measures the stability and robustness of the model. Larger confidence better robustness.</td>
+<td>[0 1]</td>
+</tr>
 <tr>
 <td>Decision Tree</td>
 <td>Clique Method Robustness Verification</td>
