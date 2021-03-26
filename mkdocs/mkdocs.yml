@@ -7,6 +7,7 @@ nav:
         - Explainability: Pillars/Explainability.md
         - Robustness: Pillars/Robustness.md
         - Accountability : Pillars/Accountability/index.md
+    - Additional Aspects: Other_aspects.md
     - Code:
         - trusted AI algorithm: AI_algo.md
         - Implementation: code_documentation.md
