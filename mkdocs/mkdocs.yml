@@ -13,6 +13,7 @@ nav:
     - Tools:
         - IBM FactSheets 360: Tools/IBM-FactSheets/index.md
         - Another Tool: Tools/another-tool.md
+    - Additional Aspects: Other_aspects.md
     - Code:
         - trusted AI algorithm: AI_algo.md
         - Implementation: code_documentation.md

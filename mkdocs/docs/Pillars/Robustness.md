@@ -7,10 +7,11 @@ Machine Learning models might not be robust against adversarial perturbations. W
 * *Key Takeaways*
     * Robustness is a mathematical term and context independent.
     * Mostly measured by a specific adversarial attack's success rate on the model.
+    * Stability and robustness are related to models confidence score.
 * *Limitations*
     * Robustness can be defined as vulnerability to adversarial examples. An adversarial example is an instance with small, intentional feature perturbations that cause a machine learning model to make a false prediction. Hence robustness is defined on models where the "False Prediction" is clearly defined and where true and false predictions are sufficiently different. For example we can talk about robustness of classifiers. However it is quite difficult to talk about robustness of regression models.  
     *  Robustness only makes sense if the input to the model is sufficiently large. When the input is adversarially perturbed the difference should be unnoticiable to the human eye but still be large enough to make the input misclassified. This is only possible when the input is high dimensional so that the differences can be hidden. Thats why they usually use Convolutional Neural Networks as an example.
-    * The topic is well explored on neural network classifiers. For the other models I was able to find a paper proposing an attack working for neural networks, logistic regression models and SVM's. With the help of the same paper, I learned that 2 other attacks can be modified to work for logistic regression, SVM and neural networks. We should narrow down the possible different classifier models that can be used with our algorithm.
+    * The topic is well explored on neural network classifiers. For the other models I was able to find a paper proposing an attack working for neural networks, logistic regression models and SVM's. With the help of the same paper, I learned that 2 other attacks can be modified to work for logistic regression, SVM and neural networks. 
 
 
 ## Sources
@@ -52,6 +53,12 @@ The main idea of the robustness metrics is to calculate the minimal perturbation
 Assesses the robustness of a given classifier with respect to a specific attack and test data set. It is equivalent to the average minimal perturbation that the attacker needs to introduce for a successful attack.
 
 To be able to calculate empirical robustness we need to know the type and the parameters of the attack.
+
+### Model Uncertainty & Confidence Score
+
+The model uncertainty can be estimated by computing the variance of M independently trained models predicted probability of a data point. For the same input the all of the model's predict probabilities for classes. If they returns similar probabilities, the model architecture is said to be stable and robust. The [experiment](https://arxiv.org/pdf/2006.16375.pdf) results show that the Model Uncertainty and Confidence Scores are inversely related where the Confidence Score is defined as average prediction probability of the group of models.
+
+For one model we can define Confidence Score as the ratio of probabilities of the predicted class and the second close class. Larger ratio can imply a more robust model.
 
 ### Loss Sensitivity
 Local loss sensitivity quantify the smoothness of a model by estimating its Lipschitz continuity constant. Lipschitz constant measures the largest variation of the output of the model under a small change in its input. The smaller the value, the smoother the function.
@@ -112,6 +119,7 @@ An efficient attack for deep neural networks. It is white-box and untargeted. Fo
 
 |model type | metric     	| description 	| unit             	|
 |-----------|---------------|:-----------:	|------------------	|
+|All models that we have access to the prediction probabilities|Confidence Score| Measures the stability and robustness of the model. Larger confidence better robustness.|[0 1]|
 |Decision Tree|	Clique Method Robustness Verification|	Gives a lower bound on robustness for decision tree ensembles. Larger value better robustness.| [0 inf]		|
 |Neural Network	|Loss Sensitivity|	Quantify the smoothness of a model. Smaller value better robustness.|	[0 inf]	| 
 |Neural Network	| CLEVER Score| Estimates the minimal perturbation that is required to change the classification. Higher value better robustness.|	[0 inf]	|
