@@ -12,6 +12,8 @@ Mangement requires interpretability to gain comfort and build confidence that th
 
 Greater visibility uncovers unknown vulnerabilities and flaws.
 
+How many people would trust an AI algorithm giving a diagnosis rather than a doctor without having some form of clarity over how the algorithm came up with the conclusion? Although the AI diagnosis may be more accurate, a lack of explainability may lead to a lack of trust.
+
 Why does this enable governance?
 
 Increased transparency provides information for AI consumers to better understand how an AI model or service was created and build in order to determine if the model is appropriate for their specific situation or need.
