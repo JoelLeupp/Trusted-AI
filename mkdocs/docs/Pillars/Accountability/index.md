@@ -36,6 +36,23 @@ Information that lets you know what your system is doing. If you are more transp
 
 4. Adhere to your company’s business conduct guidelines. Also, understand national and international laws, regulations, and guidelines that your AI may have to work within. You can find other related resources in the IEEE Ethically Aligned Design Document [1].
 
+## Fact Sheet Components
+- Model Name<br/>
+- Overview<br/>
+- Purpose<br/>
+- Intended Domain<br/>
+- Training Data<br/>
+- Input<br/>
+- Output<br/>
+- Metrics<br/>
+- Bias<br/>
+- Robustness<br/> 
+- Domain Shift<br/>
+- Test Data<br/>
+- Optimal Conditions<br/>
+- Poor Conditions<br/>
+- Explanation<br/>
+- Contact Information<br/>
 
 ## Summary
 
@@ -76,3 +93,9 @@ mate users of a model to provide increased transparency.
 [1] ... IBM 2019 - Accountability - https://www.ibm.com/design/ai/ethics/accountability/
 
 ## Taxonomy and Metrics
+
+|metric | target | description | unit | weight |
+|---|---|---|---|---|
+| Train-Test-Split | Data | Is the split into training and testing data appropriate | [0,1] | 0.2 |
+| Level of Human Involvement | Model |  Is the AI to be embedded in a human decision-making process, is it making decisions on its own, or is it a hybrid? | {1/3, 2/3, 3/3} | 0.2 |
+| Fact Sheet Availability || Does the model come with a FactSheet? | {0, 1} | 0.2 |

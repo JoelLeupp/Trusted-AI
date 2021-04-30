@@ -4,7 +4,7 @@ The goal of the FactSheet project is to foster trust in AI by increasing transpa
 
 ### What is a FactSheet?
 * Is a collection of relevant information about the creation and deployment of an AI model or service. 
-* Such facts can be the purpose, criticality, measured dataset and model characteristics (e.g accuracy).
+* Such facts can be the purpose, criticality, performance, measured dataset and model characteristics (e.g accuracy).
 * Every stakeholder might contribute facts about the model (data collector, model creator, model validator).
 * The fact sheet documents the construction process of the model similar to a transcript of records providing insights about a student. Modeled after a supplier’s declaration of conformity. Since they are tailored to a particular Ai service or model they might vary in content.
 

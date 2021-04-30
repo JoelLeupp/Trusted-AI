@@ -10,10 +10,11 @@ nav:
         - Explainability: Pillars/Explainability.md
         - Robustness: Pillars/Robustness.md
         - Accountability : Pillars/Accountability/index.md
+        - Additional Aspects: Other_aspects.md
     - Tools:
         - IBM FactSheets 360: Tools/IBM-FactSheets/index.md
-        - Another Tool: Tools/another-tool.md
-    - Additional Aspects: Other_aspects.md
+    - Releated Research: 
+        - Index: RelatedResearch/index.md
     - Code:
         - trusted AI algorithm: AI_algo.md
         - Implementation: code_documentation.md

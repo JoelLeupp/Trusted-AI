@@ -170,10 +170,65 @@ Three categories of bias in computer systems
 - Unintended use or adversarial feedback (e.g Tay.ai)
 - Gaming the system. Users can try to use the rules and procedures meant to protect the system, in order to instead, manipulate the system.
 
+### Statistical Measures Of Fairness
+The closer these values are to one the better the classifier.
+
+**Positive Predicted Value (PPV)**<br/>
+How many of the samples that were classified as pos samples are actually pos samples.<br/>
+Also called precision.<br/>
+PPV = P(actual=+|prediction=+) = TP / (TP + FP)<br/>
+
+**False Discovery Rate (FDR)**<br/>
+The fractions of samples that got classified as pos samples but however actually are negative samples.<br/>
+FDR = P(actual=-|prediction=+) = FP / (TP + FP)<br/>
+
+
+**Negative Predicted Value (NPV)**<br/>
+NPV = P(actual=-|prediction=+) = TN / (TN + FN)<br/>
+
+**False Omission Rate (FOR)**<br/>
+FOR = P(actual=+|prediction=-) = FN / (TN + FN)<br/>
+
+**True Positive Rate (TPR)**<br/>
+Number of positive samples that got successfully identified as positives.<br/>
+Also called sensitivity or recall.<br/>
+TPR = P(prediction=+|actual=+) = TP / (TP + FN)<br/>
+
+**False Negative Rate (FNR)**<br/>
+Number of positive samples that accidentally got identified as negatives.<br/>
+FNR = P(prediction=-|actual=+) = FN / (TP + FN)<br/>
+
+**True Negative Rate (TNR)**<br/>
+TNR = P(prediction=-|actual=-) = TN / (TN + FP)<br/>
+
+**False Positive Rate (FPR)**<br/>
+FPR = P(prediction=+|actual=-) = FP / (TN + FP)<br/>
+
+
+
 ###Overview
 - (1) and (2) are widely used ideas inspired by anti-discrimnation legislation.
 - There are group notions of fairness (e.g *statistical parity, equality of accuracy, equality of false positive/false negative rates*) and individual notions (e.g *treating similar individuals similar*).
 - There is no universally accepted definition of fairness. The existing notions consider how errors are distributed across different groups.
+
+#### Biased Data
+During the data collection bias can be introduced.<br/>
+Selection bias for example could result in the data not being representative of the underlying population.<br/>
+Or depending on how certain questions are framed the results of a survey could also be different.<br/>
+However it is really difficult to automatically detect bias in data since you need to compare the data to something in order to identify deviations.<br/>
+
+**Sample Bias:**<br/>
+When the sample process generating the data is not uniform across protected groups.
+
+**Label Bias:**<br/>
+We define ‘label bias’ as the case when there is a causal link between a protected attribute and the class label assigned to an individual which is not warranted by ground truth. Consider a dataset composed of elementary school students, with a dependent variable that indicates whether the student misbehaves. Studies have shown that Black and Latinx children are more likely than White children to receive suspensions or expulsions for similar problem behavior, so if our dataset’s dependent variable were based on suspensions it would contain label bias.
+
+##### Simpson’s paradox
+ Cases where different levels of data aggregation produce different fairness conclusions. An analysis of graduate admissions data from Berkeley offers one such case [1], in which the aggregate data show an admissions bias against women, but when the data are disaggregated to the department level the bias is reversed. This difficulty stems from the causal influence of the protected class (in this case gender) on the presence of an individual in the set of applicants to each department: women preferentially apply to departments with lower acceptance rates.
+
+#### Class Imbalance
+Imagine a dataset with 99% samples with label one and 1% samples with label zero. 
+A classifier returning always one as the predicted label would still receive an accuracy of 99%.
 
 #### Individual Fairness
 * Treating people as individuals, regardless of their group membership.
@@ -198,7 +253,6 @@ Three categories of bias in computer systems
 
 #### Group Fairness
 
-
 ####1. Disparate Treatment 
 A practice that intentionally disadvantages/discriminates a group based on a protected feature (*e.g the pay difference between men and women at the same position, *). The treatment or process should not depend on a sensitive feature encoding group membership.
 
@@ -212,9 +266,12 @@ Is what occurs when an organization’s actions, policies, or some other aspect 
 
 ####3. Statistical Parity
 In some cases statistical parity is a central goal (and in some it is legally mandated). Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.
+
 > 
 *“A selection rate for any race, sex, or ethnic group which is less than four-fifths (or 80%) of the rate for the group with the highest rate will generally be regarded by the Federal enforcement agencies as evidence of [discrimination].”* - **Equal Employment Opportunity Commission**
-> 
+>
+
+Certain definitions of fairness, and thus certain fairness metrics, are demonstrably inappropriate in particular circumstances. For example, if there is a legitimate reason for a difference in the rate of positive labels between members of different protected classes (e.g. incidence of breast cancer by gender) then statistical parity between model results for the protected classes would be an in- appropriate measure
 
 A classifier h satisfies demographic parity under a distribution over (X, A, Y ) if its prediction $h(X)$ is statistically independent of the protected attribute A—that is, if $P[h(X) = \hat{y} | A=a]=P[h(X)=\hat{y}]\ \forall a,\hat{y}$. Because $\hat{y}∈{0,1}$, this is equivalent to $E[h(X) | A = a] = E[h(X)]$ for all a.
 
@@ -258,18 +315,22 @@ Post-processing the classifier’s predictions.
 4. Based on the taxonomy an overall fairness score can then be created.
 
 ##Taxonomy
-| **Stage** | **Metric** | **Description** | **Unit** | **Weight** |
-|---|---|---|---|---|
-|** *1. Business Understanding* **|*Question Fairness*|Is the question we are trying to answer fair in itself? It would be considered fair to recommend a preferred treatment to a patient, but the application of machine learning for racial profiling would be considered unfair.|[0,1]|1/n|
-||*Context Criticality*|How important is fairness in the context the model operates in? In a legal context fairness is very important while it is less important for marketing purposes.|[0,1]|1/n|
-|** *2. Data Mining* **|*Biased<br/>Data*|Does the data possibly contain a bias which was introduced during the data collection? (e.g selection bias)|{0,1}|1/n|
-|** *3. Data Cleaning* **|*Class Balance/<br/>Imbalance*|To what degree does the sample (training dataset) represent the expected class distribution of the real underlying population?|[0,1]|1/n|
-|** *4. Data Exploration* **|-|-|-|-|
-|** *5. Feature Engineering* **|-|-|-|-|
-|** *6. Predictive Modeling* **|*Disparate Treatment*|Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a at least one protected feature for its prediction?|[0,1]|1/n|
-||*Disparate Impact*|A practice that intentionally disadvantages/discriminates a group based on a protected feature (e.g the pay difference between men and women at the same position, ). The treatment or process should not depend on a sensitive feature encoding group membership.|[0,1]|1/n|
-||*Disparate Mistreatment*|Check if the prediction error (FPR, FNR) is similar across groups and therefore independant of protected features E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]|[0,1]|1/n|
-||*Statistical Parity*|Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.|[0,1]|1/n|
+| **Stage** | **Metric** | **Target** | **Description** | **Unit** | **Weight** |
+|---|---|---|---|---|---|
+|** *1. Business Understanding* **|*Question Fairness*|Problem<br/>Context| Is the question we are trying to answer fair in itself? It would be considered fair to recommend a preferred treatment to a patient, but the application of machine learning for racial profiling would be considered unfair.|[0,1]|1/n|
+||*Context Criticality*|Problem<br/>Context| How important is fairness in the context the model operates in? In a legal context fairness is very important while it is less important for marketing purposes.|[0,1]|1/n|
+|** *2. Data Mining* **|*Biased<br/>Data*|Dataset|Does the data possibly contain a bias which was introduced during the data collection? (e.g selection bias)|{0,1}|1/n|
+|** *3. Data Cleaning* **|*Class Balance/<br/>Imbalance*|Dataset| To what degree does the sample (training dataset) represent the expected class distribution of the real underlying population?|[0,1]|1/n|
+|** *4. Data Exploration* **|-|-|-|-|-|
+|** *5. Feature Engineering* **|-|-|-|-|-|
+|** *6. Predictive Modeling* **|*Equally Distributed Precision*|Model|What fraction of predictions as a positive class were actually positive. <br/>Precision: TP/(TP+FP)|[0,1]|1/n|
+||*Equally Distributed Recall*|Model|What fraction of all positive samples were correctly predicted as positive by the classifier. <br/>Recall: TP/(TP+FN).|[0,1]|1/n|
+||*Equally Distributed Specificity*| Model | What fraction of all negative samples are correctly predicted as negative by the classifier.<br/> Specificity: TN/(TN+FP).|[0,1]|1/n|
+||*Equally Distributed F1 Score*|Model|F1 = 2*(precision * recall)/(precision + recall)|[0,1]|1/n|
+||*Disparate Treatment*|Model|Depending on the context certain features (gender, religion, race) are considered to be protected. Is at least one protected feature used during the training process for the model's prediction?|[0,1]|1/n|
+||*Disparate Impact*|Model|A practice that intentionally disadvantages/discriminates a group based on a protected feature (e.g the pay difference between men and women at the same position, ). The treatment or process should not depend on a sensitive feature encoding group membership.|[0,1]|1/n|
+||*Disparate Mistreatment*|Model|Check if the prediction error (FPR, FNR) is similar across groups and therefore independant of protected features E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]|[0,1]|1/n|
+||*Statistical Parity*|Model|Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.|[0,1]|1/n|
 |** *7. Data Visualization* **|-|-|-|-|
 
 ## Sources
