@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>IBM FactSheets 360 - Trused AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../../extra.css" rel="stylesheet" />
+  <link href="../../Pillars/Fairness/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "IBM FactSheets 360";
+    var mkdocs_page_input_path = "Tools/IBM-FactSheets/index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Trused AI</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <p class="caption"><span class="caption-text">Home</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../documentation/">Documentation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../introduction/">Introduction</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Pillars</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Pillars/Fairness/">Fairness</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Pillars/Explainability/">Explainability</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Pillars/Robustness/">Robustness</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Pillars/Accountability/">Accountability</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Other_aspects/">Additional Aspects</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Tools</span></p>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">IBM FactSheets 360</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#what-is-a-factsheet">What is a FactSheet?</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#why-do-we-need-factsheets">Why do we need FactSheets?</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#structure-of-a-factsheet">Structure of a FactSheet</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#taxonomy">Taxonomy</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Releated Research</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../RelatedResearch/">Index</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Code</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../AI_algo/">trusted AI algorithm</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../code_documentation/">Implementation</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">References</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../sources/">sources</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Trused AI</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Tools &raquo;</li>
+        
+      
+    
+    <li>IBM FactSheets 360</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="ibm-ai-factsheets-360">IBM AI FactSheets 360</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The goal of the FactSheet project is to foster trust in AI by increasing transparency an increased understanding of how AI was created and deployed and enabling governance the ability to control how AI is created and deployed. Increased transparency provides information for AI consumers to better understand how the AI model a program component that is generated by learning patterns in training data to make predictions on new data, such as a loan application. or service an executable program, deployed behind an API, that allows it to respond to program requests from other programs or services was created. This allows a consumer of the model to determine if it is appropriate for their situation.</p>
+<h3 id="what-is-a-factsheet">What is a FactSheet?</h3>
+<ul>
+<li>Is a collection of relevant information about the creation and deployment of an AI model or service. </li>
+<li>Such facts can be the purpose, criticality, performance, measured dataset and model characteristics (e.g accuracy).</li>
+<li>Every stakeholder might contribute facts about the model (data collector, model creator, model validator).</li>
+<li>
+<p>The fact sheet documents the construction process of the model similar to a transcript of records providing insights about a student. Modeled after a supplier’s declaration of conformity. Since they are tailored to a particular Ai service or model they might vary in content.</p>
+</li>
+<li>
+<p>The format can be differently for different audiences (e.g Full, tabular, slides)</p>
+</li>
+<li>Contains information about how the model was created, tested, trained, deployed and evaluated.</li>
+<li>What legislation (e.g GDPR) or company rules (e.g what features can not be used) need to be accounted for.</li>
+</ul>
+<h4 id="why-do-we-need-factsheets">Why do we need FactSheets?</h4>
+<ul>
+<li>Many stakeholders are involved in the model creation process (e.g In the </li>
+</ul>
+<h3 id="structure-of-a-factsheet">Structure of a FactSheet</h3>
+<ul>
+<li>
+<p>The structure is customizable for varying audiences (internal, external stakeholders).</p>
+</li>
+<li>
+<p>Fact Sheet Examples can be found here (https://aifs360.mybluemix.net/examples)</p>
+</li>
+</ul>
+<p><img alt="Full Format" class="center" src="Images/factsheet-full.png" width="384px" />
+<img alt="Tabular Format" class="center" src="Images/factsheet-tabular.png" width="384px" />
+<img alt="Tabular Format" class="center" src="Images/factsheet-tabular.png" width="384px" /></p>
+<h2 id="taxonomy">Taxonomy</h2>
+<table>
+<thead>
+<tr>
+<th><strong>Stage</strong></th>
+<th><strong>Metric</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Weight</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<p>[1] - <strong>Matthew Arnold</strong> - <em>"FactSheets: Increasing Trust in AI Services through Supplier's Declarations of Conformity"</em></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../RelatedResearch/" class="btn btn-neutral float-right" title="Index">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../Other_aspects/" class="btn btn-neutral" title="Additional Aspects"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../../Other_aspects/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../RelatedResearch/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../javascripts/config.js" defer></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

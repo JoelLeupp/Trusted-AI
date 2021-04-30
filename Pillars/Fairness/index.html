@@ -49,8 +49,11 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <p class="caption"><span class="caption-text">Home</span></p>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../../documentation/">Documentation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../introduction/">Introduction</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Pillars</span></p>
@@ -58,54 +61,92 @@
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Fairness</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#definition">Definition</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#legally-recognized-protected-classes">Legally recognized 'protected classes'</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#application-examples">Application Examples</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#counterexamples">Counterexamples</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#fairness-metrics-within-the-ml-pipeline">Fairness Metrics within the ML Pipeline</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#1-business-understanding">1. Business Understanding</a>
+    <li class="toctree-l3"><a class="reference internal" href="#legally-recognized-protected-classes">Legally recognized 'protected classes'</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#2-data-mining">2. Data Mining</a>
+    <li class="toctree-l3"><a class="reference internal" href="#application-examples">Application Examples</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#3-data-cleaning">3. Data Cleaning</a>
+    <li class="toctree-l3"><a class="reference internal" href="#counterexamples">Counterexamples</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#4-data-exploration">4. Data Exploration</a>
+    <li class="toctree-l3"><a class="reference internal" href="#sources-of-bias">Sources of Bias</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#5-feature-engineering">5. Feature Engineering</a>
+    <li class="toctree-l3"><a class="reference internal" href="#sources-of-unfairness">Sources of Unfairness</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#6-predictive-modeling">6. Predictive Modeling</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#7-data-visualization">7. Data Visualization</a>
+    <li class="toctree-l3"><a class="reference internal" href="#algorithmic-unfairness">Algorithmic Unfairness</a>
     </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#fairness-metrics">Fairness Metrics</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#1-disparate-treatment">1. Disparate Treatment</a>
+    <li class="toctree-l3"><a class="reference internal" href="#within-the-ml-pipeline">within the ML Pipeline</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#1-business-understanding">1. Business Understanding</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#2-disparate-impact">2. Disparate Impact</a>
+    <li class="toctree-l4"><a class="reference internal" href="#2-data-mining">2. Data Mining</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#3-statistical-parity">3. Statistical Parity</a>
+    <li class="toctree-l4"><a class="reference internal" href="#3-data-cleaning">3. Data Cleaning</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#4-envy-free-fairness">4. Envy Free Fairness</a>
+    <li class="toctree-l4"><a class="reference internal" href="#4-data-exploration">4. Data Exploration</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#4-disparate-mistreatment">4. Disparate Mistreatment</a>
+    <li class="toctree-l4"><a class="reference internal" href="#5-feature-engineering">5. Feature Engineering</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#6-predictive-modeling">6. Predictive Modeling</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#7-data-visualization">7. Data Visualization</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#8-deployment">8. Deployment</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#statistical-measures-of-fairness">Statistical Measures Of Fairness</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#biased-data">Biased Data</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#class-imbalance">Class Imbalance</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#individual-fairness">Individual Fairness</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#group-fairness">Group Fairness</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#1-disparate-treatment">1. Disparate Treatment</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#2-disparate-impact">2. Disparate Impact</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#3-statistical-parity">3. Statistical Parity</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#4-envy-free-fairness">4. Envy Free Fairness</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#5-disparate-mistreatment">5. Disparate Mistreatment</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#6-equalized-odds">6. Equalized Odds</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fairness-mechanisms">Fairness Mechanisms</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#pre-processing">Pre-processing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#in-processing">In-processing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#post-processing">Post-processing</a>
     </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#process">Process</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#summaries">Summaries</a>
-    </li>
     <li class="toctree-l2"><a class="reference internal" href="#taxonomy">Taxonomy</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    <li class="toctree-l2"><a class="reference internal" href="#sources">Sources</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#papers">Papers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#websites">Websites</a>
+    </li>
+        </ul>
     </li>
     </ul>
                     </li>
@@ -115,9 +156,17 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../Accountability/">Accountability</a>
                     </li>
-                </ul>
-                <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../../Other_aspects/">Additional Aspects</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Tools</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Tools/IBM-FactSheets/">IBM FactSheets 360</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Releated Research</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../RelatedResearch/">Index</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Code</span></p>
@@ -171,9 +220,10 @@
                 <h1 id="fairness">Fairness</h1>
 <h2 id="introduction">Introduction</h2>
 <p>An increasing number of information systems take decisions based on statistical inference rules, acquired through machine learning techniques. Especially in decision-critical contexts such as predictive policing, lending decisions in credit scoring or triage and allocation of health care resources discrimination is to be avoided. In order to avoid encoding discrimination in automated decisions, multiple fairness aspects needs to be accounted for.</p>
-<h2 id="definition">Definition</h2>
+<!--##Definition-->
+
 <p><img alt="Fairness Pipeline" src="Images/fairness-pipeline.png" /></p>
-<h2 id="legally-recognized-protected-classes">Legally recognized 'protected classes'</h2>
+<h3 id="legally-recognized-protected-classes">Legally recognized 'protected classes'</h3>
 <p>Depending on the context the stakeholders need to decide during the model creation process which systemic difference between groups should be available to the model and which should be excluded. These sensitive features should either not be used or very carefully, since they are protected by law.</p>
 <ul>
 <li>Race (Civil Rights Act of 1964)</li>
@@ -190,7 +240,7 @@
 <li>Genetic Information (Genetic Information Nondiscrimination Act)</li>
 <li>Sexual orientation (in some jurisdications)</li>
 </ul>
-<h2 id="application-examples">Application Examples</h2>
+<h3 id="application-examples">Application Examples</h3>
 <ol>
 <li><strong>Medical Testing and Diagnosis</strong><ul>
 <li>Making decisions about a patient’s treatment may rely on tests providing probability estimates for different diseases and conditions.</li>
@@ -202,53 +252,292 @@
 <li><strong>School Admission</strong></li>
 <li><strong>Criminal Justice</strong></li>
 </ol>
-<h2 id="counterexamples">Counterexamples</h2>
-<p>Examples of Algorithmic Unfairness
-1. <strong>COMPAS risk tool</strong>
-    * Assess a defendant’s probability of recidivism.
-    * Tool’s errors were asymmetric: African-American defendants were more likely to be incorrectly labeled as higher-risk than they actually were, while white defendants were more likely to be incorrectly labeled as lower-risk than they actually were.
-    * White defendants who went on to commit future crimes were assigned risk scores corresponding to lower probability estimates in aggregate.
-2. <strong>Apple Credit Card</strong>
-    * Apple Card's Credit Scoring Algorithm was investigated after discriminating against women.
-3. <strong>Apple Credit Card</strong></p>
-<h2 id="fairness-metrics-within-the-ml-pipeline">Fairness Metrics within the ML Pipeline</h2>
+<h3 id="counterexamples">Counterexamples</h3>
+<p>Examples of Algorithmic Unfairness</p>
+<ol>
+<li><strong>COMPAS risk tool</strong><ul>
+<li>Assess a defendant’s probability of recidivism.</li>
+<li>Want to keep </li>
+<li>Tool’s errors were asymmetric: African-American defendants were more likely to be incorrectly labeled as higher-risk than they actually were, while white defendants were more likely to be incorrectly labeled as lower-risk than they actually were.</li>
+<li>White defendants who went on to commit future crimes were assigned risk scores corresponding to lower probability estimates in aggregate [5].</li>
+</ul>
+</li>
+<li><strong>Apple Credit Card</strong><ul>
+<li>Apple Card's Credit Scoring Algorithm was investigated after discriminating against women.</li>
+</ul>
+</li>
+<li><strong>Beauty AI Contest</strong><ul>
+<li>The first international beauty contest decided by an algorithm has sparked controversy after the results revealed that the algorithm discriminated against people of color [1].</li>
+</ul>
+</li>
+<li><strong>Google Advertising Discrimination</strong><ul>
+<li>A team of researchers form Carnegie Mellon university build a tool called AdFisher to automatically test the Google Adwords system.</li>
+<li>They found out that women are much less likely to be shown ads for high paid positions [3].</li>
+</ul>
+</li>
+<li><strong>University Admission</strong><ul>
+<li>Universities are starting to use machine learning tools in order to predict which students are going to perform well.</li>
+<li>This can potentially lead to a discrimination based on the students family background [4].</li>
+</ul>
+</li>
+<li><strong>Predictive Policing</strong><ul>
+<li>Violent crime is like a communicable disease, that it tends to break out in geographic clusters.</li>
+<li>PredPol identifies areas in a neighborhood where serious crimes are more likely to occur during a particular period.  </li>
+<li>The company claims its research has found the software to be twice as accurate as human analysts when it comes to predicting where crimes will happen [6]. </li>
+</ul>
+</li>
+<li><strong>Amazon's AI Recruiting Engine</strong><ul>
+<li>Amazons recruiting engine discriminated against women.</li>
+<li>Since most software developers at Amazon are male the system thought they are prefered over women.</li>
+</ul>
+</li>
+</ol>
+<h3 id="sources-of-bias">Sources of Bias</h3>
+<p>The term bias to refer to computer systems that systematically and unfairly discriminate against certain individuals or groups of individuals in favor of others. A system discriminates unfairly if it denies an opportunity or a good or if it assigns an undesirable outcome to an individual or group of individuals on grounds that are unreasonable or inappropriate. Consider, for example, an automated credit advisor that assists in the decision of whether or not to extend credit to a particular applicant. If the advisor denies credit to individuals with consistently poor payment records we do not judge the system to be biased because it is reasonable and appropriate for a credit company to want to avoid extending credit privileges to people who consistently do not pay their bills. In contrast, a credit advisor that systematically assigns poor credit ratings to individuals with ethnic surnames discriminates on grounds that are not relevant to credit assessments and, hence, discriminates unfairly. <strong>Bias is systematic discrimination with an unfair outcome</strong> [8].</p>
+<p>Three categories of bias in computer systems</p>
+<ul>
+<li>Preexisting<ul>
+<li>Has its roots in social institutions, practices, and attitudes.</li>
+<li>Can also reflect the personal biases of individuals who have significant input into the design of the system.</li>
+<li>Can enter a system either through the explicit and conscious efforts of individuals or institutions, or implicitly and unconsciously, even in spite of the best of intentions.</li>
+</ul>
+</li>
+<li>Technical<ul>
+<li>Arises from technical constraints or considerations.</li>
+<li>E.g bias that originates from the use of an algorithm that fails to treat all groups fairly.</li>
+</ul>
+</li>
+<li>
+<p>Emergent</p>
+<ul>
+<li>Arises in a context of use.</li>
+<li>Typically emerges some time after a design is completed, as a result of changing societal knowledge, population, or cultural values</li>
+</ul>
+</li>
+<li>
+<p>If the system is complex, and most are, biases can remain hidden in the code.</p>
+</li>
+<li>The distinction between a rationally based discrimination and bias is always easy to draw</li>
+</ul>
+<hr />
+<p><strong> Common types of bias in machine learning </strong><br/></p>
+<ul>
+<li><strong>Automation bias</strong><ul>
+<li>When a human decision maker favors recommendations made by an automated decision-making system over information made without automation, even when the automated decision-making system makes errors.</li>
+</ul>
+</li>
+<li><strong>Confirmation bias</strong><ul>
+<li>The tendency to search for, interpret, favor, and recall information in a way that confirms one's preexisting beliefs or hypotheses. Machine learning developers may inadvertently collect or label data in ways that influence an outcome supporting their existing beliefs</li>
+</ul>
+</li>
+<li><strong>Experimenter’s bias</strong><ul>
+<li>Is a form of confirmation bias in which an experimenter continues training models until a preexisting hypothesis is confirmed.</li>
+</ul>
+</li>
+<li><strong>Group attribution bias</strong><ul>
+<li>Assuming that what is true for an individual is also true for everyone in that group.</li>
+</ul>
+</li>
+<li><strong>Implicit bias</strong><ul>
+<li>Automatically making an association or assumption based on one’s mental models and memories</li>
+</ul>
+</li>
+<li><strong>In-group bias</strong><ul>
+<li>Showing partiality to one's own group or own characteristics. If testers or raters consist of the machine learning developer's friends, family, or colleagues, then in-group bias may invalidate product testing or the dataset</li>
+</ul>
+</li>
+<li><strong>Out-group homogeneity bias</strong><ul>
+<li>Showing partiality to one's own group or own characteristics. If testers or raters consist of the machine learning developer's friends, family, or colleagues, then in-group bias may invalidate product testing or the dataset.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<ul>
+<li><strong>Coverage bias</strong><ul>
+<li>The population represented in the dataset does not match the population that the machine learning model is making predictions about.</li>
+</ul>
+</li>
+<li><strong>Non-response bias</strong><ul>
+<li>Also called participation bias.</li>
+<li>Users from certain groups opt-out of surveys at different rates than users from other groups.</li>
+</ul>
+</li>
+<li><strong>Reporting bias</strong><ul>
+<li>The fact that the frequency with which people write about actions, outcomes, or properties is not a reflection of their real-world frequencies or the degree to which a property is characteristic of a class of individuals. Reporting bias can influence the composition of data that machine learning systems learn from.</li>
+<li>For example, in books, the word laughed is more prevalent than breathed. A machine learning model that estimates the relative frequency of laughing and breathing from a book corpus would probably determine that laughing is more common than breathing.</li>
+</ul>
+</li>
+<li><strong>Sampling bias</strong><ul>
+<li>Data is not collected randomly from the target group.</li>
+</ul>
+</li>
+<li><strong>Selection bias</strong><ul>
+<li>Errors in conclusions drawn from sampled data due to a selection process that generates systematic differences between samples observed in the data and those not observed.</li>
+</ul>
+</li>
+</ul>
+<h3 id="sources-of-unfairness">Sources of Unfairness</h3>
+<ul>
+<li>Data Unfairness ... from Task Definition and Data Collection.</li>
+<li>Algorithmic Unfairness ... from Model Specification and Model Training.</li>
+<li>Impact Unfairness ... from Model Testing and Deployment in Real-World.</li>
+</ul>
+<h3 id="algorithmic-unfairness">Algorithmic Unfairness</h3>
+<ul>
+<li>f<sub>∗</sub>,the underlying model (y<sub>i</sub> =f<sub>∗</sub>(x<sub>i</sub>)+ε<sub>i</sub>).</li>
+<li>h<sub>∗</sub> ∈ H, the best available hypothesis.</li>
+<li>h=argmin<sub>h′∈H</sub>L(D,h′), the best model on finite sample.</li>
+<li>For the sake of concreteness, s ∈ {0, 1} is assumed.</li>
+<li>Unfairness = E[(h(x)−y)<sup>2</sup>|s=0] − E[(h(x)−y)<sup>2</sup>|s=1]</li>
+</ul>
+<h2 id="fairness-metrics">Fairness Metrics</h2>
+<h3 id="within-the-ml-pipeline">within the ML Pipeline</h3>
 <p><img alt="Data Science Lifecycle" class="center" src="Images/data-science-lifecycle.png" width="512px" /></p>
-<h3 id="1-business-understanding">1. Business Understanding</h3>
+<h4 id="1-business-understanding">1. Business Understanding</h4>
 <p><em>Ask relevant questions and define objectives for the problem that needs to be tackled.</em></p>
-<h3 id="2-data-mining">2. Data Mining</h3>
+<p><strong>Counter Examples</strong></p>
+<ul>
+<li>Inferring criminality using face images is unethical.</li>
+<li>Identifying gay faces is an unenthical use case.</li>
+</ul>
+<h4 id="2-data-mining">2. Data Mining</h4>
 <p><em>Gather and scrape the data necessary for the project.</em></p>
-<h3 id="3-data-cleaning">3. Data Cleaning</h3>
+<ul>
+<li>
+<p>Mismatch between training and deployment populations (e.g Different population or drifting populations)</p>
+</li>
+<li>
+<p>Under/over-representation</p>
+</li>
+<li>Less data from the minority (e.g., accents in speech recognition)</li>
+<li>Feedback loops (e.g observe if “paid back the loan” only if loan granted)</li>
+</ul>
+<h4 id="3-data-cleaning">3. Data Cleaning</h4>
 <p><em>Fix the inconsistencies within the data and handle the missing values.</em></p>
 <ul>
-<li>Class imbalance: The number of observations for each class deviates substantially from the proportions </li>
+<li>Class imbalance: The number of observations for each class deviates substantially from the proportions in the underlying population.</li>
 <li>Over- and Undersampling</li>
 <li>Unfairness from Underrepresentation</li>
 </ul>
 <p><img align="center" alt="Data Science Lifecycle" src="Images/unfairness-from-underrepresentation.png" /></p>
-<h3 id="4-data-exploration">4. Data Exploration</h3>
+<h4 id="4-data-exploration">4. Data Exploration</h4>
 <p><em>Form hypotheses about your defined problem by visually analyzing the data.</em></p>
-<h3 id="5-feature-engineering">5. Feature Engineering</h3>
+<h4 id="5-feature-engineering">5. Feature Engineering</h4>
 <p><em>Select important features and construct more meaningful ones using the raw data that you have.</em></p>
-<h3 id="6-predictive-modeling">6. Predictive Modeling</h3>
+<h4 id="6-predictive-modeling">6. Predictive Modeling</h4>
 <p><em>Train machine learning models, evaluate their performance, and use them to make predictions.</em></p>
-<h3 id="7-data-visualization">7. Data Visualization</h3>
+<h4 id="7-data-visualization">7. Data Visualization</h4>
 <p><em>Communicate the findings with key stakeholders using plots and interactive visualizations.</em></p>
-<h2 id="fairness-metrics">Fairness Metrics</h2>
-<p>(1) and (2) are widely used ideas inspired by anti-discrimnation legislation</p>
-<h3 id="1-disparate-treatment">1. Disparate Treatment</h3>
+<h4 id="8-deployment">8. Deployment</h4>
+<ul>
+<li>Unintended use or adversarial feedback (e.g Tay.ai)</li>
+<li>Gaming the system. Users can try to use the rules and procedures meant to protect the system, in order to instead, manipulate the system.</li>
+</ul>
+<h3 id="statistical-measures-of-fairness">Statistical Measures Of Fairness</h3>
+<p>The closer these values are to one the better the classifier.</p>
+<p><strong>Positive Predicted Value (PPV)</strong><br/>
+How many of the samples that were classified as pos samples are actually pos samples.<br/>
+Also called precision.<br/>
+PPV = P(actual=+|prediction=+) = TP / (TP + FP)<br/></p>
+<p><strong>False Discovery Rate (FDR)</strong><br/>
+The fractions of samples that got classified as pos samples but however actually are negative samples.<br/>
+FDR = P(actual=-|prediction=+) = FP / (TP + FP)<br/></p>
+<p><strong>Negative Predicted Value (NPV)</strong><br/>
+NPV = P(actual=-|prediction=+) = TN / (TN + FN)<br/></p>
+<p><strong>False Omission Rate (FOR)</strong><br/>
+FOR = P(actual=+|prediction=-) = FN / (TN + FN)<br/></p>
+<p><strong>True Positive Rate (TPR)</strong><br/>
+Number of positive samples that got successfully identified as positives.<br/>
+Also called sensitivity or recall.<br/>
+TPR = P(prediction=+|actual=+) = TP / (TP + FN)<br/></p>
+<p><strong>False Negative Rate (FNR)</strong><br/>
+Number of positive samples that accidentally got identified as negatives.<br/>
+FNR = P(prediction=-|actual=+) = FN / (TP + FN)<br/></p>
+<p><strong>True Negative Rate (TNR)</strong><br/>
+TNR = P(prediction=-|actual=-) = TN / (TN + FP)<br/></p>
+<p><strong>False Positive Rate (FPR)</strong><br/>
+FPR = P(prediction=+|actual=-) = FP / (TN + FP)<br/></p>
+<h3 id="overview">Overview</h3>
+<ul>
+<li>(1) and (2) are widely used ideas inspired by anti-discrimnation legislation.</li>
+<li>There are group notions of fairness (e.g <em>statistical parity, equality of accuracy, equality of false positive/false negative rates</em>) and individual notions (e.g <em>treating similar individuals similar</em>).</li>
+<li>There is no universally accepted definition of fairness. The existing notions consider how errors are distributed across different groups.</li>
+</ul>
+<h4 id="biased-data">Biased Data</h4>
+<p>During the data collection bias can be introduced.<br/>
+Selection bias for example could result in the data not being representative of the underlying population.<br/>
+Or depending on how certain questions are framed the results of a survey could also be different.<br/>
+However it is really difficult to automatically detect bias in data since you need to compare the data to something in order to identify deviations.<br/></p>
+<p><strong>Sample Bias:</strong><br/>
+When the sample process generating the data is not uniform across protected groups.</p>
+<p><strong>Label Bias:</strong><br/>
+We define ‘label bias’ as the case when there is a causal link between a protected attribute and the class label assigned to an individual which is not warranted by ground truth. Consider a dataset composed of elementary school students, with a dependent variable that indicates whether the student misbehaves. Studies have shown that Black and Latinx children are more likely than White children to receive suspensions or expulsions for similar problem behavior, so if our dataset’s dependent variable were based on suspensions it would contain label bias.</p>
+<h5 id="simpsons-paradox">Simpson’s paradox</h5>
+<p>Cases where different levels of data aggregation produce different fairness conclusions. An analysis of graduate admissions data from Berkeley offers one such case [1], in which the aggregate data show an admissions bias against women, but when the data are disaggregated to the department level the bias is reversed. This difficulty stems from the causal influence of the protected class (in this case gender) on the presence of an individual in the set of applicants to each department: women preferentially apply to departments with lower acceptance rates.</p>
+<h4 id="class-imbalance">Class Imbalance</h4>
+<p>Imagine a dataset with 99% samples with label one and 1% samples with label zero. 
+A classifier returning always one as the predicted label would still receive an accuracy of 99%.</p>
+<h4 id="individual-fairness">Individual Fairness</h4>
+<ul>
+<li>Treating people as individuals, regardless of their group membership.</li>
+<li>Similarity is defined with respect to the task at hand.</li>
+<li>Individual notions, while intuitively appealing, are hard to formalize (what is the right notion of benefit or distance?) and are computationally challenging.</li>
+</ul>
+<p><strong>Formalizing Individual Fairness</strong></p>
+<ul>
+<li>d(x<sub>i</sub>, x<sub>j</sub>): a metric defining distance between two individuals.</li>
+<li>D: a measure of distance between distributions.</li>
+<li>A randomized classifier h : X → ∆(Y) satisfies the (D, d)-Lipschitz property if ∀x<sub>i</sub> , x<sub>j</sub>: D(∆<sub>h</sub>(x<sub>i</sub>), ∆<sub>h</sub>(x<sub>j</sub>)) ≤ L d(x<sub>i</sub>, x<sub>j</sub>) for a real number L &gt; 0.</li>
+<li>This means that the differences in prediction between individuals need to be based on a well reasoned distance in the feature space with regard to the application context.</li>
+<li>How should we pick d, D and L?</li>
+<li>Does not treat dissimilar individuals differently.</li>
+</ul>
+<p><strong>Unfairness as inequality of received benefit</strong></p>
+<ul>
+<li>Define the benefit obtained by each individual.</li>
+<li><span class="arithmatex">\(\forall\ individual\ i: b_i = \hat{y}_i - y_i + 1\)</span></li>
+<li>Plug the different benefits into the inequality equation e.g Gini index.</li>
+<li><span class="arithmatex">\(G(b) = \frac{\Sigma_{i=1}^{n}\Sigma_{j=1}^{n}|b_i-b_j|}{2n \Sigma_{i=1}^{n}b_i}\)</span></li>
+</ul>
+<h4 id="group-fairness">Group Fairness</h4>
+<h4 id="1-disparate-treatment">1. Disparate Treatment</h4>
 <p>A practice that intentionally disadvantages/discriminates a group based on a protected feature (<em>e.g the pay difference between men and women at the same position, </em>). The treatment or process should not depend on a sensitive feature encoding group membership.</p>
 <p><strong>How to check for Disparate Treatment</strong><br />
 Depending on the context certain attributes are considered to be protected. For hiring decisions in Germany for example the exmployer is not allowed to use certain information e.g (pregnancy status, wish for a child, relationship status). The user of our tool could be presented with all attributes the model is taking into consideration. He could then select every attribute he would consider in this context. On the other hand side it would be possible to define a default list of protected attributes (gender, religion, race) and let their use negatively influence the fairness score.</p>
-<h3 id="2-disparate-impact">2. Disparate Impact</h3>
+<h4 id="2-disparate-impact">2. Disparate Impact</h4>
 <p>Is what occurs when an organization’s actions, policies, or some other aspect of their processes inadvertently result in unintentional discrimination against people who are in a protected class. Even though the policy, action, or item in question would otherwise appear to be neutral. What matters is the outcome, not the intent. Equality in outcomes across groups based on protected features has to be assured.</p>
 <p><strong>How to check for Disparate Impact</strong>  </p>
-<h3 id="3-statistical-parity">3. Statistical Parity</h3>
+<h4 id="3-statistical-parity">3. Statistical Parity</h4>
 <p>In some cases statistical parity is a central goal (and in some it is legally mandated). Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.</p>
-<h3 id="4-envy-free-fairness">4. Envy Free Fairness</h3>
-<p>In an envy free assignment every individual does not want to receive the anothers' assignment. E.g cake cutting where the slices have equal size.</p>
-<h3 id="4-disparate-mistreatment">4. Disparate Mistreatment</h3>
+<blockquote>
+<p><em>“A selection rate for any race, sex, or ethnic group which is less than four-fifths (or 80%) of the rate for the group with the highest rate will generally be regarded by the Federal enforcement agencies as evidence of [discrimination].”</em> - <strong>Equal Employment Opportunity Commission</strong>
+</p>
+</blockquote>
+<p>Certain definitions of fairness, and thus certain fairness metrics, are demonstrably inappropriate in particular circumstances. For example, if there is a legitimate reason for a difference in the rate of positive labels between members of different protected classes (e.g. incidence of breast cancer by gender) then statistical parity between model results for the protected classes would be an in- appropriate measure</p>
+<p>A classifier h satisfies demographic parity under a distribution over (X, A, Y ) if its prediction <span class="arithmatex">\(h(X)\)</span> is statistically independent of the protected attribute A—that is, if <span class="arithmatex">\(P[h(X) = \hat{y} | A=a]=P[h(X)=\hat{y}]\ \forall a,\hat{y}\)</span>. Because <span class="arithmatex">\(\hat{y}∈{0,1}\)</span>, this is equivalent to <span class="arithmatex">\(E[h(X) | A = a] = E[h(X)]\)</span> for all a.</p>
+<p><strong>Equal selection rates across different groups</strong><br/>
+P[y_pred = 1|s<sub>1</sub>] = P[y_pred = 1|s<sub>2</sub>]</p>
+<p><strong>Equality of the prediction accuracy across groups</strong><br/>
+E[l(y_pred, y)|s<sub>1</sub>] = E[l(y_pred, y)|s<sub>2</sub>]</p>
+<h4 id="4-envy-free-fairness">4. Envy Free Fairness</h4>
+<p>In an envy free assignment every individual does not want to receive the anothers' assignment. E.g cake cutting where the slices have equal size.
+The concept of envy free fairness is closesly linked to <strong>pareto optimality</strong>.</p>
+<h4 id="5-disparate-mistreatment">5. Disparate Mistreatment</h4>
 <p>Classifier might make decisions for people belonging to different social groups with different misclassification rates. When the ground truth for historical decisions is available, disproportionately beneficial outcomes for certain sensitive attribute value groups can be justified and explained by means of the ground truth. Therefore, disparate impact would not be a suitable notion of unfairness in such scenarios. Disparate Mistreatment arises when the false positive rates (FPR) and false negative rates (FNR) are substantially different between groups. Avoiding Disparate Mistreatment requires to establish <strong>Group Error Parity</strong> For this the prediction error (FPR, FNR) should be similar across groups and therefore independant of protected feature
 E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
+<h4 id="6-equalized-odds">6. Equalized Odds</h4>
+<p>Demographic parity rules out perfect classifiers whenever Y is correlated with A.</p>
+<p>A classifier h satisfies equalized odds under a distribution over <span class="arithmatex">\((X,A,Y)\)</span> if its prediction <span class="arithmatex">\(h(X)\)</span>is conditionally independent of the protected attribute A given the label Y —that is, if <span class="arithmatex">\(P[h(X)=\hat{y}|A=a,Y =y] = P[h(X)=\hat{y}|Y=y] \forall a, y, and\ \hat{y}\)</span>. Because <span class="arithmatex">\(\hat{y} ∈ {0, 1}\)</span>, this is equivalent to <span class="arithmatex">\(E[h(X)|A=a,Y =y]=E[h(X)|Y=y]\ \forall a,y\)</span>.</p>
+<h2 id="fairness-mechanisms">Fairness Mechanisms</h2>
+<p>Fairness constraints and mechanisms have to be weighted against a loss in accuracy.</p>
+<h3 id="pre-processing">Pre-processing</h3>
+<p>Pre-processing the data.</p>
+<h3 id="in-processing">In-processing</h3>
+<p><span class="arithmatex">\(min_{h' \in H} L(h', D)\)</span><br/>
+<span class="arithmatex">\(s.t\ F(h', D)\)</span><br/>
+Choose the model h' that minimizes the prediction loss while respecting the fairness constraints.</p>
+<h3 id="post-processing">Post-processing</h3>
+<p>Post-processing the classifier’s predictions.</p>
 <h2 id="process">Process</h2>
 <ol>
 <li>Let the user select the variables that he considers to be protected from the training dataset.</li>
@@ -256,61 +545,13 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <li>Compute metrics based on the protected attributes for example group fairness, disparate treatment score, disparate impact score etc.</li>
 <li>Based on the taxonomy an overall fairness score can then be created.</li>
 </ol>
-<h2 id="summaries">Summaries</h2>
-<table>
-<thead>
-<tr>
-<th>Year</th>
-<th>Author</th>
-<th>Title</th>
-<th>Context</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2012</td>
-<td>Martin Glaser</td>
-<td>"Racial profiling is a discriminatory practice that undermines fundamental civil rights while failing to promote law enforcement goals"</td>
-<td>Racial Profiling</td>
-<td>Racial profiling is of unjust nature</td>
-</tr>
-<tr>
-<td>2015</td>
-<td>Amit Datta</td>
-<td>"Automated Experiments on Ad Privacy Settings"</td>
-<td>Advertising</td>
-<td>- Setting the gender to famel results in getting fewer instances of an ad related to high paying jobs than setting it to male.<br/> - The amoral status of an algorithm does not negate its effects on society.<br/>- Manifold interactions can lead to discrimination, whereby not one party can be blamed solely.</td>
-</tr>
-<tr>
-<td>2016</td>
-<td>John Kleinberg</td>
-<td>"Inherent Trade-Offs in the Fair Determination of Risk Scores"</td>
-<td>Law<br/>Healthcare</td>
-<td>- Three fairness notions are developed and it is shown that under non trivial conditions it is impossible to satisfy all three simultaneously.</td>
-</tr>
-<tr>
-<td>2016</td>
-<td>Muhammad Zafar</td>
-<td>"Fairness Beyond Disparate Treatment &amp; Disparate Impact: Learning Classification without Disparate Mistreatment"</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>2019</td>
-<td>Ziad Obermeyer</td>
-<td>Dissecting racial bias in an algorithm used to manage the health of populations</td>
-<td>Healthcare</td>
-<td>- Show that a widely used algorithm, typical of this industry-wide approach and affecting millions of patients, exhibits significant racial bias.<br/>- At a given risk score, Black patients are considerably sicker than White patients, as evidenced by signs of uncontrolled illnesses.</td>
-</tr>
-</tbody>
-</table>
 <h2 id="taxonomy">Taxonomy</h2>
 <table>
 <thead>
 <tr>
 <th><strong>Stage</strong></th>
 <th><strong>Metric</strong></th>
+<th><strong>Target</strong></th>
 <th><strong>Description</strong></th>
 <th><strong>Unit</strong></th>
 <th><strong>Weight</strong></th>
@@ -320,6 +561,7 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <tr>
 <td><strong> <em>1. Business Understanding</em> </strong></td>
 <td><em>Question Fairness</em></td>
+<td>Problem<br/>Context</td>
 <td>Is the question we are trying to answer fair in itself? It would be considered fair to recommend a preferred treatment to a patient, but the application of machine learning for racial profiling would be considered unfair.</td>
 <td>[0,1]</td>
 <td>1/n</td>
@@ -327,6 +569,7 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <tr>
 <td></td>
 <td><em>Context Criticality</em></td>
+<td>Problem<br/>Context</td>
 <td>How important is fairness in the context the model operates in? In a legal context fairness is very important while it is less important for marketing purposes.</td>
 <td>[0,1]</td>
 <td>1/n</td>
@@ -334,6 +577,7 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <tr>
 <td><strong> <em>2. Data Mining</em> </strong></td>
 <td><em>Biased<br/>Data</em></td>
+<td>Dataset</td>
 <td>Does the data possibly contain a bias which was introduced during the data collection? (e.g selection bias)</td>
 <td>{0,1}</td>
 <td>1/n</td>
@@ -341,12 +585,14 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <tr>
 <td><strong> <em>3. Data Cleaning</em> </strong></td>
 <td><em>Class Balance/<br/>Imbalance</em></td>
+<td>Dataset</td>
 <td>To what degree does the sample (training dataset) represent the expected class distribution of the real underlying population?</td>
 <td>[0,1]</td>
 <td>1/n</td>
 </tr>
 <tr>
 <td><strong> <em>4. Data Exploration</em> </strong></td>
+<td>-</td>
 <td>-</td>
 <td>-</td>
 <td>-</td>
@@ -358,17 +604,52 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <td>-</td>
 <td>-</td>
 <td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td><strong> <em>6. Predictive Modeling</em> </strong></td>
+<td><em>Equally Distributed Precision</em></td>
+<td>Model</td>
+<td>What fraction of predictions as a positive class were actually positive. <br/>Precision: TP/(TP+FP)</td>
+<td>[0,1]</td>
+<td>1/n</td>
+</tr>
+<tr>
+<td></td>
+<td><em>Equally Distributed Recall</em></td>
+<td>Model</td>
+<td>What fraction of all positive samples were correctly predicted as positive by the classifier. <br/>Recall: TP/(TP+FN).</td>
+<td>[0,1]</td>
+<td>1/n</td>
+</tr>
+<tr>
+<td></td>
+<td><em>Equally Distributed Specificity</em></td>
+<td>Model</td>
+<td>What fraction of all negative samples are correctly predicted as negative by the classifier.<br/> Specificity: TN/(TN+FP).</td>
+<td>[0,1]</td>
+<td>1/n</td>
+</tr>
+<tr>
+<td></td>
+<td><em>Equally Distributed F1 Score</em></td>
+<td>Model</td>
+<td>F1 = 2*(precision * recall)/(precision + recall)</td>
+<td>[0,1]</td>
+<td>1/n</td>
+</tr>
+<tr>
+<td></td>
 <td><em>Disparate Treatment</em></td>
-<td>Depending on the context certain features (gender, religion, race) are considered to be protected. Does the model use a at least one protected feature for its prediction?</td>
+<td>Model</td>
+<td>Depending on the context certain features (gender, religion, race) are considered to be protected. Is at least one protected feature used during the training process for the model's prediction?</td>
 <td>[0,1]</td>
 <td>1/n</td>
 </tr>
 <tr>
 <td></td>
 <td><em>Disparate Impact</em></td>
+<td>Model</td>
 <td>A practice that intentionally disadvantages/discriminates a group based on a protected feature (e.g the pay difference between men and women at the same position, ). The treatment or process should not depend on a sensitive feature encoding group membership.</td>
 <td>[0,1]</td>
 <td>1/n</td>
@@ -376,6 +657,7 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <tr>
 <td></td>
 <td><em>Disparate Mistreatment</em></td>
+<td>Model</td>
 <td>Check if the prediction error (FPR, FNR) is similar across groups and therefore independant of protected features E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</td>
 <td>[0,1]</td>
 <td>1/n</td>
@@ -383,6 +665,7 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <tr>
 <td></td>
 <td><em>Statistical Parity</em></td>
+<td>Model</td>
 <td>Statistical parity, ensures that the overall proportion of members in a protected group receiving positive (negative) classification are identical to the proportion of the population as a whole.</td>
 <td>[0,1]</td>
 <td>1/n</td>
@@ -393,10 +676,85 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 <td>-</td>
 <td>-</td>
 <td>-</td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<h2 id="references">References</h2>
+<h2 id="sources">Sources</h2>
+<h3 id="papers">Papers</h3>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Author</th>
+<th>Title</th>
+<th>Context</th>
+<th>Content</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2012</td>
+<td>Martin Glaser</td>
+<td>"Racial profiling is a discriminatory practice that undermines fundamental civil rights while failing to promote law enforcement goals"</td>
+<td>Racial Profiling</td>
+<td>Racial profiling is of unjust nature</td>
+<td>-</td>
+</tr>
+<tr>
+<td>2015</td>
+<td>Amit Datta</td>
+<td>"Automated Experiments on Ad Privacy Settings"</td>
+<td>Advertising</td>
+<td>- Setting the gender to famel results in getting fewer instances of an ad related to high paying jobs than setting it to male.<br/> - The amoral status of an algorithm does not negate its effects on society.<br/>- Manifold interactions can lead to discrimination, whereby not one party can be blamed solely.</td>
+<td>-</td>
+</tr>
+<tr>
+<td>2016</td>
+<td>John Kleinberg</td>
+<td>"Inherent Trade-Offs in the Fair Determination of Risk Scores"</td>
+<td>Law<br/>Healthcare</td>
+<td>- Three fairness notions are developed and it is shown that under non trivial conditions it is impossible to satisfy all three simultaneously.</td>
+<td>-</td>
+</tr>
+<tr>
+<td>2016</td>
+<td>Muhammad Zafar</td>
+<td>"Fairness Beyond Disparate Treatment &amp; Disparate Impact: Learning Classification without Disparate Mistreatment"</td>
+<td></td>
+<td></td>
+<td>-</td>
+</tr>
+<tr>
+<td>2019</td>
+<td>Ziad Obermeyer</td>
+<td>Dissecting racial bias in an algorithm used to manage the health of populations</td>
+<td>Healthcare</td>
+<td>- Show that a widely used algorithm, typical of this industry-wide approach and affecting millions of patients, exhibits significant racial bias.<br/>- At a given risk score, Black patients are considerably sicker than White patients, as evidenced by signs of uncontrolled illnesses.</td>
+<td>-</td>
+</tr>
+<tr>
+<td>2018</td>
+<td>Alekh Agarwal</td>
+<td>A Reductions Approach to Fair Classification</td>
+<td>Fairness Mechanisms</td>
+<td>Reduce fair classification to a sequence of cost-sensitive classification problems.</td>
+<td><a href="https://arxiv.org/pdf/1803.02453.pdf">[9]</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="websites">Websites</h3>
+<ul>
+<li>[1]- Sam Levin - <a href="https://www.theguardian.com/technology/2016/sep/08/artificial-intelligence-beauty-contest-doesnt-like-black-people">A beauty contest was judged by AI and the robots didn't like dark skin</a> (2019)</li>
+<li>[2] - Robert Hart - <a href="https://qz.com/1023448/if-youre-not-a-white-male-artificial-intelligences-use-in-healthcare-could-be-dangerous/">If you’re not a white male, artificial intelligence’s use in healthcare could be dangerous</a> (2017)</li>
+<li>[3] - Samuel Gibbs - <a href="https://www.theguardian.com/technology/2015/jul/08/women-less-likely-ads-high-paid-jobs-google-study">Women less likely to be shown ads for high-paid jobs on Google, study shows</a> (2015)</li>
+<li>[4] - Neal Ungeleider - <a href="https://www.fastcompany.com/3019859/colleges-are-using-big-data-to-predict-which-students-will-do-well-before-the">Colleges Are Using Big Data To Predict Which Students Will Do Well–Before They Accept Them</a></li>
+<li>[5] - Julia Angwin - <a href="https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing">There’s software used across the country to predict future criminals. And it’s biased against blacks.</a></li>
+<li>[6] - Randy Rieland - <a href="https://www.smithsonianmag.com/innovation/artificial-intelligence-is-now-used-predict-crime-is-it-biased-180968337/">Artificial Intelligence Is Now Used to Predict Crime. But Is It Biased?</a></li>
+<li>[7] - Jeffrey Dastin - <a href="https://www.reuters.com/article/us-amazon-com-jobs-automation-insight-idUSKCN1MK08G">Amazon scraps secret AI recruiting tool that showed bias against women</a></li>
+<li>[8] - Batya Friedman - <a href="https://nissenbaum.tech.cornell.edu/papers/Bias%20in%20Computer%20Systems.pdf">Bias in Computer Systems</a></li>
+</ul>
               
             </div>
           </div>
@@ -407,7 +765,7 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
         <a href="../Explainability/" class="btn btn-neutral float-right" title="Explainability">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../introduction/" class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -433,7 +791,7 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../../introduction/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../Explainability/" style="color: #fcfcfc">Next &raquo;</a></span>
@@ -442,6 +800,9 @@ E<sub>s=0</sub>[f(x,s), y] = E<sub>s=1</sub>[f(x,s), y]</p>
 </div>
     <script>var base_url = '../..';</script>
     <script src="../../js/theme.js" defer></script>
+      <script src="../../javascripts/config.js" defer></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
       <script src="../../search/main.js" defer></script>
     <script defer>
         window.onload = function () {

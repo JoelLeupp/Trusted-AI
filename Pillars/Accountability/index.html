@@ -49,8 +49,11 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <p class="caption"><span class="caption-text">Home</span></p>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../../documentation/">Documentation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../introduction/">Introduction</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Pillars</span></p>
@@ -63,6 +66,10 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Accountability</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#recommended-actions">Recommended Actions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fact-sheet-components">Fact Sheet Components</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#summary-papers">Summary papers</a>
@@ -73,9 +80,17 @@
     </li>
     </ul>
                     </li>
-                </ul>
-                <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../../Other_aspects/">Additional Aspects</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Tools</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../Tools/IBM-FactSheets/">IBM FactSheets 360</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Releated Research</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../RelatedResearch/">Index</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Code</span></p>
@@ -127,8 +142,54 @@
             <div class="section">
               
                 <h1 id="accountability-and-transparency">Accountability and Transparency</h1>
-<p>Safety, fairness, explainability and robustness are characteristics we demand from an AI system. Yet, to achieve trust in AI, engineering these traits into a final solution will not be enough; it must be accompanied with the ability to measure and communicate the performance levels of a system on each of these dimensions. IBM Research AI is working toward this objective. By demonstrating how to effectively capture events and performance metrics of an AI system on hyperledger fabric, and introduce the concept of factsheets for AI services, which outlines how these metrics can be communicated to end-users as a way of informing their understanding of how the service works, evaluating its functionality, and comprehending its strengths and limitations.</p>
+<p>While there has been a push to make developers more cognizant of the possible repercussions of their algorithms, others point out that public agencies and companies reliant on AI also need to be accountable.</p>
+<p>“There is this emphasis on designers understanding a system. But it’s also about the people administering and implementing the system,” says Jason Schultz, a professor of law at New York University who works with the AI Now Institute on legal and policy issues. "That’s where the rubber meets the road in accountability. A government agency using AI has the most responsibility and they need to understand it, too. If you can’t understand the technology, you shouldn’t be able to use it.”</p>
+<p>To that end, AI Now is promoting the use of “algorithmic impact assessments,” which would require public agencies to disclose the systems they’re using, and allow outside researchers to analyze them for potential problems. When it comes to police departments, some legal experts think it’s also important for them to clearly spell out how they’re using technology and be willing to share that with the local community.</p>
+<p>Which metrics should be used in order to communicate the quality of a model to a </p>
+<p>Mangement requires interpretability to gain comfort and build confidence that they should deploy the system</p>
+<p>Greater visibility uncovers unknown vulnerabilities and flaws.</p>
+<p>How many people would trust an AI algorithm giving a diagnosis rather than a doctor without having some form of clarity over how the algorithm came up with the conclusion? Although the AI diagnosis may be more accurate, a lack of explainability may lead to a lack of trust.</p>
+<p>Why does this enable governance?</p>
+<p>Increased transparency provides information for AI consumers to better understand how an AI model or service was created and build in order to determine if the model is appropriate for their specific situation or need.</p>
+<p>Safety, fairness, explainability and robustness are characteristics we demand from an AI system. Yet, to achieve trust in AI, engineering these traits into a final solution will not be enough; it must be accompanied with the ability to measure and communicate the performance levels of a system on each of these dimensions. By demonstrating how to effectively capture events and performance metrics of an AI system on hyperledger fabric, and introduce the concept of factsheets for AI services, which outlines how these metrics can be communicated to end-users as a way of informing their understanding of how the service works, evaluating its functionality, and comprehending its strengths and limitations.</p>
 <p>Many decision making processes can be suported by machine learning models. For example if someone should go to jail or should be released until their trial. Or if an employee will perform well and therefore should be hired or not? The involvment of the machine can reduce the humane workload, ncrease accuracy and enlarge fairness.</p>
+<p>Every person involved in the creation of AI at any step is accountable for considering the system’s impact in the world, as are the companies invested in its development.</p>
+<p><em>Transparency</em> =&gt; 
+Information that lets you know what your system is doing. If you are more transparent as a company and openly communicate why certain design decisions were taken end users better understand what has been done.</p>
+<h2 id="recommended-actions">Recommended Actions</h2>
+<ol>
+<li>
+<p>Make company policies clear and accessible to design and development teams from day one so that no one is confused about issues of responsibility or accountability. As an AI designer or developer, it is your responsibility to know.</p>
+</li>
+<li>
+<p>Understand where the responsibility of the company/software ends. You may not have control over how data or a tool will be used by a user, client, or other external source.</p>
+</li>
+<li>
+<p>Keep detailed records of your design processes and decision making. Determine a strategy for keeping records during the design and development process to encourage best practices and encourage iteration.</p>
+</li>
+<li>
+<p>Adhere to your company’s business conduct guidelines. Also, understand national and international laws, regulations, and guidelines that your AI may have to work within. You can find other related resources in the IEEE Ethically Aligned Design Document [1].</p>
+</li>
+</ol>
+<h2 id="fact-sheet-components">Fact Sheet Components</h2>
+<ul>
+<li>Model Name<br/></li>
+<li>Overview<br/></li>
+<li>Purpose<br/></li>
+<li>Intended Domain<br/></li>
+<li>Training Data<br/></li>
+<li>Input<br/></li>
+<li>Output<br/></li>
+<li>Metrics<br/></li>
+<li>Bias<br/></li>
+<li>Robustness<br/> </li>
+<li>Domain Shift<br/></li>
+<li>Test Data<br/></li>
+<li>Optimal Conditions<br/></li>
+<li>Poor Conditions<br/></li>
+<li>Explanation<br/></li>
+<li>Contact Information<br/></li>
+</ul>
 <h2 id="summary">Summary</h2>
 <h2 id="summary-papers">Summary papers</h2>
 <p>Arnold et al. 2019: Arnold, M.; Bellamy, R. K. E.; Hind,
@@ -155,7 +216,42 @@ Sheet for the updated model. FactSheets can be consumed</p>
 ernance adherence or model performance, or by the ulti-
 mate users of a model to provide increased transparency.</p>
 <h2 id="links">Links</h2>
+<p>[1] ... IBM 2019 - Accountability - https://www.ibm.com/design/ai/ethics/accountability/</p>
 <h2 id="taxonomy-and-metrics">Taxonomy and Metrics</h2>
+<table>
+<thead>
+<tr>
+<th>metric</th>
+<th>target</th>
+<th>description</th>
+<th>unit</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Train-Test-Split</td>
+<td>Data</td>
+<td>Is the split into training and testing data appropriate </td>
+<td> [0,1]</td>
+<td>0.2</td>
+</tr>
+<tr>
+<td>Level of Human Involvement</td>
+<td>Model</td>
+<td>Is the AI to be embedded in a human decision-making process, is it making decisions on its own, or is it a hybrid?</td>
+<td> {1/3, 2/3, 3/3}</td>
+<td> 0.2</td>
+</tr>
+<tr>
+<td>Fact Sheet Availability</td>
+<td></td>
+<td> Does the model come with a FactSheet?</td>
+<td>{0, 1}</td>
+<td>0.2 </td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div>
@@ -201,6 +297,9 @@ mate users of a model to provide increased transparency.</p>
 </div>
     <script>var base_url = '../..';</script>
     <script src="../../js/theme.js" defer></script>
+      <script src="../../javascripts/config.js" defer></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
       <script src="../../search/main.js" defer></script>
     <script defer>
         window.onload = function () {
