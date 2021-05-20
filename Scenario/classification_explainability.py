@@ -151,14 +151,14 @@ feat_labels=df_X.columns
 importances=rnd_clf.feature_importances_
 indices=np.argsort(importances)[::-1]
 
-for f in range(X_train.shape[1]):
-    print("%2d) %-*s %f" % (f + 1, 30,feat_labels[indices[f]],importances[indices[f]]))
+# for f in range(X_train.shape[1]):
+#     print("%2d) %-*s %f" % (f + 1, 30,feat_labels[indices[f]],importances[indices[f]]))
 
 relevance = pd.DataFrame({"relevance":importances[indices]}, feat_labels[indices])
 relevance["relevance"].plot.bar()
 
 #%% 
-remove highly correlated features
+#remove highly correlated features
 
 corr_matrix = df_comb.corr().abs()
 

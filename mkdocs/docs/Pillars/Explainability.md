@@ -146,6 +146,8 @@ dimensions of interpretability:
 
 (p.7) Monotonicity Constraints in Classification Models. Users are more like to trust and accept classification models when they  are built by respecting monotonicity constraints in  the  application domain. A monotonic  relationship  between  a  feature and  the  class  attribute  occurs  when  increasing  the  value  of  the feature  tends  to  either  monotonically  increase  or  monotonically decrease the probability of an instance’s membership to a class
 
+
+
 ## Taxonomy
 
 Construct a set of measurable metrict which can be used to calculate a score that should indicate how good the explainability of a model is. For The calculation of the score differnt weights can be assigned to the metrics. 
@@ -159,6 +161,27 @@ metrics where 5 is the best and 1 the worst:
 
 (new metric: uncorrelated dataset?)
 
+### Model Type Scoring
+
+There exist many different machine learning model and so does the interpretability of those models. The difficulty to explain a 
+model decison is linked very closesly with the chosen model. 
+
+Here a subjective score for the different learning algorithm classes based on the difficulty to decipher the decision of the model:
+
+*well interpretable models*
+
+*	Linear Regression: The weights of a linear model can be interpreted and 
+the importance of a feature can be measured by the absolute value of its t-statistic.
+
+*	
+
+
+### Monotonicity
+
+We can test a group of features for monotnicity constrainst with Verification-based testing.
+
+
+[see this paper for algo](https://arxiv.org/pdf/2002.12278.pdf)
 
 <style>
 table {
