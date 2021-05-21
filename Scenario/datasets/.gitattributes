@@ -1,0 +1,4 @@
+compas-recidivism/cox-violent-parsed_filt.csv filter=lfs diff=lfs merge=lfs -text
+compas-recidivism/propublica_data_for_fairml.csv filter=lfs diff=lfs merge=lfs -text
+compas-recidivism/compas-scores-raw.csv filter=lfs diff=lfs merge=lfs -text
+compas-recidivism/cox-violent-parsed.csv filter=lfs diff=lfs merge=lfs -text
