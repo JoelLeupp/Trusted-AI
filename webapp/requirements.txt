@@ -1,0 +1,4 @@
+Flask~=2.0.0
+pandas==1.2.4
+Werkzeug~=2.0.0
+aif360==0.4.0

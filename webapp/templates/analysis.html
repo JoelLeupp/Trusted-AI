@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+{% endblock %}
+
+{% block title %}Trust In AI{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm" style="background-color: grey">
+    	<i class="bi bi-collection"></i><br/>
+    	<h3>Dataset</h3>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#dataset_info">Simple collapsible</button>
+    </div>
+
+    <div class="col-sm">
+    	<i class="bi bi-collection"></i>
+    	<h3>Model</h3>
+    </div>
+
+    <div class="col-sm">
+    	<i class="bi bi-collection"></i>
+    	<h3>Factsheet</h3>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div id="demo" class="collapse">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  </div>
+</div>
+
+<div class="container" id="dataset_info">
+	<div class="row">
+		<!--<ul>
+	        {% for file in files %}
+	        <li>
+	            {{ file }}
+	        </li>
+	       {% endfor %}
+		</ul>-->
+        <h2>
+
+        </h2>
+        {% for feature in features: %}
+            {{ feature }}
+        {% endfor %}
+   		{{ table.to_html(index=True)|safe }}
+	</div>
+	<br/>
+	<div class="row" style="background-color: green">
+		Fairness
+	</div>
+
+	<div class="row" style="background-color: red">
+		Accountability
+	</div>
+
+	<div class="row" style="background-color: blue">
+		Robustness
+	</div>
+
+	<div class="row" style="background-color: blue">
+		Result
+	</div>
+</div>
+
+{% endblock %}

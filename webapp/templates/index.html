@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Trust In AI{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+    	<i class="bi bi-collection"></i>
+    	<label for="male">Dataset</label>
+    	<input type=file name=dataset accept="text/csv">
+    </div>
+    <div class="col-sm">
+    	<label for="male">Model</label>
+    	<input type=file name=model>
+    </div>
+    <div class="col-sm">
+    	<label for="male">Factsheet</label>
+    	<input type=file name=factsheet accept="text/json">
+    </div>
+    	<input type=submit value="Analyze" >
+  </div>
+</div>
+</form>
+{% endblock %}

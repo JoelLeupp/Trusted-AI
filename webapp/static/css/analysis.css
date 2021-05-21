@@ -1,0 +1,42 @@
+table {
+    border:none !important;
+}
+
+th {
+    border:none;
+}
+
+td {
+    border:none !important;
+    width: 5em;
+    line-height: 2em;
+    background-color: #fff;
+    font-weight: bold;
+}
+
+tr {
+    border:none !important;
+    text-align: right;
+}
+
+thead
+{
+    border-bottom: 1px solid #000;
+}
+
+tr:nth-child(even), tr:nth-child(even) td  {
+
+    background-color: rgba(245, 245, 245, 0.8) !important
+}
+
+tr:nth-child(odd) {
+    background-color: #FFFFFF !important;
+}
+
+tbody tr:hover, tbody tr:hover td {
+    background-color: rgba(135, 206, 250, 0.2) !important;
+}
+
+tr:hover td {
+    background-color: transparent;
+}

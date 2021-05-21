@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Trust In AI{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for analysis in analyses: %}
+        <li>
+            <a href='/analysis/{{ analysis }}'>{{ analysis }}</a>
+        </li>
+       {% endfor %}
+   </ul>
+{% endblock %}
