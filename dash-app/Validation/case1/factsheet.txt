@@ -1,0 +1,8 @@
+{
+  "factsheet_ID" : 1,
+  "name": "Case 1",
+  "description": "Random forest classifier (example code from Alberto)",
+  "testsize": 0.2,
+  "question_is_fair": false,
+  "data_is_normalized": true
+}
