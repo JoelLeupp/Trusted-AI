@@ -3,6 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import base64
+import os
 import pandas as pd
 import io
 import datetime
@@ -10,13 +11,16 @@ import dash
 from dash.dependencies import Input, Output, State
 import dash_html_components as html
 import dash_table
+import json
+import pickle
+
 
 
 # must add this line in order for the app to be deployed successfully on Heroku
 from app import server
 from app import app
 # import all pages in the app
-from apps import home, upload_train_data,upload_test_data, visualisation, methodology
+from apps import home, upload_train_data, visualisation
 
 
 
@@ -24,7 +28,6 @@ navbar = dbc.Navbar(
     dbc.Container(
         [
             html.A(
-                # Use row and col to control vertical alignment of logo / brand
                 dbc.Row(
                     [
                         dbc.Col(dbc.NavbarBrand("Trusted AI Algorithm", className="ml-2")),
@@ -35,14 +38,6 @@ navbar = dbc.Navbar(
                 href="/home",
             ),
             dbc.NavbarToggler(id="navbar-toggler2"),
-            dbc.Collapse(
-                dbc.Nav(
-                    # right align dropdown menu with ml-auto className
-                #    [dropdown], className="ml-auto", navbar=True
-                ),
-                id="navbar-collapse2",
-                navbar=True,
-            ),
         ]
     ),
     color="dark",
@@ -81,20 +76,59 @@ def parse_contents(contents, filename):
     elif 'pkl' in filename:
             # Assume that the user uploaded an excel file
             df = pd.read_pickle(io.BytesIO(decoded))
-
+    df = df.describe().reset_index()
     return html.Div([
-        html.H5(filename),
+        html.H5("Statistics regarding "+filename, className="text-center", style={"color":"DarkBlue"}),
         dash_table.DataTable(
             data=df.to_dict('records'),
-            columns=[{'name': i, 'id': i} for i in df.columns]
+            columns=[{'name': i, 'id': i} for i in df.columns],
+            style_table={'overflowX': 'scroll'},
         ),
-
-        html.Hr(),  # horizontal line
-
-        # For debugging, display the raw contents provided by the web browser
-        
+        html.Hr(),
     ])
 
+def save_file(name, content):
+    data = content.encode("utf8").split(b";base64,")[1]
+    with open(os.path.join(os.getcwd(), "uploaded_files", name), "wb") as fp:
+        fp.write(base64.decodebytes(data))
+
+def save_model(name, content):
+    content_type, content_string = content.split(',')
+    decoded = base64.b64decode(content_string)
+    df = pd.read_pickle(io.BytesIO(decoded))
+    pickle.dump(df, open(os.path.join(os.getcwd(), "uploaded_files", name), 'wb'))
+
+def save_factsheet(regularization):
+    factsheet = { 'regularization': regularization}
+    with open(os.path.join(os.getcwd(), "uploaded_files","factsheet.json"), "w",  encoding="utf8") as fp:
+        json.dump(factsheet, fp, indent=4)
+    
+@app.callback(Output('hidden-div', 'children'),
+              [Input('trustscore-button', 'n_clicks'),
+               Input('upload-model', 'contents'),
+               Input('upload-train-data', 'contents'),
+               Input('upload-test-data', 'contents'),
+               State('regularization', 'value'),
+               State('upload-train-data', 'contents'),
+               State('upload-test-data', 'contents'),
+               State('upload-model', 'contents')
+               ])
+def calculate_trust_score(n_clicks, modeltrigger, traintrigger, testtrigger, regularization, train, test, model):
+    trigger = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+    if trigger == "trustscore-button":
+        if n_clicks is None:
+            return ""
+        else:
+            save_factsheet(regularization)
+            if train is None:
+                return html.H4("Please upload the train data.", style={"color":"Red"},  className="text-center")
+            elif test is None:
+                return html.H4("Please upload the test data.", style={"color":"Red"},  className="text-center")
+            elif model is None:
+                return html.H4("Please upload the model.", style={"color":"Red"},  className="text-center")
+            return dcc.Location(pathname="/visualisation", id="someid_doesnt_matter")
+    else:
+        return ""
 
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
@@ -103,37 +137,51 @@ def display_page(pathname):
         return upload_train_data.layout
     elif pathname == '/visualisation':
         return visualisation.layout
-    elif pathname == '/upload_test_data':
-        return upload_test_data.layout
-    elif pathname == '/methodology':
-        return methodology.layout
     else:
         return home.layout
+
+@app.callback([Output('model-uploaded-div', 'children'),
+               Output('upload-model', 'children')],
+              [Input('upload-model', 'contents'),
+              State('upload-model', 'filename')])
+def upload_model_callback(content, name):
+    if content is not None:
+        save_model(name, content)
+        return [html.H4("Model is uploaded.", style={"color":"Green"}),  html.Div(['Drag and Drop or Select a Different File (Overwrites the Previous One)'])]
+    return [None,  html.Div(['Drag and Drop or Select Files'])]
     
 @app.callback([Output('output-train-data-upload', 'children'),
-              Output('hidden-button-train', 'style')],
+              Output('upload-train-data', 'children')],
               [Input('upload-train-data', 'contents'),
               State('upload-train-data', 'filename')])
-def update_output(list_of_contents, list_of_names):
-    if list_of_contents is not None:
-        children = [
-            parse_contents(c, n) for c, n in
-            zip(list_of_contents, list_of_names)]
-        return [children, {'display':'inline'}]
-    return [None, {'display':'none'}]
+def upload_train_callback(content, name):
+    if content is not None:
+        children = [parse_contents(content, name)]
+        save_file(name, content)
+        return [children, html.Div(['Drag and Drop or Select a Different File (Overwrites the Previous One)'])]
+    return [None, html.Div(['Drag and Drop or Select Files'])]
 
 @app.callback([Output('output-test-data-upload', 'children'),
-              Output('hidden-button-test', 'style')],
+              Output('upload-test-data', 'children')],
               [Input('upload-test-data', 'contents'),
               State('upload-test-data', 'filename')])
-def update_output(list_of_contents, list_of_names):
-    if list_of_contents is not None:
-        children = [
-            parse_contents(c, n) for c, n in
-            zip(list_of_contents, list_of_names)]
-        return [children, {'display':'inline'}]
-    return [None, {'display':'none'}]
+def upload_test_callback(content, name):
+    if content is not None:
+        children = [parse_contents(content, name)]
+        save_file(name, content)
+        return [children, html.Div(['Drag and Drop or Select a Different File (Overwrites the Previous One)'])]
+    return [None, html.Div(['Drag and Drop or Select Files'])]
 
+@app.callback([Output('spider', 'style'),
+              Output('spider_pillars', 'style'),
+              Output('bar', 'style'),
+              Output('bar_pillars', 'style')],
+              [Input('plot_type', 'value')])
+def show_the_graphs(value):
+    if value == "spider":
+        return [{'display': 'block'}, {'display': 'block'}, {'display': 'none'}, {'display': 'none'}]
+    else:
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'block'}]
 
 
 if __name__ == '__main__':
