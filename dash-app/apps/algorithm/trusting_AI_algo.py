@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import json
 from math import pi
+import sklearn.metrics as metrics
 
 ## get inputs
 def get_case_inputs(case):
@@ -38,6 +39,7 @@ def get_case_inputs(case):
 # define model inputs
 # choose scenario case (case1,case1,..)
 case = "case1"
+np.random.seed(1)
 
 # load case inputs
 factsheet, model, X_test, X_train, y_test, y_train = get_case_inputs(case)
@@ -90,16 +92,16 @@ config = {
 # functions for fairness score
 
 def score_Statistical_Parity():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Disparate_Mistreatment():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Class_Imbalance():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Biased_Data():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def calc_fairness_score():
     
@@ -115,16 +117,16 @@ def calc_fairness_score():
 # functions for explainability score
 
 def score_Algorithm_Class():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Correlated_Features():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Model_Size():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Feature_Relevance():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def calc_explainability_score():
     
@@ -139,10 +141,10 @@ def calc_explainability_score():
 # functions for robustness score
 
 def score_Confidence_Score():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Class_Specific_Metrics():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def calc_robustness_score():
     
@@ -155,19 +157,19 @@ def calc_robustness_score():
 # functions for methodology score
 
 def score_Normalization():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Test_F1_score():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Train_Test_Split():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Regularization():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def score_Test_Accuracy():
-    return np.random.randint(1,5)
+    return np.random.randint(1,6)
 
 def calc_methodology_score():
     
@@ -199,3 +201,34 @@ def get_final_score():
         final_scores[pillar] = round(np.sum(weighted_scores),1)
 
     return final_scores, scores
+
+def get_perfomance_metric(clf, y_test, X_test):
+    
+    y_true =  y_test.values.flatten()
+    y_pred = clf.predict(X_test)
+    y_pred_proba = clf.predict_proba(X_test)
+    labels = np.unique(np.array([y_pred,y_true]).flatten())
+    
+    performance_metrics = {
+        "accuracy" :  metrics.accuracy_score(y_true, y_pred),
+        "global recall" :  metrics.recall_score(y_true, y_pred, labels=labels, average="micro"),
+        "class weighted recall" : metrics.recall_score(y_true, y_pred,average="weighted"),
+        "global precision" : metrics.precision_score(y_true, y_pred, labels=labels, average="micro"),
+        "class weighted precision" : metrics.precision_score(y_true, y_pred,average="weighted"),
+        "global f1 score" :  metrics.f1_score(y_true, y_pred,average="micro"),
+        "class weighted f1 score" :  metrics.f1_score(y_true, y_pred,average="weighted"),
+        "cross-entropy loss" : metrics.log_loss(y_true, y_pred_proba),
+        "ROC AUC" : metrics.roc_auc_score(y_true, y_pred_proba,average="weighted", multi_class='ovr')#one vs rest method
+        }
+    
+    # for name, value in performance_metrics.items():
+    #     print("%1s: %2.2f" %(name, value))
+    
+    return performance_metrics
+
+def get_performance_table():
+    performance_metrics = get_perfomance_metric(model, y_test, X_test)
+    df = pd.DataFrame(performance_metrics, index=["Performance Metrics"]).transpose()
+    df["Performance Metrics"] = df["Performance Metrics"].round(2)
+    df = df.loc[["accuracy","class weighted recall","class weighted precision","class weighted f1 score","cross-entropy loss","ROC AUC"]]
+    return df

@@ -14,8 +14,10 @@ import seaborn as sn
 import pandas as pd
 import json
 from math import pi
+import dash_table
 from apps.algorithm.trusting_AI_algo import get_final_score
 import dash_bootstrap_components as dbc
+from apps.algorithm.trusting_AI_algo import get_performance_table
 
 children=[
      dbc.Col(
@@ -35,8 +37,24 @@ children=[
 
 # visualize final score
 final_score, results = get_final_score()
+performance =  get_performance_table().transpose()
 pillars = list(final_score.keys())
 values = list(final_score.values())
+
+performance_table = dash_table.DataTable(
+                        id='table',
+                        columns=[{"name": i, "id": i} for i in performance.columns],
+                        data=performance.to_dict('records'),
+                         style_table={
+                'width': '70%',
+                'margin-left': 'auto', 
+                'margin-right': 'auto'
+            }
+                    )
+children.append(html.Br())
+children.append(html.H5("Performance metrics", style={"width": "70%","text-align": "center", "margin-right": "auto", "margin-left": "auto" }))
+children.append(performance_table)
+
 spider_plt = px.line_polar(r=values, theta=pillars, line_close=True, title='Trusting AI Final Score')
 spider_plt.update_layout(title_x=0.5)
 children.append(dcc.Graph(id='spider',figure=spider_plt, style={'display': 'none'}))
