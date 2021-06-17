@@ -39,7 +39,7 @@ def get_case_inputs(case):
 # define model inputs
 # choose scenario case (case1,case1,..)
 case = "case1"
-np.random.seed(1)
+np.random.seed(6)
 
 # load case inputs
 factsheet, model, X_test, X_train, y_test, y_train = get_case_inputs(case)
@@ -64,10 +64,12 @@ config = {
   },
   "weights": {
     "fairness": {
-      "Statistical_Parity": 0.25,
-      "Disparate_Mistreatment": 0.25,
-      "Class_Imbalance": 0.25,
-      "Biased_Data": 0.25
+      "Statistical_Parity": 1/6,
+      "Disparate_Mistreatment": 1/6,
+      "Class_Imbalance": 1/6,
+      "Biased_Data": 1/6,
+      "Disparate_Treatment" : 1/6,
+      "Disparate_Impact": 1/6
     },
     "explainability": {
       "Algorithm_Class": 0.55,
@@ -76,18 +78,22 @@ config = {
       "Feature_Relevance": 0.15
     },
     "robustness": {
-      "Confidence_Score": 0.5,
-      "Class_Specific_Metrics": 0.5
+      "Confidence_Score": 0.25,
+      "Clique_Method"    : 0.25,
+        "Loss_Sensitivity"  : 0.25, 
+        "CLEVER_Score"   : 0.25,
     },
     "methodology": {
-      "Normalization": 0.2,
-      "Test_F1_score": 0.2,
-      "Train_Test_Split": 0.2,
-      "Regularization": 0.2,
-      "Test_Accuracy": 0.2
+      "Normalization":  1/6,
+      "Treatment_of_Corrupt_Values":  1/6,
+      "Train_Test_Split":  1/6,
+      "Regularization":  1/6,
+      "Treatment_of_Categorical_Features":  1/6,
+      "Feature_Filtering": 1/6
     }
   }
 }
+
 
 # functions for fairness score
 
@@ -108,6 +114,8 @@ def calc_fairness_score():
     output = dict(
         Statistical_Parity     = score_Statistical_Parity(),
         Disparate_Mistreatment = score_Disparate_Mistreatment(),
+        Disparate_Treatment = score_Disparate_Mistreatment(),
+        Disparate_Impact = score_Disparate_Mistreatment(),
         Class_Imbalance        = score_Class_Imbalance(),
         Biased_Data            = score_Biased_Data()
                  )
@@ -150,7 +158,9 @@ def calc_robustness_score():
     
     output = dict(
         Confidence_Score          = score_Confidence_Score(),
-        Class_Specific_Metrics   = score_Class_Specific_Metrics()
+        Clique_Method    = score_Class_Specific_Metrics(),
+        Loss_Sensitivity   = score_Class_Specific_Metrics(),
+        CLEVER_Score   = score_Class_Specific_Metrics()
                  )
     return output
 
@@ -175,10 +185,11 @@ def calc_methodology_score():
     
     output = dict(
         Normalization    = score_Normalization(),
-        Test_F1_score    = score_Test_F1_score(),
+        Treatment_of_Corrupt_Values     = score_Test_F1_score(),
         Train_Test_Split = score_Train_Test_Split(),
         Regularization   = score_Regularization(),
-        Test_Accuracy    = score_Test_Accuracy()
+        Feature_Filtering    = score_Test_Accuracy(),
+        Treatment_of_Categorical_Features  = score_Test_Accuracy()
                  )
     return output
 

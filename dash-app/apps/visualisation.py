@@ -63,11 +63,12 @@ my_palette = ['yellow','cornflowerblue','lightgrey','lightseagreen']
 spider_plt_pillars=[]
 for n, (pillar , sub_scores) in enumerate(results.items()):
     title = pillar
-    categories = list(sub_scores.keys())
+    categories = list(map(lambda x: x.replace("_",' '), sub_scores.keys())) 
     val = list(sub_scores.values())
     spider_plt_pillar = px.line_polar(r=val, theta=categories, line_close=True, title=title)
     spider_plt_pillar.update_traces(fill='toself', fillcolor=my_palette[n], marker_color='rgb(250,00,00)',marker_line_width=1.5, opacity=0.6)
     spider_plt_pillar.update_layout(title_x=0.5)
+    spider_plt_pillar.update_yaxes(range=[0,5],autorange=False)
 
     spider_plt_pillars.append(dcc.Graph(id=pillar, figure=spider_plt_pillar, style={'display': 'inline-block','width': '50%'}))
 
@@ -85,7 +86,7 @@ children.append(dcc.Graph(id='bar',figure=bar_chart, style={'display': 'block'})
 bar_chart_pillars=[]
 for n, (pillar , sub_scores) in enumerate(results.items()):
     title = pillar
-    categories = list(sub_scores.keys())
+    categories = list(map(lambda x: x.replace("_",' '), sub_scores.keys())) 
     val = list(sub_scores.values())
     bar_chart_pillar = go.Figure(data=[go.Bar(x=categories, y=values, marker_color=my_palette[n])])
     bar_chart_pillar.update_layout(title_text=title, title_x=0.5)
