@@ -64,19 +64,28 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
+
 def parse_contents(contents, filename):
     content_type, content_string = contents.split(',')
 
     decoded = base64.b64decode(content_string)
     
-    if 'csv' in filename:
-            # Assume that the user uploaded a CSV file
-            df = pd.read_csv(
-                io.StringIO(decoded.decode('utf-8')))
-    elif 'pkl' in filename:
-            # Assume that the user uploaded an excel file
-            df = pd.read_pickle(io.BytesIO(decoded))
-    df = df.describe().reset_index()
+    try:
+        if 'csv' in filename:
+                # Assume that the user uploaded a CSV file
+                df = pd.read_csv(
+                    io.StringIO(decoded.decode('utf-8')))
+        elif 'pkl' in filename:
+                # Assume that the user uploaded an excel file
+                df = pd.read_pickle(io.BytesIO(decoded))
+        df = df.describe().reset_index()
+        
+    except Exception as e:
+        print(e)
+        return html.Div([
+            'There was an error processing this file.'
+        ])
+    
     return html.Div([
         html.H5("Statistics regarding "+filename, className="text-center", style={"color":"DarkBlue"}),
         dash_table.DataTable(
@@ -108,18 +117,18 @@ def save_factsheet(regularization):
                Input('upload-model', 'contents'),
                Input('upload-train-data', 'contents'),
                Input('upload-test-data', 'contents'),
-               State('regularization', 'value'),
+               # State('regularization', 'value'),
                State('upload-train-data', 'contents'),
                State('upload-test-data', 'contents'),
                State('upload-model', 'contents')
                ])
-def calculate_trust_score(n_clicks, modeltrigger, traintrigger, testtrigger, regularization, train, test, model):
+def calculate_trust_score(n_clicks, modeltrigger, traintrigger, testtrigger, train, test, model):
     trigger = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
     if trigger == "trustscore-button":
         if n_clicks is None:
             return ""
         else:
-            save_factsheet(regularization)
+            # save_factsheet(regularization)
             if train is None:
                 return html.H4("Please upload the train data.", style={"color":"Red"},  className="text-center")
             elif test is None:
@@ -185,4 +194,18 @@ def show_the_graphs(value):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
+
+
+#debug
+# with open("Validation/case1/X_test.pkl", "rb") as file:
+#     encoded_string = base64.b64encode(file.read()).decode()
+    
+# encoded_string.encode("utf8")
+
+# encoded_string.encode("utf8").split(b";base64,")[1]
+# encoded_string.encode("utf8").split(b";base64,")
+
+# data = encoded_string.encode("utf8")
+# with open(os.path.join(os.getcwd(), "uploaded_files", "test.pkl"), "wb") as fp:
+#       fp.write(base64.decodebytes(data))

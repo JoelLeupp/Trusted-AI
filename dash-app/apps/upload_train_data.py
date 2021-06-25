@@ -74,11 +74,11 @@ layout = html.Div([
         }
     ),
     html.Div(id="model-uploaded-div", className="text-center"),
-    dbc.Col(html.H3("4. Is regularization used during the training?", className="text-center")
-                    , className="mb-2"),
-    dbc.Col(dcc.RadioItems(id='regularization', options=[{'label': 'Yes', 'value': 1},{'label': 'No', 'value': 0},],value=1,
-                           labelStyle={'display': 'inline-block', "marginRight": "20px", "marginLeft": "10px"}, className="text-center", inputStyle={'display': 'inline-block', "marginRight": "10px", })
-                    , className="text-center"),
+    # dbc.Col(html.H3("4. Is regularization used during the training?", className="text-center")
+    #                 , className="mb-2"),
+    # dbc.Col(dcc.RadioItems(id='regularization', options=[{'label': 'Yes', 'value': 1},{'label': 'No', 'value': 0},],value=1,
+    #                        labelStyle={'display': 'inline-block', "marginRight": "20px", "marginLeft": "10px"}, className="text-center", inputStyle={'display': 'inline-block', "marginRight": "10px", })
+    #                 , className="text-center"),
     html.Div(html.Span(id="hidden-div")),
     html.Div(dbc.Button("Calculate Trust Score",  id='trustscore-button', color="primary", className="mt-3"), className="text-center"),
     

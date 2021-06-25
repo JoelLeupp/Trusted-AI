@@ -125,16 +125,16 @@ def calc_fairness_score():
 # functions for explainability score
 
 def score_Algorithm_Class():
-    return np.random.randint(1,6)
+    return 5
 
 def score_Correlated_Features():
-    return np.random.randint(1,6)
+    return 2
 
 def score_Model_Size():
-    return np.random.randint(1,6)
+    return 2
 
 def score_Feature_Relevance():
-    return np.random.randint(1,6)
+    return 3
 
 def calc_explainability_score():
     
