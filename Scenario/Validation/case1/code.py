@@ -118,6 +118,8 @@ df_Y = df_comb.iloc[:,-1: ]
 # Split the datast in training and testing set
 X_train, X_test, y_train, y_test = train_test_split(df_X,df_Y, test_size=0.20, random_state=42)
 
+train_data, test_data = train_test_split(df_comb, test_size=0.20, random_state=42)
+
 #Create a Random Forest classifier
 rnd_clf = RandomForestClassifier()
 
@@ -134,3 +136,7 @@ rnd_clf.fit(X_train, y_train)
 #C:\Users\Besitzer\Documents\GitHub\Trusted-AI\Scenario\Validation\case1
 filename = 'model.sav'
 pickle.dump(rnd_clf, open(filename, 'wb'))
+
+
+pickle.dump(train_data, open("train_data.pkl", 'wb'))
+pickle.dump(test_data, open("test_data.pkl", 'wb'))

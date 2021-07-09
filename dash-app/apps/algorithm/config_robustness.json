@@ -1,0 +1,16 @@
+{
+  "parameters": {
+    "score_Confidence_Score": {
+      "parameter_XY": {
+        "value": "The value of the parameter_XY",
+        "description": "The description of the paramter and its impact"
+      }
+    }
+  },
+  "weights": {
+    "Confidence_Score": 0.25,
+      "Clique_Method"    : 0.25,
+        "Loss_Sensitivity"  : 0.25, 
+        "CLEVER_Score"   : 0.25
+  }
+}

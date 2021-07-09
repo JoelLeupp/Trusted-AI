@@ -1,0 +1,43 @@
+{
+  "fairness": {
+    "par1": 0,
+    "par2": 0
+  },
+  "explainability": {
+    "par1": 0,
+    "par2": 0
+  },
+  "robustness": {
+    "par1": 0,
+    "par2": 0
+  },
+  "methodology": {
+    "par1": 0,
+    "par2": 0
+  },
+  "weights": {
+    "fairness": {
+      "Statistical_Parity": 0.25,
+      "Disparate_Mistreatment": 0.25,
+      "Class_Imbalance": 0.25,
+      "Biased_Data": 0.25
+    },
+    "explainability": {
+      "Algorithm_Class": 0.55,
+      "Correlated_Features": 0.15,
+      "Model_Size": 0.15,
+      "Feature_Relevance": 0.15
+    },
+    "robustness": {
+      "Confidence_Score": 0.5,
+      "Class_Specific_Metrics": 0.5
+    },
+    "methodology": {
+      "Normalization": 0.2,
+      "Test_F1_score": 0.2,
+      "Train_Test_Split": 0.2,
+      "Regularization": 0.2,
+      "Test_Accuracy": 0.2
+    }
+  }
+}

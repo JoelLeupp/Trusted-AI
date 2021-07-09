@@ -1,0 +1,38 @@
+{
+  "parameters": {
+    "score_Algorithm_Class": {
+      "clf_type_score": {
+        "value": {
+          "RandomForestClassifier": 3,
+          "KNeighborsClassifier": 3,
+          "SVC": 2,
+          "GaussianProcessClassifier": 3,
+          "DecisionTreeClassifier": 4,
+          "MLPClassifier": 1,
+          "AdaBoostClassifier": 3,
+          "GaussianNB": 3.5,
+          "QuadraticDiscriminantAnalysis": 3,
+          "LogisticRegression": 3,
+          "LinearRegression": 3.5
+        },
+        "description": "Mapping of Learning techniques to the level of explainability based on on literature research and qualitative analysis of each learning technique. For more information see gh-pages/explainability/taxonomy"
+      }
+    },
+    "score_Feature_Relevance": {
+      "scale_factor": {
+        "value": 1.5,
+        "description": "Used for the calculation to detect outliers in a dataset with the help of quartiels and the Interquartile Range (Q3-Q1) for example the lower bound for outliers is then calculated as follows: lw = Q1-scale_factor*IQR"
+      },
+      "distri_threshold": {
+        "value": 0.6,
+        "description": "Used for the calulation of how many features make up the a certain fraction (distri_threshold) of all importance. For example if the distri_threshold is 0.6 and the result would be 10% than this would mean that 10% of the used features concentrate 60% of all feature importance, which would mean that the importance of the features is not well balanced where only a few features are important for the classification and the majority of features has only very little or no impact at all"
+      }
+    }
+  },
+  "weights": {
+    "Algorithm_Class": 0.55,
+    "Correlated_Features": 0.15,
+    "Model_Size": 0.15,
+    "Feature_Relevance": 0.15
+  }
+}

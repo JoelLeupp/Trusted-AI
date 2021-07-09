@@ -15,9 +15,8 @@ import pandas as pd
 import json
 from math import pi
 import dash_table
-from apps.algorithm.trusting_AI_algo import get_final_score
 import dash_bootstrap_components as dbc
-from apps.algorithm.trusting_AI_algo import get_performance_table
+from apps.algorithm.helper_functions import get_performance_table, get_final_score, get_case_inputs
 
 children=[
      dbc.Col(
@@ -36,8 +35,24 @@ children=[
          className="text-center")]
 
 # visualize final score
-final_score, results = get_final_score()
-performance =  get_performance_table().transpose()
+### delete later
+# define model inputs
+# choose scenario case (case1,case1,..)
+case = "case1"
+np.random.seed(6)
+
+# load case inputs
+model, train_data, test_data = get_case_inputs(case)
+
+config_fairness, config_explainability, config_robustness, config_methodology = 0, 0, 0 ,0
+for config in ["config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
+    with open("apps/algorithm/"+config+".json") as file:
+            exec("%s = json.load(file)" % config)
+
+
+
+final_score, results = get_final_score(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology)
+performance =  get_performance_table(model, test_data).transpose()
 pillars = list(final_score.keys())
 values = list(final_score.values())
 

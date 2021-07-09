@@ -1,0 +1,28 @@
+{
+  "parameters": {
+    "score_Algorithm_Class": {
+      "clf_type_score": {
+        "RandomForestClassifier": 3,
+        "KNeighborsClassifier": 3,
+        "SVC": 2,
+        "GaussianProcessClassifier": 3,
+        "DecisionTreeClassifier": 4,
+        "MLPClassifier": 1,
+        "AdaBoostClassifier": 3,
+        "GaussianNB": 3.5,
+        "QuadraticDiscriminantAnalysis": 3,
+        "LogisticRegression": 3,
+        "LinearRegression": 3.5
+      }},
+    "score_Feature_Relevance": {
+     "scale_factor":1.5,
+	 "distri_threshold":0.6
+    }
+  },
+  "weights": {
+    "Algorithm_Class": 0.55,
+    "Correlated_Features": 0.15,
+    "Model_Size": 0.15,
+    "Feature_Relevance": 0.15
+  }
+}

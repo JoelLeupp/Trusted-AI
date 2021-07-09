@@ -1,0 +1,18 @@
+{
+  "parameters": {
+    "score_Statistical_Parity": {
+      "parameter_XY": {
+        "value": "The value of the parameter_XY",
+        "description": "The description of the paramter and its impact"
+      }
+    }
+  },
+  "weights": {
+    "Statistical_Parity": 0.16666666666666666,
+      "Disparate_Mistreatment": 0.16666666666666666,
+      "Class_Imbalance": 0.16666666666666666,
+      "Biased_Data": 0.16666666666666666,
+      "Disparate_Treatment" : 0.16666666666666666,
+      "Disparate_Impact": 0.16666666666666666
+  }
+}
