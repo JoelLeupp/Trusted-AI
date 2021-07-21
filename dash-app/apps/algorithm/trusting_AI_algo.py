@@ -194,10 +194,10 @@ def calc_methodology_score():
     return output
 
 # define algo
-def trusting_AI_scores(factsheet, model, X_test, X_train, y_test, y_train, config):
+def trusting_AI_scores(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology):
     score = dict(
         fairness       = calc_fairness_score(),
-        explainability = calc_explainability_score(),
+        explainability = calc_explainability_score(model, train_data, test_data, config_explainability),
         robustness     = calc_robustness_score(),
         methodology    = calc_methodology_score()
     )

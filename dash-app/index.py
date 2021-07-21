@@ -20,7 +20,7 @@ import pickle
 from app import server
 from app import app
 # import all pages in the app
-from apps import home, upload_train_data, visualisation
+from apps import home, upload_train_data, visualisation, test
 
 
 
@@ -146,6 +146,8 @@ def display_page(pathname):
         return upload_train_data.layout
     elif pathname == '/visualisation':
         return visualisation.layout
+    elif pathname == '/test':
+        return test.layout
     else:
         return home.layout
 

@@ -15,6 +15,9 @@ from apps.algorithm.fairness_score import calc_fairness_score
 from apps.algorithm.explainability_score import calc_explainability_score
 from apps.algorithm.robustness_score import calc_robustness_score
 from apps.algorithm.methodology_score import calc_methodology_score
+import collections
+
+result = collections.namedtuple('result', 'score properties')
 
 def get_perfomance_metric(clf,test_data):
     
@@ -119,17 +122,20 @@ def draw_bar_plot(categories, values, ax, color='lightblue', title='Trusting AI 
         
 # define algo
 def trusting_AI_scores(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology):
-    score = dict(
+    output = dict(
         fairness       = calc_fairness_score(),
         explainability = calc_explainability_score(model, train_data, test_data, config_explainability),
         robustness     = calc_robustness_score(),
         methodology    = calc_methodology_score()
     )
-    return score
+    scores = dict((k, v.score) for k, v in output.items())
+    properties = dict((k, v.properties) for k, v in output.items())
+    
+    return  result(score=scores, properties=properties)
 
 # calculate final score with weigths
 def get_final_score(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology):
-    scores = trusting_AI_scores(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology)
+    scores = trusting_AI_scores(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology).score
     final_scores = dict()
     for pillar, item in scores.items():
         config = eval("config_"+pillar)

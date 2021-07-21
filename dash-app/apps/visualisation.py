@@ -16,7 +16,7 @@ import json
 from math import pi
 import dash_table
 import dash_bootstrap_components as dbc
-from apps.algorithm.helper_functions import get_performance_table, get_final_score, get_case_inputs
+from apps.algorithm.helper_functions import get_performance_table, get_final_score, get_case_inputs, trusting_AI_scores
 
 children=[
      dbc.Col(
@@ -50,7 +50,7 @@ for config in ["config_fairness", "config_explainability", "config_robustness", 
             exec("%s = json.load(file)" % config)
 
 
-
+properties = trusting_AI_scores(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology).properties
 final_score, results = get_final_score(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology)
 performance =  get_performance_table(model, test_data).transpose()
 pillars = list(final_score.keys())
@@ -107,6 +107,42 @@ for n, (pillar , sub_scores) in enumerate(results.items()):
     bar_chart_pillar.update_layout(title_text=title, title_x=0.5)
     bar_chart_pillars.append(dcc.Graph(id=str(pillar+"bar"), figure=bar_chart_pillar, style={'display': 'inline-block','width': '50%'}))
 children.append(html.Div(id="bar_pillars", children=bar_chart_pillars, style={'display': 'block'}))  
+
+
+# properties explainability
+prop_exp = properties["explainability"]
+
+importance = prop_exp["Feature_Relevance"]['importance'].value
+pct_dist = prop_exp["Feature_Relevance"]["pct_dist"].value 
+pct_mark = importance["labels"][int(float(pct_dist[:-1])/100 * len(importance["value"]))-1]
+
+fig = go.Figure(data=go.Scatter(x=importance["labels"], y=importance["value"],mode='lines+markers'))
+fig.add_vline(x=pct_mark, line_width=3, line_dash="dash")
+fig.add_trace(go.Scatter(
+    x=[importance["labels"][int(float(pct_dist[:-1])/100 * len(importance["value"]))-3]], y=[max(importance["value"])],
+    text="60% Threshold",
+    mode="text",
+))
+
+def get_properties_exp(p):
+    prop = p[1]
+    if p[0]=="importance":
+        return dcc.Graph(id='test',figure=fig, style={'display': 'block'})
+    else:
+       return html.H5(str(prop.description) + ": " + str(prop.value),style={'text-align':'center'})
+        
+children.append(html.Div([
+    html.H2('Extracted properties from the Explainability pillar'),
+    html.Br(),
+    html.Div(
+        list(map(lambda item: html.Div([
+        html.H3(item[0].replace("_",' '),style={'text-align':'center'}),
+        html.Div(list(map(get_properties_exp ,item[1].items()))),
+        html.Br()
+    ]), prop_exp.items()))
+        )
+] ,style={'text-align':'center'}))
+
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']

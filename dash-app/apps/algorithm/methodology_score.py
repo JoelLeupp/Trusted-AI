@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+import collections
+
+result = collections.namedtuple('result', 'score properties')
 
 # functions for methodology score
 
 def score_Normalization():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def score_Test_F1_score():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def score_Train_Test_Split():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def score_Regularization():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def score_Test_Accuracy():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def calc_methodology_score():
     
@@ -28,4 +31,7 @@ def calc_methodology_score():
         Feature_Filtering    = score_Test_Accuracy(),
         Treatment_of_Categorical_Features  = score_Test_Accuracy()
                  )
-    return output
+    scores = dict((k, v.score) for k, v in output.items())
+    properties = dict((k, v.properties) for k, v in output.items())
+    
+    return  result(score=scores, properties=properties)

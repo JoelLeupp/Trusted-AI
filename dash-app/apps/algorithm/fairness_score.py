@@ -2,18 +2,21 @@
 # functions for fairness score
 
 import numpy as np
+import collections
+
+result = collections.namedtuple('result', 'score properties')
 
 def score_Statistical_Parity():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def score_Disparate_Mistreatment():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def score_Class_Imbalance():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def score_Biased_Data():
-    return np.random.randint(1,6)
+    return result(score=np.random.randint(1,6), properties={}) 
 
 def calc_fairness_score():
     
@@ -26,5 +29,8 @@ def calc_fairness_score():
         Biased_Data            = score_Biased_Data()
                  )
     
-    return output
+    scores = dict((k, v.score) for k, v in output.items())
+    properties = dict((k, v.properties) for k, v in output.items())
+    
+    return  result(score=scores, properties=properties)
     
