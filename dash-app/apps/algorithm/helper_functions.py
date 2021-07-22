@@ -143,7 +143,12 @@ def get_final_score(model, train_data, test_data, config_fairness, config_explai
         final_scores[pillar] = round(np.sum(weighted_scores),1)
 
     return final_scores, scores
-        
+
+#config = {'fairness': 0.25, 'explainability': 0.25, 'robustness': 0.25, 'methodology': 0.25}
+
+def get_trust_score(final_score, config):
+     return round(np.sum(list(map(lambda x: final_score[x] * config[x], final_score.keys()))),1)
+    
 ### delete later
 # define model inputs
 # choose scenario case (case1,case1,..)

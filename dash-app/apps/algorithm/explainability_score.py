@@ -51,7 +51,7 @@ def score_Correlated_Features(train_data, test_data):
     
     bins = np.linspace(0.05, 0.4, 4)
     score = 5-np.digitize(pct_drop, bins, right=False) 
-    properties= {"pct_drop" : info("Percentage of highly correlated features","{:.2f}%".format(100*pct_drop))}
+    properties= {"pct_drop" : info("Percentage of highly correlated features", "{:.2f}%".format(100*pct_drop))}
     
     return  result(score=score, properties=properties)
 

@@ -16,23 +16,11 @@ import json
 from math import pi
 import dash_table
 import dash_bootstrap_components as dbc
-from apps.algorithm.helper_functions import get_performance_table, get_final_score, get_case_inputs, trusting_AI_scores
+from apps import test
+from apps.algorithm.helper_functions import get_performance_table, get_final_score, get_case_inputs, trusting_AI_scores, get_trust_score
 
-children=[
-     dbc.Col(
-         [html.H5("Please select the type of the visualisations.", style={'float': 'left', "width": "70%","margin-right": "-30%", "margin-left": "10%" }),
-          html.Div(
-          dcc.Dropdown(
-                id='plot_type',
-                options=[
-                     {'label': 'Bar Charts', 'value': 'bar'},
-                    {'label': 'Spider Plots', 'value': 'spider'}
-                    ],
-                value='bar',
-                clearable=False),
-          style={'display': 'inline-block', "width": "20%", "margin-top": "-10px" }
-          )],
-         className="text-center")]
+children=[]
+     
 
 # visualize final score
 ### delete later
@@ -44,14 +32,15 @@ np.random.seed(6)
 # load case inputs
 model, train_data, test_data = get_case_inputs(case)
 
-config_fairness, config_explainability, config_robustness, config_methodology = 0, 0, 0 ,0
-for config in ["config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
+config_fairness, config_explainability, config_robustness, config_methodology, config_pillars = 0, 0, 0 ,0,0
+for config in ["config_pillars","config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
     with open("apps/algorithm/"+config+".json") as file:
             exec("%s = json.load(file)" % config)
 
 
 properties = trusting_AI_scores(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology).properties
 final_score, results = get_final_score(model, train_data, test_data, config_fairness, config_explainability, config_robustness, config_methodology)
+trust_score = get_trust_score(final_score, config_pillars)
 performance =  get_performance_table(model, test_data).transpose()
 pillars = list(final_score.keys())
 values = list(final_score.values())
@@ -69,8 +58,31 @@ performance_table = dash_table.DataTable(
 children.append(html.Br())
 children.append(html.H5("Performance metrics", style={"width": "70%","text-align": "center", "margin-right": "auto", "margin-left": "auto" }))
 children.append(performance_table)
+children.append(html.Br())
+children.append(html.Hr())
+children.append(html.Br())
 
-spider_plt = px.line_polar(r=values, theta=pillars, line_close=True, title='AI Final Trust Score: 3.1')
+children.append(html.Br())
+children.append(test.layout)
+children.append(html.Br())
+
+children.append(dbc.Col(
+         [html.H5("Please select the type of the visualisations.", style={'float': 'left', "width": "70%","margin-right": "-30%", "margin-left": "10%" }),
+          html.Div(
+          dcc.Dropdown(
+                id='plot_type',
+                options=[
+                     {'label': 'Bar Charts', 'value': 'bar'},
+                    {'label': 'Spider Plots', 'value': 'spider'}
+                    ],
+                value='bar',
+                clearable=False),
+          style={'display': 'inline-block', "width": "20%", "margin-top": "-10px" }
+          )],
+         className="text-center"))
+
+
+spider_plt = px.line_polar(r=values, theta=pillars, line_close=True, title='AI Final Trust Score: {}'.format(trust_score))
 spider_plt.update_layout(title_x=0.5)
 children.append(dcc.Graph(id='spider',figure=spider_plt, style={'display': 'none'}))
 

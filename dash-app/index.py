@@ -150,6 +150,16 @@ def display_page(pathname):
         return test.layout
     else:
         return home.layout
+    
+@app.callback(
+   Output(component_id='panel', component_property='style'),
+   [Input(component_id="toggle-hide", component_property='on')])
+
+def show_hide_element(visibility_state):
+    if visibility_state == True:
+        return {'display': 'block'}
+    if visibility_state == False:
+        return {'display': 'none'}
 
 @app.callback([Output('model-uploaded-div', 'children'),
                Output('upload-model', 'children')],

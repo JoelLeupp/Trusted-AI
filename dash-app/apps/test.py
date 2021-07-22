@@ -22,61 +22,52 @@ from apps.algorithm.explainability_panel import explainability_panel
 from apps.algorithm.fairness_panel import fairness_panel
 from apps.algorithm.robustness_panel import robustness_panel
 from apps.algorithm.methodology_panel import methodology_panel
+import dash_daq as daq
 
-children=[
-     dbc.Col(
-         [html.H5("Please select the type of the visualisations.", style={'float': 'left', "width": "70%","margin-right": "-30%", "margin-left": "10%" }),
-          html.Div(
-          dcc.Dropdown(
-                id='plot_type',
-                options=[
-                     {'label': 'Bar Charts', 'value': 'bar'},
-                    {'label': 'Spider Plots', 'value': 'spider'}
-                    ],
-                value='bar',
-                clearable=False),
-          style={'display': 'inline-block', "width": "20%", "margin-top": "-10px" }
-          )],
-         className="text-center")]
-
-# visualize final score
-### delete later
-# define model inputs
-# choose scenario case (case1,case1,..)
-case = "case1"
-np.random.seed(6)
+children=[]
 
 # load case inputs
-model, train_data, test_data = get_case_inputs(case)
+# model, train_data, test_data = get_case_inputs(case)
 
 config_fairness, config_explainability, config_robustness, config_methodology = 0, 0, 0 ,0
 for config in ["config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
     with open("apps/algorithm/"+config+".json") as file:
             exec("%s = json.load(file)" % config)
 
-# panels
-exp_panel_comp = [html.H3("Explainability Panel", style={'text-align':'center'}),html.Br(),] + explainability_panel
-exp_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
+#panels
+exp_panel_comp = [html.H3("Explainability Panel TEST", style={'text-align':'center'}),html.Br(),] + explainability_panel
+exp_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block',"vertical-align": "top",'margin-left': 10})
 
 fair_panel_comp = [html.H3("Fairness Panel", style={'text-align':'center'}),html.Br(),] + fairness_panel
-fair_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
+fair_panel = html.Div(fair_panel_comp, style={'width': '22%', 'display': 'inline-block',"vertical-align": "top",'margin-left': 10})
 
 rob_panel_comp = [html.H3("Robustness Panel", style={'text-align':'center'}),html.Br(),] + robustness_panel
-rob_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
+rob_panel = html.Div(rob_panel_comp, style={'width': '22%', 'display': 'inline-block',"vertical-align": "top",'margin-left': 10})
 
 meth_panel_comp = [html.H3("Methodology Panel", style={'text-align':'center'}),html.Br(),] + methodology_panel
-meth_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
+meth_panel = html.Div(meth_panel_comp, style={'width': '22%', 'display': 'inline-block',"vertical-align": "top",'margin-left': 10})
 
 
-children.append(html.Div([html.H3("Configuration",style={'text-align':'center'}),exp_panel,fairness_panel,robustness_panel,methodology_panel,]))
+children.append(html.Div([html.H3("Configuration",style={'text-align':'center'}),exp_panel,fair_panel,rob_panel,meth_panel,]))
 
+panel_div = html.Div(children, id= "panel", style= {'display': 'block'})
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-layout = html.Div(children=children, style={"margin-left": "100px","margin-right": "50px"})
+#layout = html.Div(children=children, style={"margin-left": "100px","margin-right": "50px"})
 
+layout = html.Div([
+    panel_div,
+    daq.BooleanSwitch(id='toggle-hide',
+                      on=False,
+                      label="show configuration",
+                      labelPosition="top",
+                      color = "green"
+                     
+                    ),  
+        ], style={"margin-left": "100px","margin-right": "50px"})
 
     
 if __name__ == '__main__':
