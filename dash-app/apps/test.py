@@ -18,6 +18,10 @@ import dash_table
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 from apps.algorithm.helper_functions import get_performance_table, get_final_score, get_case_inputs, trusting_AI_scores
+from apps.algorithm.explainability_panel import explainability_panel
+from apps.algorithm.fairness_panel import fairness_panel
+from apps.algorithm.robustness_panel import robustness_panel
+from apps.algorithm.methodology_panel import methodology_panel
 
 children=[
      dbc.Col(
@@ -51,36 +55,17 @@ for config in ["config_fairness", "config_explainability", "config_robustness", 
             exec("%s = json.load(file)" % config)
 
 # panels
-exp_panel_comp = [html.H3("Explainability Panel",style={'text-align':'center'}),html.Br(),]
-comp_weight = [html.H4("Weights",style={'text-align':'center'})]
-for key, val in config_explainability["weights"].items():
-    comp_weight.append(html.Label(key.replace("_",' '))) 
-    comp_weight.append(html.Br())
-    comp_weight.append(dcc.Input(id="w_"+key,value=val, type='text'))
-    comp_weight.append(html.Br())
-
-exp_panel_comp.append(html.Div(comp_weight))
-exp_panel_comp.append(html.Br())
-exp_panel_comp.append(html.H4("Parameters",style={'text-align':'center'}))
-for key, val in config_explainability["parameters"].items():
-    param_comp = [html.H4(key.replace("_",' '))]
-    for param, info in val.items():
-         param_comp.append(html.Label(html.Strong(key.replace("_",' '))))
-         param_comp.append(html.Br())
-         param_comp.append(dcc.Input(id="p_"+param,value=str(info["value"]), type='text'))
-         param_comp.append(html.P(info["description"])) 
-    exp_panel_comp.append(html.Div(param_comp))
-
+exp_panel_comp = [html.H3("Explainability Panel", style={'text-align':'center'}),html.Br(),] + explainability_panel
 exp_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
 
-fairness_panel = html.Div([html.H3("Fairness Panel",style={'text-align':'center'}),html.Br(),html.H4("Weights"),html.Br(),html.H4("Parameters")], 
-                          style={'width': '22%', 'display': 'inline-block','height': '1500px', "vertical-align": "top",'margin-left': 10})
+fair_panel_comp = [html.H3("Fairness Panel", style={'text-align':'center'}),html.Br(),] + fairness_panel
+fair_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
 
-robustness_panel = html.Div([html.H3("Robustness Panel",style={'text-align':'center'}),html.Br(),html.H4("Weights"),html.Br(),html.H4("Parameters")], 
-                          style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
+rob_panel_comp = [html.H3("Robustness Panel", style={'text-align':'center'}),html.Br(),] + robustness_panel
+rob_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
 
-methodology_panel = html.Div([html.H3("Methodology Panel",style={'text-align':'center'}),html.Br(),html.H4("Weights"),html.Br(),html.H4("Parameters")], 
-                          style={'width': '22%', 'display': 'inline-block','height': '1500px', "vertical-align": "top",'margin-left': 10})
+meth_panel_comp = [html.H3("Methodology Panel", style={'text-align':'center'}),html.Br(),] + methodology_panel
+meth_panel = html.Div(exp_panel_comp, style={'width': '22%', 'display': 'inline-block','height': '1500px',"vertical-align": "top",'margin-left': 10})
 
 
 children.append(html.Div([html.H3("Configuration",style={'text-align':'center'}),exp_panel,fairness_panel,robustness_panel,methodology_panel,]))
