@@ -196,7 +196,12 @@ def get_solution_ids(scenario_id):
     solution_ids = [(f.name, f.path) for f in os.scandir(get_solution_path(scenario_id, "")) if f.is_dir() and not f.name.startswith('.')]
     solution_ids = sorted(solution_ids, key=lambda x: x[0])
     return solution_ids
-    
+
+def get_solution_ids_unsupervised(scenario_id):
+    solution_ids = [(f.name, f.path) for f in os.scandir(get_solution_unsupervised_path(scenario_id, "")) if f.is_dir() and not f.name.startswith('.')]
+    solution_ids = sorted(solution_ids, key=lambda x: x[0])
+    return solution_ids
+
 def get_solution_options():
     scenario_ids = get_scenario_ids()
     options = []
@@ -216,8 +221,19 @@ def get_scenario_solutions_options(scenario_id):
             options.append({"label": solution_name, "value": solution_path})
     return options
 
+def get_scenario_solutions_options_unsupervised(scenario_id):
+    options = []
+    solutions = get_solution_ids_unsupervised(scenario_id)
+    for solution_id, solution_path in solutions:
+        solution_name = id_to_name(solution_id)
+        options.append({"label": solution_name, "value": solution_path})
+    return options
+
 def get_solution_path(scenario_id, solution_id):
     return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id, SOLUTIONS_FOLDER, solution_id)
+
+def get_solution_unsupervised_path(scenario_id, solution_id):
+    return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id, SOLUTIONS_FOLDER_UNSUPERVISED, solution_id)
 
 def get_factsheet_path(scenario_id, solution_id):
     return os.path.join(get_solution_path(scenario_id, solution_id), FACTSHEET_NAME)

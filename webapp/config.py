@@ -18,6 +18,7 @@ print("BASE_PATH: {}".format(BASE_PATH))
 
 SCENARIOS_FOLDER_PATH = "scenarios"
 SOLUTIONS_FOLDER = "solutions"
+SOLUTIONS_FOLDER_UNSUPERVISED = "solutions_unsupervised"
 TRAINING_DATA_FILE_NAME_REGEX = "train.*"
 TEST_DATA_FILE_NAME_REGEX = "test.*"
 MODEL_REGEX = "model.*"
