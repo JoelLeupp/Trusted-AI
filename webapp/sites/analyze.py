@@ -1273,7 +1273,7 @@ def clever_score(data):
  
 @app.callback(
     Output("solution_set_dropdown", 'options'),
-    [Input('scenario_dropdown', 'value'), Input('toggle_supervised_unsupervised', 'on')], prevent_initial_call=False)
+    [Input('scenario_dropdown', 'value'), Input('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call=False)
 def show_scenario_solution_options(scenario_id, unsupervised):
     if scenario_id and not unsupervised:
         solutions = get_scenario_solutions_options(scenario_id)
@@ -1305,12 +1305,6 @@ def download_report(n_clicks, solution_set_path, is_open, data, weight, map_f, m
     else:
         return is_open, data
 
-'''  
-@app.callback(
-    [Output("scenario_dropdown", 'value'),
-    Input(component_id='toggle_supervised_unsupervised', component_property='on')])
-def toggle_mode(toggle_on):
-'''
 
 @app.callback([Output("scenario_dropdown", 'value'),
                Output("solution_set_dropdown", 'value')],
@@ -1340,9 +1334,9 @@ layout = html.Div([
                       color = "green",
                     
                     )], style= {'display': 'Block'} if DEBUG else {"display": "None"}),
-            daq.BooleanSwitch(id='toggle_supervised_unsupervised',
+            daq.BooleanSwitch(id='toggle_supervised_unsupervised_analyze',
                       on=False,
-                      label="apply Unsupervised",
+                      label="enable Unsupervised Mode",
                       labelPosition="top",
                       color = TRUST_COLOR,
                       style={"float": "right",'margin-left': "44%"}

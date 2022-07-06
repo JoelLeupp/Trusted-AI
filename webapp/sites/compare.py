@@ -134,10 +134,13 @@ def map_dropdown(pillar):
 
 @app.callback(
     [Output("solution_set_dropdown-1", 'options'),Output("solution_set_dropdown-2", 'options')],
-    Input('scenario_dropdown_compare', 'value'), prevent_initial_call=False)
-def load_solution_sets(scenario_id):
-    if scenario_id:
+    [Input('scenario_dropdown_compare', 'value'), Input('toggle_supervised_unsupervised_compare', 'on')], prevent_initial_call=False)
+def load_solution_sets(scenario_id, unsupervised):
+    if scenario_id and not unsupervised:
         return get_scenario_solutions_options(scenario_id), get_scenario_solutions_options(scenario_id)
+    elif scenario_id and unsupervised:
+        print("hello")
+        return get_scenario_solutions_options_unsupervised(scenario_id), get_scenario_solutions_options_unsupervised(scenario_id)
     else:
         return [], []
 
@@ -171,6 +174,13 @@ layout = html.Div([
                     ],style={"background-color": "rgba(255,228,181,0.5)",'padding-bottom': 20," margin-left": "auto", "margin-right": "auto"}), 
                 width=12,style={'display': 'none'},id="compare-config"),
             dcc.Store(id='result-1'),
+            daq.BooleanSwitch(id='toggle_supervised_unsupervised_compare',
+                      on=False,
+                      label="enable Unsupervised Mode",
+                      labelPosition="top",
+                      color = TRUST_COLOR,
+                      style={"float": "right",'margin-left': "44%"}
+                    ),
             dbc.Col([dcc.Dropdown(
                     id='scenario_dropdown_compare',
                     options= get_scenario_options(),
