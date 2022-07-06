@@ -859,6 +859,7 @@ def toggle_pillar_section_visibility(path):
     Output('analysis_section', 'style')],
     [Input('solution_set_dropdown', 'value')], prevent_initial_call=True)
 def analyze_solution_completeness(solution_set_path):
+    print(solution_set_path)
     button = []
     alerts = []
     style={'display': 'none'}
@@ -875,7 +876,8 @@ def analyze_solution_completeness(solution_set_path):
         test_data_path = "{}/test.*".format(solution_set_path)
         training_data_path = "{}/train.*".format(solution_set_path)
         model_path = "{}/model.*".format(solution_set_path)
-        
+
+
         if not glob.glob(factsheet_path):
             alerts.append(html.H5("No factsheet provided", className="text-center", style={"color":"Red"}))
         if not glob.glob(training_data_path):
@@ -887,6 +889,7 @@ def analyze_solution_completeness(solution_set_path):
         if alerts:
             style={'display': 'none'}
             alerts.append(html.H5("Please provide a complete dataset", className="text-center", style={"color":"Red"}))
+
     return alerts, style
 
 @app.callback(Output('delete_solution_confirm', 'displayed'),
