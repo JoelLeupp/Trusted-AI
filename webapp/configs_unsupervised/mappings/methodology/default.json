@@ -1,0 +1,50 @@
+{
+    "score_normalization": {
+        "mappings": {
+            "value": {
+                "None": 1,
+                "training_normal": 2,
+                "training_and_test_normal": 3,
+                "training_standardized": 4,
+                "training_and_test_standardize": 5
+            },
+            "description": "Dictionary of how to map different normalization types to scores between 1-5.",
+            "label": "Score Thresholds"
+        }
+    },
+    "score_missing_data": {
+        "mappings": {
+            "value": {
+                "null_values_exist": 1,
+                "no_null_values": 5
+            },
+            "description": "Dictionary of how to map missing data to scores between 1-5.",
+            "label": "Score Thresholds"
+        }
+    },
+    "score_regularization": {
+        "parameter_regularization_technique": {
+            "value": "The value of the parameter_XY",
+            "description": "The description of the paramter and its impact"
+        }
+    },
+    "score_train_test_split": {
+        "mappings": {
+            "value": {
+                "50-60 95-97": 1,
+                "60-75 90-95": 2,
+                "70-75 85-90": 3,
+                "75-79 81-85": 4,
+                "79-81": 5
+            },
+            "description": "Thresholds of how to map the train-test split to a score between 1-5.",
+            "label": "Score Thresholds"
+        }
+    },
+    "score_factsheet_completeness": {
+        "parameter_split": {
+            "value": "The value of the parameter_XY",
+            "description": "The description of the paramter and its impact"
+        }
+    }
+}

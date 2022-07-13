@@ -1,0 +1,29 @@
+{
+    "fairness": {
+        "underfitting": 1,
+        "overfitting": 0.15,
+        "statistical_parity_difference": 0.15,
+        "disparate_impact": 0.1,
+    },
+    "explainability": {
+        "correlated_features": 0.15,
+        "model_size": 0.15,
+        "permutation_feature_importance": 0.15
+    },
+    "robustness": {
+        "clever_score": 0.2
+    },
+    "methodology": {
+        "normalization": 0.2,
+        "missing_data": 0.2,
+        "regularization": 0.2,
+        "train_test_split": 0.2,
+        "factsheet_completeness": 0.2
+    },
+    "pillars": {
+        "fairness": 0.25,
+        "explainability": 0.25,
+        "robustness": 0.25,
+        "methodology": 0.25
+    }
+}

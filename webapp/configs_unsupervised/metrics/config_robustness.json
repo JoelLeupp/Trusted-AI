@@ -1,0 +1,106 @@
+{
+  "parameters": {
+    "score_clique_method": {
+      "thresholds": {
+        "value": [
+          0.01,
+          0.1,
+          0.25,
+          0.5
+        ],
+        "description": "Thresholds of how to map the result of the clique method from 1-5.",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_loss_sensitivity": {
+      "thresholds": {
+        "value": [
+          2,
+          1.5,
+          1,
+          0.5
+        ],
+        "description": "Thresholds of how to map loss sensitivity from 1-5. Smaller value means higher robustness.",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_clever_score": {
+      "thresholds": {
+        "value": [
+          0.2,
+          0.5,
+          1,
+          2.5
+        ],
+        "description": "Thresholds of how to map CLEVER score from 1-5.",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_confidence_score": {
+      "thresholds": {
+        "value": [
+          20,
+          40,
+          60,
+          80
+        ],
+        "description": "Thresholds of how to map confidence score from 1-5. Better confidence score means higher robustness.",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_fast_gradient_attack": {
+      "thresholds": {
+        "value": [
+          80,
+          60,
+          40,
+          20
+        ],
+        "description": "Thresholds of how to map difference between before-after attack accuracies from 1-5. Example: If the before attack accuracy is 85% and after attack accuracy is again 85% it means model is so robust that attack was not successful at all. The difference is 0 and hence this would result in a score of 5 (best score). However if the before attack accuracy was 100% and after attack accuracy is 0% then the model is not robust. The difference is 100% and it would result in score 0 (worst score)",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_carlini_wagner_attack": {
+      "thresholds": {
+        "value": [
+          80,
+          60,
+          40,
+          20
+        ],
+        "description": "Thresholds of how to map difference between before-after attack accuracies from 1-5. Example: If the before attack accuracy is 85% and after attack accuracy is again 85% it means model is so robust that attack was not successful at all. The difference is 0 and hence this would result in a score of 5 (best score). However if the before attack accuracy was 100% and after attack accuracy is 0% then the model is not robust. The difference is 100% and it would result in score 0 (worst score)",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_deepfool_attack": {
+      "thresholds": {
+        "value": [
+          80,
+          60,
+          40,
+          20
+        ],
+        "description": "Thresholds of how to map difference between before-after attack accuracies from 1-5. Example: If the before attack accuracy is 85% and after attack accuracy is again 85% it means model is so robust that attack was not successful at all. The difference is 0 and hence this would result in a score of 5 (best score). However if the before attack accuracy was 100% and after attack accuracy is 0% then the model is not robust. The difference is 100% and it would result in score 0 (worst score)",
+        "label": "Score Thresholds"
+      }
+    }
+  },
+  "weights": {
+    "confidence_score": 0.20,
+    "clique_method"    : 0.20,
+    "loss_sensitivity"  : 0.20, 
+    "clever_score"   : 0.20,
+    "er_fast_gradient_attack": 0.20,
+    "er_carlini_wagner_attack": 0.20,
+    "er_deepfool_attack": 0.20
+  },
+    "metrics": {
+    "confidence_score": "This metric computes how confident the model is about its predictions.<br>More confident a model is it is more difficult to fool the model. <br>Hence if the confidence score increases the robustness increases.",
+    "clique_method"    : "For tree based models, Clique Method calculates a bound for<br>the minimal adversarial perturbation to fool a model",
+    "loss_sensitivity"  :"This metric estimates the smoothness of the model.<br>If a small input difference creates a huge output change,<br> then the model is not robust.",
+    "clever_score"   : "This metric is designed for measuring neural networks' robustness.<br> It uses Cross Lipschitz constant estimation.",
+    "er_fast_gradient_attack": "This metric empirically tests the robustness of the model.<br>It calculates and applies Fast Gradient Attack to the model and<br>checks whether the model is fooled by it.",
+    "er_carlini_wagner_attack": "This metric empirically tests the robustness of the model.<br>It calculates and applies Carlini Wagner Attack to the model and<br>checks whether the model is fooled by it.",
+    "er_deepfool_attack": "This metric empirically tests the robustness of the model.<br>It calculates and applies Deepfool Attack to the model and<br>checks whether the model is fooled by it."
+  }
+}
