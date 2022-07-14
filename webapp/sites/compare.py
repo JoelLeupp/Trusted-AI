@@ -12,7 +12,7 @@ import glob
 import shutil
 from helpers import *
 from config import *
-from algorithms.trustworthiness import trusting_AI_scores, get_trust_score, get_final_score
+from algorithms.trustworthiness import trusting_AI_scores, get_trust_score, get_final_score, get_final_score_unsupervised
 import dash_table
 import numpy as np
 from sites import config_panel
@@ -427,61 +427,123 @@ def toggle_pillar_section_visibility_2(path):
 @app.callback(Output('result-1', 'data'),
               [Input('solution_set_dropdown-1', 'value'),
               Input("apply-config-compare", "n_clicks")],
-              [State('config-dropdown-compare', 'value')] +  [State('{}-dropdown-compare'.format(pillar),"value") for pillar in pillars])
-def store_result_1(solution_set_dropdown, n, weight, map_fairness, map_explainability, map_robustness, map_methodology):
+              [State('config-dropdown-compare', 'value')] +  [State('{}-dropdown-compare'.format(pillar),"value") for pillar in pillars],  State('toggle_supervised_unsupervised_compare', 'on'))
+def store_result_1(solution_set_dropdown, n, weight, map_fairness, map_explainability, map_robustness, map_methodology, unsupervised):
     if not solution_set_dropdown:
         return None
-    
-    with open(weight, 'r') as f:
-        weights_config = json.loads(f.read())
-    
-    mappings_config = dict()
-    
-    for pillar, map_conf in zip(pillars,[map_fairness, map_explainability, map_robustness, map_methodology]):
-        with open(map_conf, 'r') as f:
-            mappings_config[pillar] = json.loads(f.read())
-    
-    test, train, model, factsheet = read_solution(solution_set_dropdown)
-    final_score, results, properties = get_final_score(model, train, test, weights_config, mappings_config, factsheet, solution_set_dropdown)
-    trust_score = get_trust_score(final_score, weights_config["pillars"])
-    def convert(o):
-        if isinstance(o, np.int64): return int(o)
-    data = {"final_score": final_score,
-            "results": results,
-            "trust_score": trust_score,
-            "properties": properties}
-    return json.dumps(data, default=convert)
+    if unsupervised:
+        weight = "configs_unsupervised/weights/default.json"
+        map_fairness = "configs_unsupervised/mappings/fairness/default.json"
+        map_explainability = "configs_unsupervised/mappings/explainability/default.json"
+        map_robustness = "configs_unsupervised/mappings/robustness/default.json"
+        map_methodology = "configs_unsupervised/mappings/methodology/default.json"
+
+        with open(weight, 'r') as f:
+            weights_config = json.loads(f.read())
+
+        mappings_config = dict()
+
+        for pillar, map_conf in zip(pillars, [map_fairness, map_explainability, map_robustness, map_methodology]):
+            with open(map_conf, 'r') as f:
+                mappings_config[pillar] = json.loads(f.read())
+
+        test, train, model, factsheet = read_solution(solution_set_dropdown)
+        final_score, results, properties = get_final_score_unsupervised(model, train, test, weights_config, mappings_config,
+                                                           factsheet, solution_set_dropdown)
+        trust_score = get_trust_score(final_score, weights_config["pillars"])
+
+        def convert(o):
+            if isinstance(o, np.int64): return int(o)
+
+        data = {"final_score": final_score,
+                "results": results,
+                "trust_score": trust_score,
+                "properties": properties}
+        return json.dumps(data, default=convert)
+    else:
+        with open(weight, 'r') as f:
+            weights_config = json.loads(f.read())
+
+        mappings_config = dict()
+
+        for pillar, map_conf in zip(pillars,[map_fairness, map_explainability, map_robustness, map_methodology]):
+            with open(map_conf, 'r') as f:
+                mappings_config[pillar] = json.loads(f.read())
+
+        test, train, model, factsheet = read_solution(solution_set_dropdown)
+        final_score, results, properties = get_final_score(model, train, test, weights_config, mappings_config, factsheet, solution_set_dropdown)
+        trust_score = get_trust_score(final_score, weights_config["pillars"])
+        def convert(o):
+            if isinstance(o, np.int64): return int(o)
+        data = {"final_score": final_score,
+                "results": results,
+                "trust_score": trust_score,
+                "properties": properties}
+        return json.dumps(data, default=convert)
 
 @app.callback(Output('result-2', 'data'),
               [Input('solution_set_dropdown-2', 'value'),
                Input("apply-config-compare", "n_clicks")],
-              [State('config-dropdown-compare', 'value')] +  [State('{}-dropdown-compare'.format(pillar),"value") for pillar in pillars])
-def store_result_2(solution_set_dropdown, n, weight, map_fairness, map_explainability, map_robustness, map_methodology):
+              [State('config-dropdown-compare', 'value')] +  [State('{}-dropdown-compare'.format(pillar),"value") for pillar in pillars],
+              State('toggle_supervised_unsupervised_compare', 'on'))
+def store_result_2(solution_set_dropdown, n, weight, map_fairness, map_explainability, map_robustness, map_methodology, unsupervised):
     if not solution_set_dropdown:
         return None
-    
-    with open(weight, 'r') as f:
-        weights_config = json.loads(f.read())
-    
-    mappings_config = dict()
-    
-    for pillar, map_conf in zip(pillars,[map_fairness, map_explainability, map_robustness, map_methodology]):
-        with open(map_conf, 'r') as f:
-            mappings_config[pillar] = json.loads(f.read())
-    
-    # mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"], 
-    #                robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
-    print(map_explainability)
-    test, train, model, factsheet = read_solution(solution_set_dropdown)
-    final_score, results, properties = get_final_score(model, train, test, weights_config, mappings_config, factsheet, solution_set_dropdown)
-    trust_score = get_trust_score(final_score, weights_config["pillars"])
-    def convert(o):
-        if isinstance(o, np.int64): return int(o)
-    data = {"final_score": final_score,
-            "results": results,
-            "trust_score": trust_score,
-            "properties": properties}
-    return json.dumps(data, default=convert)
+    if unsupervised:
+        weight = "configs_unsupervised/weights/default.json"
+        map_fairness = "configs_unsupervised/mappings/fairness/default.json"
+        map_explainability = "configs_unsupervised/mappings/explainability/default.json"
+        map_robustness = "configs_unsupervised/mappings/robustness/default.json"
+        map_methodology = "configs_unsupervised/mappings/methodology/default.json"
+
+        with open(weight, 'r') as f:
+            weights_config = json.loads(f.read())
+
+        mappings_config = dict()
+
+        for pillar, map_conf in zip(pillars, [map_fairness, map_explainability, map_robustness, map_methodology]):
+            with open(map_conf, 'r') as f:
+                mappings_config[pillar] = json.loads(f.read())
+
+        # mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"],
+        #                robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
+        print(map_explainability)
+        test, train, model, factsheet = read_solution(solution_set_dropdown)
+        final_score, results, properties = get_final_score_unsupervised(model, train, test, weights_config, mappings_config,
+                                                           factsheet, solution_set_dropdown)
+        trust_score = get_trust_score(final_score, weights_config["pillars"])
+
+        def convert(o):
+            if isinstance(o, np.int64): return int(o)
+
+        data = {"final_score": final_score,
+                "results": results,
+                "trust_score": trust_score,
+                "properties": properties}
+        return json.dumps(data, default=convert)
+    else:
+        with open(weight, 'r') as f:
+            weights_config = json.loads(f.read())
+
+        mappings_config = dict()
+
+        for pillar, map_conf in zip(pillars,[map_fairness, map_explainability, map_robustness, map_methodology]):
+            with open(map_conf, 'r') as f:
+                mappings_config[pillar] = json.loads(f.read())
+
+        # mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"],
+        #                robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
+        print(map_explainability)
+        test, train, model, factsheet = read_solution(solution_set_dropdown)
+        final_score, results, properties = get_final_score(model, train, test, weights_config, mappings_config, factsheet, solution_set_dropdown)
+        trust_score = get_trust_score(final_score, weights_config["pillars"])
+        def convert(o):
+            if isinstance(o, np.int64): return int(o)
+        data = {"final_score": final_score,
+                "results": results,
+                "trust_score": trust_score,
+                "properties": properties}
+        return json.dumps(data, default=convert)
 
 
 @app.callback(Output('general_description-1', 'children'),
@@ -589,15 +651,18 @@ def show_general_description_2(scenario_id, solution_set_path):
         return ""
 
 @app.callback(Output('performance_metrics_section-1', 'children'),
-          Input('solution_set_dropdown-1', 'value'), prevent_initial_call=True)
-def show_performance_metrics_1(solution_set_path):
+          Input('solution_set_dropdown-1', 'value'),
+              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+def show_performance_metrics_1(solution_set_path, unsupervised):
+    if unsupervised:
+        return []
     if not solution_set_path:
         return []
     else:
         test_data, training_data, model, factsheet = read_solution(solution_set_path)
         target_column = factsheet.get("general", {}).get("target_column", "")
 
-        performance_metrics =  get_performance_metrics(model, test_data, target_column)
+        performance_metrics = get_performance_metrics(model, test_data, target_column)
         performance_metrics_table = dash_table.DataTable(
                                 id='performance_metrics_table-1',
                                 columns=[{"name": i, "id": i} for i in performance_metrics.columns],
@@ -636,8 +701,11 @@ def show_performance_metrics_1(solution_set_path):
         return html.Div([html.H5("Performance Metrics"), performance_metrics_table], className="mt-4 mb-4", style={"border": "4px solid {}".format(TRUST_COLOR)})
 
 @app.callback(Output('performance_metrics_section-2', 'children'),
-          Input('solution_set_dropdown-2', 'value'), prevent_initial_call=True)
-def show_performance_metrics_2(solution_set_path):
+          Input('solution_set_dropdown-2', 'value'),
+              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+def show_performance_metrics_2(solution_set_path, unsupervised):
+    if unsupervised:
+        return []
     if not solution_set_path:
         return []
     else:
@@ -683,13 +751,18 @@ def show_performance_metrics_2(solution_set_path):
         return html.Div([html.H5("Performance Metrics"), performance_metrics_table], className="mt-4 mb-4", style={"border": "4px solid {}".format(TRUST_COLOR)})
 
 @app.callback(Output('properties_section-1', 'children'),
-              Input('solution_set_dropdown-1', 'value'), prevent_initial_call=True)
-def show_properties_1(solution_set_path):
+              Input('solution_set_dropdown-1', 'value'),
+              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+def show_properties_1(solution_set_path, unsupervised):
     if not solution_set_path:
         return []
     else:
         test_data, training_data, model, factsheet = read_solution(solution_set_path)
-        properties = get_properties_section(training_data, test_data, factsheet)
+        if not unsupervised:
+            properties = get_properties_section(training_data, test_data, factsheet)
+        else:
+            properties = get_properties_section_unsupervised(training_data, test_data, factsheet)
+
         properties_table = dash_table.DataTable(
             id='properties_table-1',
             columns=[{"name": i, "id": i} for i in properties.columns],
@@ -728,13 +801,18 @@ def show_properties_1(solution_set_path):
         return html.Div([html.H5("Properties"), properties_table], className="mt-4 mb-4")
 
 @app.callback(Output('properties_section-2', 'children'),
-              Input('solution_set_dropdown-2', 'value'), prevent_initial_call=True)
-def show_properties_2(solution_set_path):
+              Input('solution_set_dropdown-2', 'value'),
+              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+def show_properties_2(solution_set_path, unsupervised):
     if not solution_set_path:
         return []
     else:
         test_data, training_data, model, factsheet = read_solution(solution_set_path)
-        properties = get_properties_section(training_data, test_data, factsheet)
+        if not unsupervised:
+            properties = get_properties_section(training_data, test_data, factsheet)
+        else:
+            properties = get_properties_section_unsupervised(training_data, test_data, factsheet)
+
         properties_table = dash_table.DataTable(
             id='properties_table-2',
             columns=[{"name": i, "id": i} for i in properties.columns],
