@@ -38,32 +38,6 @@
             "label": ""
         }
     },
-    "score_equal_opportunity_difference": {
-        "thresholds": {
-            "value": [
-                0.15,
-                0.10,
-                0.05,
-                0.03,
-                0
-            ],
-            "description": "",
-            "label": ""
-        }
-    },
-    "score_average_odds_difference": {
-        "thresholds": {
-            "value": [   
-                0.15,
-                0.10,
-                0.05,
-                0.03,
-                0
-            ],
-            "description": "",
-            "label": ""
-        }
-    },
     "score_disparate_impact": {
         "thresholds": {
             "value": [
@@ -81,18 +55,12 @@
     "underfitting": 0.35,
     "overfitting": 0.15,
     "statistical_parity_difference": 0.15,
-    "equal_opportunity_difference": 0.2,
-    "average_odds_difference": 0.1,
-    "disparate_impact": 0.1,
-    "class_balance": 0.1
+    "disparate_impact": 0.1
   },
-    "metrics": {
+  "metrics": {
     "underfitting": "Is the model underfitting? <br> The higher this value the less underfitting was detected.",
     "overfitting": "Is the model overfitting? <br> The higher this value the less overfitting was detected.",
     "statistical_parity_difference": "How many percent more from the majority class receive a favorable outcome compared to the protected group.",
-    "equal_opportunity_difference": "Difference in true positive rates between protected and unprotected group.",
-    "average_odds_difference": "Is the average of difference in false positive rates and true positive rates between the protected and unprotected group",
-    "disparate_impact": "Is quotient of the ratio of samples from the protected group receiving a favorable prediction divided by the ratio of samples from the unprotected group receiving a favorable prediction",
-    "class_balance": "How well is the training data balanced or not? <br> The higher this value the more balanced the training data is."
+    "disparate_impact": "Is quotient of the ratio of samples from the protected group receiving a favorable prediction divided by the ratio of samples from the unprotected group receiving a favorable prediction"
   }
 }

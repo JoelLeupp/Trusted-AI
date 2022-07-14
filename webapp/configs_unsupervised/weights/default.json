@@ -1,9 +1,9 @@
 {
     "fairness": {
-        "underfitting": 1,
+        "underfitting": 0.35,
         "overfitting": 0.15,
         "statistical_parity_difference": 0.15,
-        "disparate_impact": 0.1,
+        "disparate_impact": 0.1
     },
     "explainability": {
         "correlated_features": 0.15,

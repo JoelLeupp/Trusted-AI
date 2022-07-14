@@ -11,6 +11,18 @@
             "label": "Score Thresholds"
         }
     },
+    "score_permutation_feature_importance": {
+        "thresholds": {
+            "value": [
+                0.05,
+                0.1,
+                0.15,
+                0.2
+            ],
+            "description": "TODO Map the fraction of many features make up 60% of all importance to a Score from 1-5. If the first number in the list is 0.05 it means that 5% or less features make up more than 60% of all importance, which would be a very skewed distribution of the feature importance and result in the worst score of 1, and if the next number is 0.1 it means if the fraction is between 5%-10% the Score would be a 2, analog the other thresholds",
+            "label": "Score Thresholds"
+        }
+    },
     "score_correlated_features": {
         "high_cor": {
             "value": 0.95,
@@ -25,18 +37,6 @@
                 0.4
             ],
             "description": "Thresholds of how to map the percentage of highly correlated features (>= high_cor or default 0.9) to a score from 1-5. Example if 0.05 is the first number it means that training dataset with 5% or less highly correlated variables would get the best score(5) and if 0.4 was the last number it would mean that a training dataset 40% or more highly correlated features would get the worst score (1), analog for the numbers in between",
-            "label": "Score Thresholds"
-        }
-    },
-    "score_permutation_feature_importance": {
-        "thresholds": {
-            "value": [
-                0.05,
-                0.1,
-                0.15,
-                0.2
-            ],
-            "description": "TODO Map the fraction of many features make up 60% of all importance to a Score from 1-5. If the first number in the list is 0.05 it means that 5% or less features make up more than 60% of all importance, which would be a very skewed distribution of the feature importance and result in the worst score of 1, and if the next number is 0.1 it means if the fraction is between 5%-10% the Score would be a 2, analog the other thresholds",
             "label": "Score Thresholds"
         }
     }
