@@ -44,9 +44,9 @@
         "methodology": {
             "normalization": 1,
             "missing_data": 5,
-            "regularization": NaN,
+            "regularization": 3,
             "train_test_split": 5,
-            "factsheet_completeness": 1
+            "factsheet_completeness": 0
         }
     },
     "properties": {
@@ -263,7 +263,7 @@
                 ],
                 "regularization_technique": [
                     "Regularization technique",
-                    "not specified"
+                    "Other"
                 ]
             },
             "train_test_split": {
@@ -300,10 +300,6 @@
                 "model_information": [
                     "Factsheet Property model information",
                     "missing"
-                ],
-                "target_column": [
-                    "Factsheet Property target column",
-                    "present"
                 ],
                 "authors": [
                     "Factsheet Property authors",

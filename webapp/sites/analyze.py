@@ -13,7 +13,7 @@ import glob
 import shutil
 from helpers import *
 from config import *
-from algorithms.trustworthiness import trusting_AI_scores, get_trust_score, get_final_score
+from algorithms.trustworthiness import trusting_AI_scores, get_trust_score, get_final_score, get_final_score_unsupervised
 import dash_table
 import numpy as np
 from sites import config_panel
@@ -26,17 +26,18 @@ from dash_extensions.snippets import send_file
 
 warnings.filterwarnings('ignore')
 
-# === CONFIG ===
+# === CONFIG SUPERVISED ===
 config_fairness, config_explainability, config_robustness, config_methodology, config_pillars = 0, 0, 0 ,0,0
+
 for config in ["config_pillars","config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
     with open(os.path.join(METRICS_CONFIG_PATH, config + ".json")) as file:
-            exec("%s = json.load(file)" % config)
+        exec("%s = json.load(file)" % config)
 
 pillars = ['fairness', 'explainability', 'robustness', 'methodology']
-weight_config = dict(fairness=config_fairness["weights"], explainability=config_explainability["weights"], 
+weight_config = dict(fairness=config_fairness["weights"], explainability=config_explainability["weights"],
                    robustness=config_robustness["weights"], methodology=config_methodology["weights"], pillars=config_pillars)
 
-mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"], 
+mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"],
                    robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
 
 metric_description = {**config_fairness["metrics"], **config_explainability["metrics"], **config_robustness["metrics"], **config_methodology["metrics"]}
@@ -52,11 +53,44 @@ for s in SECTIONS[1:]:
                 json.dump(mappings_config[s], outfile, indent=4)
 charts = []
 
-# === METRICS ===
+# === METRICS SUPERVISED===
 fairness_metrics = FAIRNESS_METRICS
 explainability_metrics = EXPLAINABILITY_METRICS
 robustness_metrics = ROBUSTNESS_METRICS
 methodology_metrics = METHODOLOGY_METRICS
+
+# === CONFIG UNSUPERVISED =========================================================================
+config_fairness, config_explainability, config_robustness, config_methodology, config_pillars = 0, 0, 0 ,0,0
+
+for config in ["config_pillars","config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
+    with open(os.path.join(METRICS_CONFIG_PATH_UNSUPERVISED, config + ".json")) as file:
+        exec("%s = json.load(file)" % config)
+
+pillars = ['fairness', 'explainability', 'robustness', 'methodology']
+weight_config_unsupervised = dict(fairness=config_fairness["weights"], explainability=config_explainability["weights"],
+                   robustness=config_robustness["weights"], methodology=config_methodology["weights"], pillars=config_pillars)
+
+mappings_config_unsupervised = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"],
+                   robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
+
+metric_description_unsupervised = {**config_fairness["metrics"], **config_explainability["metrics"], **config_robustness["metrics"], **config_methodology["metrics"]}
+
+with open('configs_unsupervised/weights/default.json', 'w') as outfile:
+                json.dump(weight_config_unsupervised, outfile, indent=4)
+
+with open('configs_unsupervised/mappings/default.json', 'w') as outfile:
+                json.dump(mappings_config_unsupervised, outfile, indent=4)
+
+for s in SECTIONS[1:]:
+    with open('configs_unsupervised/mappings/{}/default.json'.format(s), 'w') as outfile:
+                json.dump(mappings_config_unsupervised[s], outfile, indent=4)
+charts = []
+
+# === METRICS UNSUPERVISED ===
+fairness_metrics_unsupervised = FAIRNESS_METRICS_UNSUPERVISED
+explainability_metrics_unsupervised = EXPLAINABILITY_METRICS_UNSUPERVISED
+robustness_metrics_unsupervised = ROBUSTNESS_METRICS_UNSUPERVISED
+methodology_metrics_unsupervised = METHODOLOGY_METRICS_UNSUPERVISED
 
 # === SECTIONS ===
 def general_section():
@@ -566,6 +600,7 @@ def update_fairness_configuration(protected_feature, protected_values, target_co
     Output("explainability_details", 'children'),
     Input('result', 'data'), prevent_initial_call=True)
 def explainability_details(data):
+    print("data: ", data)
     if not data:
         return []
     result = json.loads(data)
@@ -575,6 +610,7 @@ def explainability_details(data):
     sections = [html.H3("▶ Explainability Metrics")]
     comp_list = []
     non_comp_list = []
+    print("metrics: ", metrics)
     for i in range(len(metrics)):
             metric_id = metrics[i]
             score = result["results"]["explainability"][metric_id]
@@ -900,9 +936,12 @@ def display_confirm(n_clicks):
     else:
         return False
     
-@app.callback(Output('performance_metrics_section', 'children'), 
-          Input('solution_set_dropdown', 'value'), prevent_initial_call=True)
-def show_performance_metrics(solution_set_path):
+@app.callback(Output('performance_metrics_section', 'children'),
+              Input('solution_set_dropdown', 'value'),
+              State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=True)
+def show_performance_metrics(solution_set_path, unsupervised):
+    if unsupervised:
+        return []
     if not solution_set_path:
         return []
     else:
@@ -950,13 +989,18 @@ def show_performance_metrics(solution_set_path):
 
 @app.callback(Output('properties_section', 'children'),
               [Input('result', 'data'),
-              State('solution_set_dropdown', 'value')], prevent_initial_call=True)
-def show_properties(data, solution_set_path):
+              State('solution_set_dropdown', 'value'),
+                State('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call=True)
+def show_properties(data, solution_set_path, unsupervised):
     if data is None:
         return []
     else:
         test_data, training_data, model, factsheet = read_solution(solution_set_path)
-        properties = get_properties_section(training_data, test_data, factsheet)
+        if not unsupervised:
+            properties = get_properties_section(training_data, test_data, factsheet)
+        else:
+            properties = get_properties_section_unsupervised(training_data, test_data, factsheet)
+
         if properties is None:
             return []
         properties_table = dash_table.DataTable(
@@ -1000,45 +1044,57 @@ def show_properties(data, solution_set_path):
 @app.callback(Output('result', 'data'), 
           [Input('solution_set_dropdown', 'value'),
           Input("input-config","data"),Input('input-mappings', 'data')],
-          State("recalc","on"))
-def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,recalc): 
-        if not solution_set_dropdown:
-            return None
-        
-        with open('configs/weights/default.json','r') as f:
-                default_weight = json.loads(f.read())
-        
+          [State("recalc","on"), State('toggle_supervised_unsupervised_analyze', 'on')])
+def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,recalc, unsupervised):
+
+    if not solution_set_dropdown:
+        return None
+
+    print("unsupervised", unsupervised)
+    if unsupervised:
+        with open('configs_unsupervised/weights/default.json', 'r') as f:
+            default_weight = json.loads(f.read())
+        with open('configs_unsupervised/mappings/default.json', 'r') as f:
+            default_map = json.loads(f.read())
+
+        weight_config = default_weight
+        mappings_config = default_map
+
+        test, train, model, factsheet = read_solution(solution_set_dropdown)
+        final_score, results, properties = get_final_score_unsupervised(model, train, test, weight_config, mappings_config,
+                                                           factsheet, solution_set_dropdown, recalc)
+        trust_score = get_trust_score(final_score, weight_config["pillars"])
+
+    else:
+        with open('configs/weights/default.json', 'r') as f:
+            default_weight = json.loads(f.read())
         with open('configs/mappings/default.json', 'r') as f:
-          default_map = json.loads(f.read()) 
-      
-        
+            default_map = json.loads(f.read())
+
         if not config_weights:
-           
-                weight_config = default_weight
+            weight_config = default_weight
         else:
             weight_config = json.loads(config_weights)
-            
+
         if not config_mappings:
-            
-                mappings_config = default_map
+            mappings_config = default_map
         else:
             mappings_config = json.loads(config_mappings)
-    
+
         test, train, model, factsheet = read_solution(solution_set_dropdown)
-    
         final_score, results, properties = get_final_score(model, train, test, weight_config, mappings_config, factsheet, solution_set_dropdown, recalc)
-        
         trust_score = get_trust_score(final_score, weight_config["pillars"])
-        
-        def convert(o):
-            if isinstance(o, np.int64): return int(o)  
-           
-            
-        data = {"final_score":final_score,
-                "results":results,
-                "trust_score":trust_score,
-                "properties" : properties}
-        return json.dumps(data,default=convert)
+
+
+    def convert(o):
+        if isinstance(o, np.int64): return int(o)
+
+
+    data = {"final_score":final_score,
+            "results":results,
+            "trust_score":trust_score,
+            "properties" : properties}
+    return json.dumps(data,default=convert)
   
 @app.callback(
       [Output('bar', 'figure'),
@@ -1056,85 +1112,94 @@ def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,
        Output('explainability_star_rating', 'children'),
        Output('robustness_star_rating', 'children'),
        Output('methodology_star_rating', 'children')],
-      [Input('result', 'data'),Input("hidden-trigger", "value")])  
-def update_figure(data, trig):
-      
-      global charts
-      charts = []
-      
-      if data is None:
-          return [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, "", "", "", "", ""]
-      result = json.loads(data)
-      final_score, results, properties = result["final_score"] , result["results"], result["properties"]
-      trust_score = result["trust_score"]
-      pillars = list(map(lambda x: x.upper(),list(final_score.keys())))
-      values = list(final_score.values()) 
-        
-      colors = [FAIRNESS_COLOR, EXPLAINABILITY_COLOR, ROBUSTNESS_COLOR, METHODOLOGY_COLOR]
-      
-      # barchart
-      chart_list=[]
-      bar_chart = go.Figure(data=[go.Bar(
-          x=pillars,
-          y=values,
-          marker_color=colors
-              )])
-      bar_chart.update_yaxes(range=[0, 5], fixedrange=True)
-      bar_chart.update_layout(title_text='', title_x=0.5, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
-      chart_list.append(bar_chart)
-      charts.append(bar_chart)
-     
-      #spider
-      radar_chart = px.line_polar(r=values, theta=pillars, line_close=True, title='')
-      radar_chart.update_layout(title_x=0.5)
-      radar_chart.update_traces(fill='toself', fillcolor=TRUST_COLOR, marker_color=TRUST_COLOR, marker_line_color=TRUST_COLOR, marker_line_width=0, opacity=0.6)
-      chart_list.append(radar_chart)
-     
-      #barcharts
-      for n, (pillar , sub_scores) in enumerate(results.items()):
-          title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
-          categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
-          values = list(map(float, sub_scores.values()))
-          if np.isnan(values).any():
-              nonNanCategories = list()
-              nonNanValues = list()
-              for c, v in zip(categories, values):
-                  if not np.isnan(v):
-                      nonNanCategories.append(c)
-                      nonNanValues.append(v)
-              categories = nonNanCategories
-              values = nonNanValues
-          desc = list(map(lambda x: metric_description[x.lower().replace(' ','_')], categories))
-          bar_chart_pillar = go.Figure(data=[go.Bar(x=categories, y=values, customdata = desc, marker_color=colors[n],hovertemplate = "(%{x}: %{y})<br>%{customdata}<extra></extra>")])
-          bar_chart_pillar.update_yaxes(range=[0, 5], fixedrange=True)
-          #bar_chart_pillar.update_yaxes(fixedrange=True)
-          #bar_chart_pillar.update_yaxes(range=[0, 8])
-          bar_chart_pillar.update_layout(title_text='', title_x=0.5, xaxis_tickangle=XAXIS_TICKANGLE, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
-            
-            
-            #fig.update_layout(barmode='group', xaxis_tickangle=-45)
-          chart_list.append(bar_chart_pillar)
-          charts.append(bar_chart_pillar)
-         
-      #spider charts
-      for n, (pillar , sub_scores) in enumerate(results.items()):
-          title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
-          categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
-          val = list(map(float, sub_scores.values()))
-          exc = np.isnan(val)
-          r = np.array(val)[~exc]
-          theta=np.array(categories)[~exc]
-          radar_chart_pillar = px.line_polar(r=r, theta=theta, line_close=True, title='')
-          radar_chart_pillar.update_traces(fill='toself', fillcolor=colors[n], marker_color=colors[n],marker_line_width=1.5, opacity=0.6)
-          radar_chart_pillar.update_layout(title_x=0.5)
-          chart_list.append(radar_chart_pillar)
-      star_ratings = []
-      star_ratings.append(show_star_rating(trust_score))
-      star_ratings.append(show_star_rating(final_score["fairness"]))
-      star_ratings.append(show_star_rating(final_score["explainability"]))
-      star_ratings.append(show_star_rating(final_score["robustness"]))
-      star_ratings.append(show_star_rating(final_score["methodology"]))
-      return chart_list + star_ratings
+      [Input('result', 'data'),Input("hidden-trigger", "value")],
+    State('toggle_supervised_unsupervised_analyze', 'on'))
+def update_figure(data, trig, unsupervised):
+    global charts
+    charts = []
+
+    if data is None:
+        return [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, "", "", "", "", ""]
+    result = json.loads(data)
+    print(result)
+    final_score, results, properties = result["final_score"] , result["results"], result["properties"]
+    trust_score = result["trust_score"]
+    pillars = list(map(lambda x: x.upper(),list(final_score.keys())))
+    values = list(final_score.values())
+
+    colors = [FAIRNESS_COLOR, EXPLAINABILITY_COLOR, ROBUSTNESS_COLOR, METHODOLOGY_COLOR]
+
+    # barchart
+    chart_list=[]
+    bar_chart = go.Figure(data=[go.Bar(
+        x=pillars,
+        y=values,
+        marker_color=colors
+            )])
+    bar_chart.update_yaxes(range=[0, 5], fixedrange=True)
+    bar_chart.update_layout(title_text='', title_x=0.5, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
+    chart_list.append(bar_chart)
+    charts.append(bar_chart)
+
+    #spider
+    radar_chart = px.line_polar(r=values, theta=pillars, line_close=True, title='')
+    radar_chart.update_layout(title_x=0.5)
+    radar_chart.update_traces(fill='toself', fillcolor=TRUST_COLOR, marker_color=TRUST_COLOR, marker_line_color=TRUST_COLOR, marker_line_width=0, opacity=0.6)
+    chart_list.append(radar_chart)
+
+    #barcharts
+    for n, (pillar , sub_scores) in enumerate(results.items()):
+        print(n, pillar, sub_scores)
+        title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
+        categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
+        values = list(map(float, sub_scores.values()))
+        if np.isnan(values).any():
+            nonNanCategories = list()
+            nonNanValues = list()
+            for c, v in zip(categories, values):
+                if not np.isnan(v):
+                    nonNanCategories.append(c)
+                    nonNanValues.append(v)
+            categories = nonNanCategories
+            values = nonNanValues
+        print(categories)
+        if not unsupervised:
+            print("metric_desription: ", metric_description)
+            desc = list(map(lambda x: metric_description[x.lower().replace(' ','_')], categories))
+        else:
+            desc = list(map(lambda x: metric_description_unsupervised[x.lower().replace(' ','_')], categories))
+            print("metric_desription_unsupervised: ", metric_description_unsupervised)
+
+        bar_chart_pillar = go.Figure(data=[go.Bar(x=categories, y=values, customdata = desc, marker_color=colors[n],hovertemplate = "(%{x}: %{y})<br>%{customdata}<extra></extra>")])
+        bar_chart_pillar.update_yaxes(range=[0, 5], fixedrange=True)
+        #bar_chart_pillar.update_yaxes(fixedrange=True)
+        #bar_chart_pillar.update_yaxes(range=[0, 8])
+        bar_chart_pillar.update_layout(title_text='', title_x=0.5, xaxis_tickangle=XAXIS_TICKANGLE, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
+
+
+          #fig.update_layout(barmode='group', xaxis_tickangle=-45)
+        chart_list.append(bar_chart_pillar)
+        charts.append(bar_chart_pillar)
+
+    #spider charts
+    for n, (pillar , sub_scores) in enumerate(results.items()):
+        title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
+        categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
+        val = list(map(float, sub_scores.values()))
+        exc = np.isnan(val)
+        r = np.array(val)[~exc]
+        theta=np.array(categories)[~exc]
+        radar_chart_pillar = px.line_polar(r=r, theta=theta, line_close=True, title='')
+        radar_chart_pillar.update_traces(fill='toself', fillcolor=colors[n], marker_color=colors[n],marker_line_width=1.5, opacity=0.6)
+        radar_chart_pillar.update_layout(title_x=0.5)
+        chart_list.append(radar_chart_pillar)
+    star_ratings = []
+    star_ratings.append(show_star_rating(trust_score))
+    star_ratings.append(show_star_rating(final_score["fairness"]))
+    star_ratings.append(show_star_rating(final_score["explainability"]))
+    star_ratings.append(show_star_rating(final_score["robustness"]))
+    star_ratings.append(show_star_rating(final_score["methodology"]))
+    return chart_list + star_ratings
 
 @app.callback(
     Output("robustness_details", 'children'),

@@ -477,10 +477,6 @@
                     "Factsheet Property model information",
                     "present"
                 ],
-                "target_column": [
-                    "Factsheet Property target column",
-                    "present"
-                ],
                 "authors": [
                     "Factsheet Property authors",
                     "present"

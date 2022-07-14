@@ -19,7 +19,7 @@
     "scores": {
         "fairness": {
             "underfitting": 4,
-            "overfitting": 5,
+            "overfitting": NaN,
             "statistical_parity_difference": 1,
             "equal_opportunity_difference": 2,
             "average_odds_difference": 3,
@@ -44,9 +44,9 @@
         "methodology": {
             "normalization": 1,
             "missing_data": 5,
-            "regularization": NaN,
+            "regularization": 3,
             "train_test_split": 5,
-            "factsheet_completeness": 1
+            "factsheet_completeness": 0
         }
     },
     "properties": {
@@ -55,53 +55,82 @@
                 "Metric Description": "Compares the models achieved test accuracy against a baseline.",
                 "Depends on": "Model, Test Data",
                 "Test Accuracy": "91.92%",
-                "Conclusion": "Model mildly underfitting"
+                "Conclusion": "Model mildly underfitting",
+                "Score": "4"
             },
             "overfitting": {
-                "Metric Description": "Overfitting is present if the training accuracy is significantly higher than the test accuracy",
-                "Depends on": "Model, Training Data, Test Data",
-                "Training Accuracy": "92.79%",
-                "Test Accuracy": "91.92%",
-                "Train Test Accuracy Difference": "0.87%",
-                "Conclusion": "Model is not overfitting"
+                "Non computable because": "The test accuracy is to low and if the model is underfitting to much it can't be overfitting at the same time."
             },
             "statistical_parity_difference": {
                 "Metric Description": "The spread between the percentage of observations from the majority group receiving a favorable outcome compared to the protected group. The closes this spread is to zero the better.",
                 "Depends on": "Training Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
-                "Favored Majority Ratio": "P(y_true=favorable|protected=False) = 19.79%",
-                "Favored Minority Ratio": "P(y_true=favorable|protected=True) = 57.43%",
-                "Formula": "Favored Minority Ratio - Favored Minority Ratio",
-                "Statistical Parity Difference": "37.64%"
+                "----------": "",
+                "|{x|x is protected, y_true is favorable}|": 115010,
+                "|{x|x is protected}|": 200249,
+                "Favored Protected Group Ratio": "P(y_true is favorable|protected=True) = 57.43%",
+                "|{x|x is not protected, y_true is favorable}|": 39530,
+                "|{x|x is not protected}|": 199751,
+                "Favored Unprotected Group Ratio": "P(y_true is favorable|protected=False) = 19.79%",
+                "-----------": "",
+                "Formula": "Statistical Parity Difference = |Favored Protected Group Ratio - Favored Unprotected Group Ratio|",
+                "Statistical Parity Difference": "37.64%",
+                "Score": "1"
             },
             "equal_opportunity_difference": {
                 "Metric Description": "Difference in true positive rates between protected and unprotected group.",
                 "Depends on": "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
-                "TPR Unprotected Group": "P(y_hat=favorable|y_true=favorable, protected=False) = 96.15%",
-                "TPR Protected Group": "P(y_hat=favorable|y_true=favorable, protected=True) = 85.18%",
-                "Formula": "Equal Opportunity Difference = TPR Protected Group - TPR Unprotected Group",
-                "Equal Opportunity Difference": "-10.97%"
+                "----------": "",
+                "|{x|x is protected, y_true is favorable, y_pred is favorable}|": 24628,
+                "|{x|x is protected, y_true is favorable}|": 28914,
+                "TPR Protected Group": "P(y_pred is favorable|y_true is favorable, protected=True) = 85.18%",
+                "|{x|x is not protected, y_true is favorable, y_pred is favorable}|": 9479,
+                "|{x|x is not protected, y_true is favorable}|": 9859,
+                "TPR Unprotected Group": "P(y_pred is favorable|y_true is favorable, protected=False) = 96.15%",
+                "-----------": "",
+                "Formula": "Equal Opportunity Difference = |TPR Protected Group - TPR Unprotected Group|",
+                "Equal Opportunity Difference": "10.97%",
+                "Score": "2"
             },
             "average_odds_difference": {
                 "Metric Description": "Is the average of difference in false positive rates and true positive rates between the protected and unprotected group",
                 "Depends on": "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
-                "FPR Unprotected Group": "P(y_hat=favorable|y_true=unfavorable, protected=False) = 8.26%",
-                "FPR Protected Group": "P(y_hat=favorable|y_true=unfavorable, protected=True) = 0.49%",
-                "TPR Unprotected Group": "P(y_hat=favorable|y_true=favorable, protected=False) = 96.15%",
-                "TPR Protected Group": "P(y_hat=favorable|y_true=favorable, protected=True) = 85.18%",
-                "Formula": "0.5*(TPR Protected - TPR Unprotected) + 0.5*(FPR Protected - FPR Unprotected)",
-                "Average Odds Difference": "-9.37%"
+                "----------": "",
+                "|{x|x is protected, y_true is unfavorable, y_pred is favorable}|": 104,
+                "|{x|x is protected, y_true is Unfavorable}|": 21162,
+                "FPR Protected Group": "P(y_pred is favorable|y_true is unfavorable, protected=True) = 0.49%",
+                "|{x|x is not protected, y_true is unfavorable, y_pred is favorable}|": 3310,
+                "|{x|x is not protected, y_true is unfavorable}|": 40065,
+                "FPR Unprotected Group": "P(y_pred is favorable|y_true is unfavorable, protected=False) = 8.26%",
+                "|{x|x is protected, y_true is favorable, y_pred is favorable}|": 24628,
+                "|{x|x is protected, y_true is favorable}|": 28914,
+                "TPR Protected Group": "P(y_pred is favorable|y_true is favorable, protected=True) = 85.18%",
+                "|{x|x is not protected, y_true is favorable, y_pred is favorable}|": 9479,
+                "|{x|x is not protected, y_true is favorable}|": 9859,
+                "TPR Unprotected Group": "P(y_pred is favorable|y_true is favorable, protected=False) = 96.15%",
+                "-----------": "",
+                "Formula": "Average Odds Difference = |0.5*(TPR Protected - TPR Unprotected) + 0.5*(FPR Protected - FPR Unprotected)|",
+                "Average Odds Difference": "9.37%",
+                "Score": "3"
             },
             "disparate_impact": {
                 "Metric Description": "Is quotient of the ratio of samples from the protected group receiving a favorable prediction divided by the ratio of samples from the unprotected group receiving a favorable prediction",
                 "Depends on": "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
+                "----------": "",
+                "|{x|x is protected, y_pred is favorable}": 24732,
+                "|{x|x is protected}|": 50076,
                 "Protected Favored Ratio": "P(y_hat=favorable|protected=True) = 49.39%",
+                "|{x|x is not protected, y_pred is favorable}|": 12789,
+                "|{x|x is not protected}|": 49924,
                 "Unprotected Favored Ratio": "P(y_hat=favorable|protected=False) = 25.62%",
+                "-----------": "",
                 "Formula": "Disparate Impact = Protected Favored Ratio / Unprotected Favored Ratio",
-                "Disparate Impact": "1.93"
+                "Disparate Impact": "1.93",
+                "Score": "5"
             },
             "class_balance": {
                 "Metric Description": "Measures how well the training data is balanced or unbalanced",
-                "Depends on": "Training Data"
+                "Depends on": "Training Data",
+                "Score": "1"
             }
         },
         "explainability": {
@@ -132,7 +161,7 @@
                 ],
                 "n_features": [
                     "number of features",
-                    6
+                    5
                 ]
             },
             "feature_relevance": {
@@ -147,14 +176,43 @@
                 "confidence_score": [
                     "Average confidence score",
                     "91.19%"
+                ],
+                "depends_on": [
+                    "Depends on",
+                    "Model and Data"
                 ]
             },
             "clique_method": {},
-            "loss_sensitivity": {},
-            "clever_score": {},
-            "er_fast_gradient_attack": {},
-            "er_carlini_wagner_attack": {},
-            "er_deepfool_attack": {}
+            "loss_sensitivity": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can only be calculated on Keras models."
+                ]
+            },
+            "clever_score": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can only be calculated on Keras models."
+                ]
+            },
+            "er_fast_gradient_attack": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can be calculated on either SVC or Logistic Regression models."
+                ]
+            },
+            "er_carlini_wagner_attack": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can be calculated on either SVC or Logistic Regression models."
+                ]
+            },
+            "er_deepfool_attack": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can be calculated on either SVC or Logistic Regression models."
+                ]
+            }
         },
         "methodology": {
             "normalization": {
@@ -200,7 +258,7 @@
                 ],
                 "regularization_technique": [
                     "Regularization technique",
-                    "not specified"
+                    "Other"
                 ]
             },
             "train_test_split": {
@@ -237,10 +295,6 @@
                 "model_information": [
                     "Factsheet Property model information",
                     "missing"
-                ],
-                "target_column": [
-                    "Factsheet Property target column",
-                    "present"
                 ],
                 "authors": [
                     "Factsheet Property authors",
