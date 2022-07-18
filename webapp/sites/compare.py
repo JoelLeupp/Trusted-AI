@@ -144,7 +144,15 @@ def load_solution_sets(scenario_id, unsupervised):
     else:
         return [], []
 
+@app.callback(
+    Output("scenario_dropdown_compare", "options"),
+    Input('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call = True
+)
+def toggle_mode_compare(unsupervised):
 
+    print("toggle on compare site")
+    print(get_scenario_options(unsupervised))
+    return get_scenario_options(unsupervised)
 
 layout = html.Div([
     dbc.Container([

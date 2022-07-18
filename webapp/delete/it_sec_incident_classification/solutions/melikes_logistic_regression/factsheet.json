@@ -1,0 +1,435 @@
+{
+    "general": {
+        "model_name": "Melike's Logistic Regression",
+        "purpose_description": "IoT Attack Classification",
+        "domain_description": "IT Security",
+        "training_data_description": "Alberto's original Raspery Pie data",
+        "model_information": "Sklearn Logistic Regression Classifier for IoT Security Incident Classification scenario",
+        "target_column": "label",
+        "authors": "Melike Demirci",
+        "contact_information": "melike.demirci@uzh.ch"
+    },
+    "fairness": {
+        "protected_feature": "connectivity",
+        "protected_values": [
+            0
+        ],
+        "favorable_outcomes": [
+            13
+        ]
+    },
+    "methodology": {
+        "regularization": "none"
+    },
+    "scores": {
+        "fairness": {
+            "underfitting": 3,
+            "overfitting": 3,
+            "statistical_parity_difference": NaN,
+            "equal_opportunity_difference": NaN,
+            "average_odds_difference": NaN,
+            "disparate_impact": NaN,
+            "class_balance": 5
+        },
+        "explainability": {
+            "algorithm_class": 3,
+            "correlated_features": 1,
+            "model_size": 3,
+            "feature_relevance": 1
+        },
+        "robustness": {
+            "confidence_score": 5,
+            "clique_method": NaN,
+            "loss_sensitivity": NaN,
+            "clever_score": NaN,
+            "er_fast_gradient_attack": 1,
+            "er_carlini_wagner_attack": 1,
+            "er_deepfool_attack": 1
+        },
+        "methodology": {
+            "normalization": 4,
+            "missing_data": 5,
+            "regularization": 1,
+            "train_test_split": 5,
+            "factsheet_completeness": 5
+        }
+    },
+    "properties": {
+        "fairness": {
+            "underfitting": {
+                "Metric Description": "Compares the models achieved test accuracy against a baseline.",
+                "Depends on": "Model, Test Data",
+                "Test Accuracy": "85.47%",
+                "Conclusion": "Model is slighly underfitting"
+            },
+            "overfitting": {
+                "Metric Description": "Overfitting is present if the training accuracy is significantly higher than the test accuracy",
+                "Depends on": "Model, Training Data, Test Data",
+                "Training Accuracy": "87.69%",
+                "Test Accuracy": "85.47%",
+                "Train Test Accuracy Difference": "2.22%",
+                "Conclusion": "Model is slighly overfitting"
+            },
+            "statistical_parity_difference": {},
+            "equal_opportunity_difference": {},
+            "average_odds_difference": {
+                "Non computable": "division by zero"
+            },
+            "disparate_impact": {},
+            "class_balance": {
+                "Metric Description": "Measures how well the training data is balanced or unbalanced",
+                "Depends on": "Training Data"
+            }
+        },
+        "explainability": {
+            "algorithm_class": {
+                "dep": [
+                    "Depends on",
+                    "Model"
+                ],
+                "clf_name": [
+                    "model type",
+                    "LogisticRegression"
+                ]
+            },
+            "correlated_features": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "pct_drop": [
+                    "Percentage of highly correlated features",
+                    "58.90%"
+                ]
+            },
+            "model_size": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "n_features": [
+                    "number of features",
+                    74
+                ]
+            },
+            "feature_relevance": {
+                "dep": [
+                    "Depends on",
+                    "Training Data and Model"
+                ],
+                "n_outliers": [
+                    "number of outliers in the importance distribution",
+                    5
+                ],
+                "pct_dist": [
+                    "percentage of feature that make up over 60% of all features importance",
+                    "0.00%"
+                ],
+                "importance": [
+                    "feature importance",
+                    {
+                        "value": [
+                            2.6194584832419685,
+                            1.9552831416287704,
+                            1.7825303538367385,
+                            1.427033970715562,
+                            1.2899601552723488,
+                            1.270248702741433,
+                            1.1297411518443727,
+                            1.0506263454247435,
+                            1.0498447071457804,
+                            1.0304278163089768,
+                            0.8609663541526494,
+                            0.8171822709056824,
+                            0.8087170628097929,
+                            0.7715876693767076,
+                            0.6715552248435823,
+                            0.6560351058750317,
+                            0.6412899230645472,
+                            0.6369367951203319,
+                            0.6187050432870841,
+                            0.6162073206834037,
+                            0.5757003674151567,
+                            0.5580429169835504,
+                            0.5419141273084467,
+                            0.5354560251469245,
+                            0.5321028185869549,
+                            0.5216472247163051,
+                            0.5206578846834656,
+                            0.4192557626936274,
+                            0.4009494928103567,
+                            0.393266567532608,
+                            0.38152622804625697,
+                            0.35579371358862005,
+                            0.3460946577652755,
+                            0.3094746173589027,
+                            0.3071129969260477,
+                            0.2960619504908215,
+                            0.29423263785711384,
+                            0.27749553749031686,
+                            0.2662712461389531,
+                            0.2581695760760581,
+                            0.2572832557640157,
+                            0.25141380348353204,
+                            0.250749907451981,
+                            0.24682430403953393,
+                            0.2341708443854117,
+                            0.2340120818044097,
+                            0.2282290002533296,
+                            0.22547967767301913,
+                            0.22470490934364765,
+                            0.2221569546476183,
+                            0.21338972359994193,
+                            0.19808077647135977,
+                            0.18220748550856797,
+                            0.17931756354405248,
+                            0.17301539761222923,
+                            0.15653018633806087,
+                            0.15427104087467639,
+                            0.1534284932183976,
+                            0.13609052117064327,
+                            0.10131049123818311,
+                            0.09494358704048397,
+                            0.09446959248042691,
+                            0.08066175214167005,
+                            0.07757487210951629,
+                            0.07539139786925439,
+                            0.06163281416508994,
+                            0.05494666909468455,
+                            0.04775523909323843,
+                            0.0346210473817951,
+                            0.008679255515903067,
+                            0.008030677988418788,
+                            0.008027557107813024,
+                            0.002043288543278066
+                        ],
+                        "labels": [
+                            "timer:hrtimer_start",
+                            "tcp:tcp_probe",
+                            "writeback:global_dirty_state",
+                            "kmem:kfree",
+                            "writeback:writeback_write_inode",
+                            "random:mix_pool_bytes_nolock",
+                            "sock:inet_sock_set_state",
+                            "kmem:kmalloc",
+                            "irq:softirq_entry",
+                            "random:urandom_read",
+                            "kmem:kmem_cache_alloc",
+                            "block:block_unplug",
+                            "kmem:kmem_cache_free",
+                            "sched:sched_process_wait",
+                            "block:block_dirty_buffer",
+                            "block:block_touch_buffer",
+                            "qdisc:qdisc_dequeue",
+                            "qdisc:qdisc_dequeue.1",
+                            "jbd2:jbd2_handle_start",
+                            "irq:irq_handler_entry",
+                            "jbd2:jbd2_start_commit",
+                            "writeback:writeback_written",
+                            "net:netif_rx",
+                            "timer:timer_start",
+                            "workqueue:workqueue_activate_work",
+                            "sched:sched_process_exec",
+                            "writeback:writeback_single_inode",
+                            "cpu-migrations",
+                            "signal:signal_deliver",
+                            "task:task_newtask",
+                            "writeback:writeback_dirty_inode",
+                            "block:block_bio_backmerge",
+                            "random:get_random_bytes",
+                            "sched:sched_wakeup",
+                            "page-faults",
+                            "writeback:wbc_writepage",
+                            "rpm:rpm_resume",
+                            "block:block_getrq",
+                            "ipi:ipi_raise",
+                            "raw_syscalls:sys_enter",
+                            "raw_syscalls:sys_exit",
+                            "writeback:writeback_dirty_inode_enqueue",
+                            "gpio:gpio_value",
+                            "connectivity",
+                            "writeback:sb_clear_inode_writeback",
+                            "kmem:mm_page_alloc",
+                            "writeback:writeback_mark_inode_dirty",
+                            "net:net_dev_xmit",
+                            "skb:consume_skb.1",
+                            "skb:consume_skb",
+                            "preemptirq:irq_enable",
+                            "net:net_dev_queue",
+                            "pagemap:mm_lru_insertion",
+                            "skb:kfree_skb.1",
+                            "kmem:mm_page_free",
+                            "skb:kfree_skb",
+                            "sched:sched_process_free",
+                            "fib:fib_table_lookup",
+                            "block:block_bio_remap",
+                            "signal:signal_generate",
+                            "seconds",
+                            "kmem:mm_page_alloc_zone_locked",
+                            "sched:sched_switch",
+                            "mmc:mmc_request_start",
+                            "cs",
+                            "skb:skb_copy_datagram_iovec",
+                            "rpm:rpm_suspend",
+                            "clk:clk_set_rate",
+                            "tcp:tcp_destroy_sock",
+                            "kmem:mm_page_pcpu_drain",
+                            "writeback:writeback_pages_written",
+                            "writeback:writeback_dirty_page",
+                            "filemap:mm_filemap_add_to_page_cache"
+                        ]
+                    }
+                ]
+            }
+        },
+        "robustness": {
+            "confidence_score": {
+                "confidence_score": [
+                    "Average confidence score",
+                    "86.33%"
+                ]
+            },
+            "clique_method": {},
+            "loss_sensitivity": {},
+            "clever_score": {},
+            "er_fast_gradient_attack": {
+                "before_attack": [
+                    "FGM Before attack accuracy",
+                    "92.00%"
+                ],
+                "after_attack": [
+                    "FGM After attack accuracy",
+                    "12.00%"
+                ],
+                "difference": [
+                    "FGM Proportional difference (After-Att Acc - Before-Att Acc)/Before-Att Acc",
+                    "86.96%"
+                ]
+            },
+            "er_carlini_wagner_attack": {
+                "before_attack": [
+                    "CW Before attack accuracy",
+                    "100.00%"
+                ],
+                "after_attack": [
+                    "CW After attack accuracy",
+                    "0.00%"
+                ],
+                "difference": [
+                    "CW Proportional difference (After-Att Acc - Before-Att Acc)/Before-Att Acc",
+                    "100.00%"
+                ]
+            },
+            "er_deepfool_attack": {
+                "before_attack": [
+                    "DF Before attack accuracy",
+                    "100.00%"
+                ],
+                "after_attack": [
+                    "DF After attack accuracy",
+                    "0.00%"
+                ],
+                "difference": [
+                    "DF Proportional difference (After-Att Acc - Before-Att Acc)/Before-Att Acc",
+                    "100.00%"
+                ]
+            }
+        },
+        "methodology": {
+            "normalization": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "Training_mean": [
+                    "Mean of the training data",
+                    "-0.00"
+                ],
+                "Training_std": [
+                    "Standard deviation of the training data",
+                    "1.00"
+                ],
+                "Test_mean": [
+                    "Mean of the test data",
+                    "-0.03"
+                ],
+                "Test_std": [
+                    "Standard deviation of the test data",
+                    "0.88"
+                ],
+                "normalization": [
+                    "Normalization",
+                    "Training data are standardized"
+                ]
+            },
+            "missing_data": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "null_values": [
+                    "Number of the null values",
+                    "0"
+                ]
+            },
+            "regularization": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "regularization_technique": [
+                    "Regularization technique",
+                    "none"
+                ]
+            },
+            "train_test_split": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "train_test_split": [
+                    "Train test split",
+                    "80.00/20.00"
+                ]
+            },
+            "factsheet_completeness": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "model_name": [
+                    "Factsheet Property model name",
+                    "present"
+                ],
+                "purpose_description": [
+                    "Factsheet Property purpose description",
+                    "present"
+                ],
+                "domain_description": [
+                    "Factsheet Property domain description",
+                    "present"
+                ],
+                "training_data_description": [
+                    "Factsheet Property training data description",
+                    "present"
+                ],
+                "model_information": [
+                    "Factsheet Property model information",
+                    "present"
+                ],
+                "target_column": [
+                    "Factsheet Property target column",
+                    "present"
+                ],
+                "authors": [
+                    "Factsheet Property authors",
+                    "present"
+                ],
+                "contact_information": [
+                    "Factsheet Property contact information",
+                    "present"
+                ]
+            }
+        }
+    }
+}

@@ -989,8 +989,8 @@ def show_performance_metrics(solution_set_path, unsupervised):
 
 @app.callback(Output('properties_section', 'children'),
               [Input('result', 'data'),
-              State('solution_set_dropdown', 'value'),
-                State('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call=True)
+               State('solution_set_dropdown', 'value'),
+               State('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call=True)
 def show_properties(data, solution_set_path, unsupervised):
     if data is None:
         return []
@@ -1043,8 +1043,9 @@ def show_properties(data, solution_set_path, unsupervised):
 
 @app.callback(Output('result', 'data'), 
           [Input('solution_set_dropdown', 'value'),
-          Input("input-config","data"),Input('input-mappings', 'data')],
-          [State("recalc","on"), State('toggle_supervised_unsupervised_analyze', 'on')])
+           Input("input-config","data"),Input('input-mappings', 'data')],
+          [State("recalc","on"),
+           State('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call = True)
 def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,recalc, unsupervised):
 
     if not solution_set_dropdown:
@@ -1338,8 +1339,10 @@ def clever_score(data):
  
 @app.callback(
     Output("solution_set_dropdown", 'options'),
-    [Input('scenario_dropdown', 'value'), Input('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call=False)
+    Input('scenario_dropdown', 'value'),
+    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
 def show_scenario_solution_options(scenario_id, unsupervised):
+    print("unsupervised: ", unsupervised)
     if scenario_id and not unsupervised:
         solutions = get_scenario_solutions_options(scenario_id)
         return solutions
@@ -1381,7 +1384,16 @@ def set_uploaded_model(scenario_id, solution_id):
         return scenario_id, solution_path
     else:
         return None, None
-      
+
+@app.callback(
+    Output("scenario_dropdown", "options"),
+    Input('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call = True
+)
+def toggle_mode_analyze(unsupervised):
+
+    print("toggle on analyze site")
+    return get_scenario_options(unsupervised)
+
 config_panel.get_callbacks(app)
     
 # === LAYOUT ===
@@ -1411,14 +1423,13 @@ layout = html.Div([
                     id='scenario_dropdown',
                     options= get_scenario_options(),
                     value = None,
-
                     placeholder='Select Scenario'
                 )], width=12, style={"marginLeft": "0 px", "marginRight": "0 px"}, className="mb-1 mt-1"
             ),
             dbc.Col([html.H5("Solution"),
                 dcc.Dropdown(
                     id='solution_set_dropdown',
-                    options = get_scenario_solutions_options('it_sec_incident_classification'),
+                    options = [],
                     value=None,
 
                     placeholder='Select Solution'

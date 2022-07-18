@@ -197,19 +197,25 @@ def name_to_id(name):
     return name.replace(" ", "_").lower()
 
 # === SCENARIOS ===
-def get_scenario_ids():
-    scenario_ids = [f.name for f in os.scandir(SCENARIOS_FOLDER_PATH) if f.is_dir() and not f.name.startswith('.')]
+def get_scenario_ids(unsupervised = False):
+    if unsupervised:
+        scenario_ids = [f.name for f in os.scandir(SCENARIOS_FOLDER_PATH_UNSUPERVISED) if f.is_dir() and not f.name.startswith('.')]
+    else:
+        scenario_ids = [f.name for f in os.scandir(SCENARIOS_FOLDER_PATH) if f.is_dir() and not f.name.startswith('.')]
     #sort scenario ids in place
     scenario_ids.sort()
     return scenario_ids
 
-def get_scenario_options():
-    scenario_ids = get_scenario_ids()
+def get_scenario_options(unsupervised = False):
+    scenario_ids = get_scenario_ids(unsupervised)
     options = [{"label": id_to_name(scenario_id), "value": scenario_id} for scenario_id in scenario_ids]
     return options
 
-def get_scenario_path(scenario_id):
-    return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id)
+def get_scenario_path(scenario_id, unsupervised = False):
+    if unsupervised:
+        return os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id)
+    else:
+        return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id)
 
 def get_solution_ids(scenario_id):
     solution_ids = [(f.name, f.path) for f in os.scandir(get_solution_path(scenario_id, "")) if f.is_dir() and not f.name.startswith('.')]
@@ -252,7 +258,7 @@ def get_solution_path(scenario_id, solution_id):
     return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id, SOLUTIONS_FOLDER, solution_id)
 
 def get_solution_unsupervised_path(scenario_id, solution_id):
-    return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id, SOLUTIONS_FOLDER_UNSUPERVISED, solution_id)
+    return os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id, SOLUTIONS_FOLDER_UNSUPERVISED, solution_id)
 
 def get_factsheet_path(scenario_id, solution_id):
     return os.path.join(get_solution_path(scenario_id, solution_id), FACTSHEET_NAME)

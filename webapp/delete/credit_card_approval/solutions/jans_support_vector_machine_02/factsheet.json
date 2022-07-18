@@ -1,0 +1,19 @@
+{
+    "general": {
+        "target_column": "Target"
+    },
+    "fairness": {
+        "protected_feature": "Group",
+        "protected_values": [
+            1
+        ],
+        "favorable_outcomes": [
+            1
+        ]
+    },
+    "explainability": {},
+    "robustness": {},
+    "methodology": {
+        "regularization": "Other"
+    }
+}

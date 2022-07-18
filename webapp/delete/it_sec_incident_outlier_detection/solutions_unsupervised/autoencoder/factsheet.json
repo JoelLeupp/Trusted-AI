@@ -1,0 +1,196 @@
+{
+    "general": {
+        "model_name": "Mauro's Neural Network",
+        "purpose_description": "Outlier Detection",
+        "domain_description": "IT Security",
+        "training_data_description": "Alberto's classification data",
+        "model_information": "Keras Neural Network Classifier for IT Security Incident Classification scenario",
+        "target_column": "label",
+        "authors": "Melike Demirci",
+        "contact_information": "melike.demirci@uzh.ch"
+    },
+    "fairness": {
+        "protected_feature": "writeback:writeback_dirty_inode_enqueue",
+        "protected_values": [
+            1
+        ]
+    },
+    "methodology": {
+        "regularization": "none"
+    },
+    "scores": {
+        "fairness": {
+            "underfitting": 4,
+            "overfitting": 1,
+            "statistical_parity_difference": 2,
+            "disparate_impact": 5
+        },
+        "explainability": {
+            "correlated_features": 1,
+            "model_size": 3,
+            "permutation_feature_importance": 5
+        },
+        "robustness": {
+            "clever_score": 1
+        },
+        "methodology": {
+            "normalization": 1,
+            "missing_data": 5,
+            "regularization": 1,
+            "train_test_split": 1,
+            "factsheet_completeness": 5
+        }
+    },
+    "properties": {
+        "fairness": {
+            "underfitting": {
+                "Non computable because": "name 'X_train' is not defined"
+            },
+            "overfitting": {
+                "Non computable because": "name 'X_train' is not defined"
+            },
+            "statistical_parity_difference": {
+                "Non computable because": "division by zero"
+            },
+            "disparate_impact": {
+                "Non computable because": "division by zero"
+            }
+        },
+        "explainability": {
+            "correlated_features": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "pct_drop": [
+                    "Percentage of highly correlated features",
+                    "39.73%"
+                ]
+            },
+            "model_size": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "n_features": [
+                    "number of features",
+                    73
+                ]
+            },
+            "permutation_feature_importance": {
+                "dep": [
+                    "Depends on",
+                    "Training Data and Model"
+                ]
+            }
+        },
+        "robustness": {
+            "clever_score": {
+                "clever_score": [
+                    "CLEVER Score",
+                    "1.04"
+                ],
+                "depends_on": [
+                    "Depends on",
+                    "Model"
+                ]
+            }
+        },
+        "methodology": {
+            "normalization": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "Training_mean": [
+                    "Mean of the training data",
+                    "-0.00"
+                ],
+                "Training_std": [
+                    "Standard deviation of the training data",
+                    "1.00"
+                ],
+                "Test_mean": [
+                    "Mean of the test data",
+                    "-0.03"
+                ],
+                "Test_std": [
+                    "Standard deviation of the test data",
+                    "0.88"
+                ],
+                "normalization": [
+                    "Normalization",
+                    "Training data are standardized"
+                ]
+            },
+            "missing_data": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "null_values": [
+                    "Number of the null values",
+                    "0"
+                ]
+            },
+            "regularization": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "regularization_technique": [
+                    "Regularization technique",
+                    "none"
+                ]
+            },
+            "train_test_split": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "train_test_split": [
+                    "Train test split",
+                    "80.00/20.00"
+                ]
+            },
+            "factsheet_completeness": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "model_name": [
+                    "Factsheet Property model name",
+                    "present"
+                ],
+                "purpose_description": [
+                    "Factsheet Property purpose description",
+                    "present"
+                ],
+                "domain_description": [
+                    "Factsheet Property domain description",
+                    "present"
+                ],
+                "training_data_description": [
+                    "Factsheet Property training data description",
+                    "present"
+                ],
+                "model_information": [
+                    "Factsheet Property model information",
+                    "present"
+                ],
+                "target_column": [
+                    "Factsheet Property target column",
+                    "present"
+                ],
+                "authors": [
+                    "Factsheet Property authors",
+                    "present"
+                ],
+                "contact_information": [
+                    "Factsheet Property contact information",
+                    "present"
+                ]
+            }
+        }
+    }
+}

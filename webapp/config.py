@@ -16,7 +16,8 @@ else:
 print("DEBUG: {}".format(DEBUG))
 print("BASE_PATH: {}".format(BASE_PATH))
 
-SCENARIOS_FOLDER_PATH = "scenarios"
+SCENARIOS_FOLDER_PATH = "scenarios\\supervised"
+SCENARIOS_FOLDER_PATH_UNSUPERVISED = "scenarios\\unsupervised"
 SOLUTIONS_FOLDER = "solutions"
 SOLUTIONS_FOLDER_UNSUPERVISED = "solutions_unsupervised"
 TRAINING_DATA_FILE_NAME_REGEX = "train.*"

@@ -1,0 +1,278 @@
+{
+    "general": {
+        "model_name": "Melike's SVC",
+        "purpose_description": "Attack Classification",
+        "domain_description": "IT Security",
+        "training_data_description": "Alberto's classification data",
+        "model_information": "Sklearn SVM Classifier for IT Security Incident Classification scenario",
+        "target_column": "label",
+        "authors": "Melike Demirci",
+        "contact_information": "melike.demirci@uzh.ch"
+    },
+    "fairness": {
+        "protected_feature": "connectivity",
+        "protected_values": [
+            0
+        ],
+        "favorable_outcomes": [
+            13
+        ]
+    },
+    "methodology": {
+        "regularization": "none"
+    },
+    "scores": {
+        "fairness": {
+            "underfitting": 3,
+            "overfitting": 1,
+            "statistical_parity_difference": NaN,
+            "equal_opportunity_difference": NaN,
+            "average_odds_difference": NaN,
+            "disparate_impact": NaN,
+            "class_balance": 5
+        },
+        "explainability": {
+            "algorithm_class": 2,
+            "correlated_features": 1,
+            "model_size": 3,
+            "feature_relevance": NaN
+        },
+        "robustness": {
+            "confidence_score": 5,
+            "clique_method": NaN,
+            "loss_sensitivity": NaN,
+            "clever_score": NaN,
+            "er_fast_gradient_attack": 4,
+            "er_carlini_wagner_attack": 2,
+            "er_deepfool_attack": 3
+        },
+        "methodology": {
+            "normalization": 4,
+            "missing_data": 5,
+            "regularization": 1,
+            "train_test_split": 5,
+            "factsheet_completeness": 5
+        }
+    },
+    "properties": {
+        "fairness": {
+            "underfitting": {
+                "Metric Description": "Compares the models achieved test accuracy against a baseline.",
+                "Depends on": "Model, Test Data",
+                "Test Accuracy": "85.47%",
+                "Conclusion": "Model is slighly underfitting"
+            },
+            "overfitting": {
+                "Metric Description": "Overfitting is present if the training accuracy is significantly higher than the test accuracy",
+                "Depends on": "Model, Training Data, Test Data",
+                "Training Accuracy": "94.20%",
+                "Test Accuracy": "85.47%",
+                "Train Test Accuracy Difference": "8.72%",
+                "Conclusion": "Model is strongly overfitting"
+            },
+            "statistical_parity_difference": {
+                "Non computable because": "One subgroup contained no samples after filtering"
+            },
+            "equal_opportunity_difference": {
+                "Non computable because": "One subgroup contained no samples after filtering"
+            },
+            "average_odds_difference": {
+                "Non computable because": "One subgroup contained no samples after filtering"
+            },
+            "disparate_impact": {
+                "Non computable because": "One subgroup contained no samples after filtering"
+            },
+            "class_balance": {
+                "Metric Description": "Measures how well the training data is balanced or unbalanced",
+                "Depends on": "Training Data"
+            }
+        },
+        "explainability": {
+            "algorithm_class": {
+                "dep": [
+                    "Depends on",
+                    "Model"
+                ],
+                "clf_name": [
+                    "model type",
+                    "SVC"
+                ]
+            },
+            "correlated_features": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "pct_drop": [
+                    "Percentage of highly correlated features",
+                    "58.90%"
+                ]
+            },
+            "model_size": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "n_features": [
+                    "number of features",
+                    74
+                ]
+            },
+            "feature_relevance": {
+                "dep": [
+                    "Depends on",
+                    "Training Data and Model"
+                ]
+            }
+        },
+        "robustness": {
+            "confidence_score": {
+                "confidence_score": [
+                    "Average confidence score",
+                    "86.09%"
+                ]
+            },
+            "clique_method": {},
+            "loss_sensitivity": {},
+            "clever_score": {},
+            "er_fast_gradient_attack": {
+                "before_attack": [
+                    "FGM Before attack accuracy",
+                    "86.00%"
+                ],
+                "after_attack": [
+                    "FGM After attack accuracy",
+                    "60.00%"
+                ],
+                "difference": [
+                    "FGM Proportional difference (After-Att Acc - Before-Att Acc)/Before-Att Acc",
+                    "30.23%"
+                ]
+            },
+            "er_carlini_wagner_attack": {
+                "before_attack": [
+                    "CW Before attack accuracy",
+                    "100.00%"
+                ],
+                "after_attack": [
+                    "CW After attack accuracy",
+                    "40.00%"
+                ],
+                "difference": [
+                    "CW Proportional difference (After-Att Acc - Before-Att Acc)/Before-Att Acc",
+                    "60.00%"
+                ]
+            },
+            "er_deepfool_attack": {
+                "before_attack": [
+                    "DF Before attack accuracy",
+                    "100.00%"
+                ],
+                "after_attack": [
+                    "DF After attack accuracy",
+                    "50.00%"
+                ],
+                "difference": [
+                    "DF Proportional difference (After-Att Acc - Before-Att Acc)/Before-Att Acc",
+                    "50.00%"
+                ]
+            }
+        },
+        "methodology": {
+            "normalization": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "Training_mean": [
+                    "Mean of the training data",
+                    "-0.00"
+                ],
+                "Training_std": [
+                    "Standard deviation of the training data",
+                    "1.00"
+                ],
+                "Test_mean": [
+                    "Mean of the test data",
+                    "-0.03"
+                ],
+                "Test_std": [
+                    "Standard deviation of the test data",
+                    "0.88"
+                ],
+                "normalization": [
+                    "Normalization",
+                    "Training data are standardized"
+                ]
+            },
+            "missing_data": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "null_values": [
+                    "Number of the null values",
+                    "0"
+                ]
+            },
+            "regularization": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "regularization_technique": [
+                    "Regularization technique",
+                    "none"
+                ]
+            },
+            "train_test_split": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "train_test_split": [
+                    "Train test split",
+                    "80.00/20.00"
+                ]
+            },
+            "factsheet_completeness": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "model_name": [
+                    "Factsheet Property model name",
+                    "present"
+                ],
+                "purpose_description": [
+                    "Factsheet Property purpose description",
+                    "present"
+                ],
+                "domain_description": [
+                    "Factsheet Property domain description",
+                    "present"
+                ],
+                "training_data_description": [
+                    "Factsheet Property training data description",
+                    "present"
+                ],
+                "model_information": [
+                    "Factsheet Property model information",
+                    "present"
+                ],
+                "target_column": [
+                    "Factsheet Property target column",
+                    "present"
+                ],
+                "authors": [
+                    "Factsheet Property authors",
+                    "present"
+                ],
+                "contact_information": [
+                    "Factsheet Property contact information",
+                    "present"
+                ]
+            }
+        }
+    }
+}

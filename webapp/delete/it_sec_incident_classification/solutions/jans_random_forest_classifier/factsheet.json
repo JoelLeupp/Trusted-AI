@@ -1,0 +1,491 @@
+{
+    "general": {
+        "model_name": "Jan's Random Forest Classifier",
+        "purpose_description": "Attack Classification",
+        "domain_description": "IT Security",
+        "training_data_description": "Alberto's classification data",
+        "model_information": "Sklearn Random Forest Classifier for IT Security Incident Classification scenario",
+        "target_column": "label",
+        "authors": "Jan Bauer",
+        "contact_information": "jan.bauer@uzh.ch"
+    },
+    "fairness": {
+        "protected_feature": "connectivity",
+        "protected_values": [
+            0
+        ],
+        "favorable_outcomes": [
+            13
+        ]
+    },
+    "methodology": {
+        "regularization": "none"
+    },
+    "scores": {
+        "fairness": {
+            "underfitting": 3,
+            "overfitting": NaN,
+            "statistical_parity_difference": 1,
+            "equal_opportunity_difference": 1,
+            "average_odds_difference": 1,
+            "disparate_impact": 5,
+            "class_balance": 5
+        },
+        "explainability": {
+            "algorithm_class": 4,
+            "correlated_features": 2,
+            "model_size": 2,
+            "feature_relevance": 5
+        },
+        "robustness": {
+            "confidence_score": 5,
+            "clique_method": 3,
+            "loss_sensitivity": NaN,
+            "clever_score": NaN,
+            "er_fast_gradient_attack": NaN,
+            "er_carlini_wagner_attack": NaN,
+            "er_deepfool_attack": NaN
+        },
+        "methodology": {
+            "normalization": 1,
+            "missing_data": 5,
+            "regularization": 1,
+            "train_test_split": 5,
+            "factsheet_completeness": 5
+        }
+    },
+    "properties": {
+        "fairness": {
+            "underfitting": {
+                "Metric Description": "Compares the models achieved test accuracy against a baseline.",
+                "Depends on": "Model, Test Data",
+                "Test Accuracy": "88.06%",
+                "Conclusion": "Model is slighly underfitting",
+                "Score": "3"
+            },
+            "overfitting": {
+                "Non computable because": "The test accuracy is to low and if the model is underfitting to much it can't be overfitting at the same time."
+            },
+            "statistical_parity_difference": {
+                "Metric Description": "The spread between the percentage of observations from the majority group receiving a favorable outcome compared to the protected group. The closes this spread is to zero the better.",
+                "Depends on": "Training Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
+                "----------": "",
+                "|{x|x is protected, y_true is favorable}|": 13,
+                "|{x|x is protected}|": 24,
+                "Favored Protected Group Ratio": "P(y_true is favorable|protected=True) = 54.17%",
+                "|{x|x is not protected, y_true is favorable}|": 281,
+                "|{x|x is not protected}|": 3526,
+                "Favored Unprotected Group Ratio": "P(y_true is favorable|protected=False) = 7.97%",
+                "-----------": "",
+                "Formula": "Statistical Parity Difference = |Favored Protected Group Ratio - Favored Unprotected Group Ratio|",
+                "Statistical Parity Difference": "46.20%",
+                "Score": "1"
+            },
+            "equal_opportunity_difference": {
+                "Metric Description": "Difference in true positive rates between protected and unprotected group.",
+                "Depends on": "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
+                "----------": "",
+                "|{x|x is protected, y_true is favorable, y_pred is favorable}|": 1,
+                "|{x|x is protected, y_true is favorable}|": 1,
+                "TPR Protected Group": "P(y_pred is favorable|y_true is favorable, protected=True) = 100.00%",
+                "|{x|x is not protected, y_true is favorable, y_pred is favorable}|": 36,
+                "|{x|x is not protected, y_true is favorable}|": 66,
+                "TPR Unprotected Group": "P(y_pred is favorable|y_true is favorable, protected=False) = 54.55%",
+                "-----------": "",
+                "Formula": "Equal Opportunity Difference = |TPR Protected Group - TPR Unprotected Group|",
+                "Equal Opportunity Difference": "45.45%",
+                "Score": "1"
+            },
+            "average_odds_difference": {
+                "Metric Description": "Is the average of difference in false positive rates and true positive rates between the protected and unprotected group",
+                "Depends on": "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
+                "----------": "",
+                "|{x|x is protected, y_true is unfavorable, y_pred is favorable}|": 0,
+                "|{x|x is protected, y_true is Unfavorable}|": 1,
+                "FPR Protected Group": "P(y_pred is favorable|y_true is unfavorable, protected=True) = 0.00%",
+                "|{x|x is not protected, y_true is unfavorable, y_pred is favorable}|": 6,
+                "|{x|x is not protected, y_true is unfavorable}|": 820,
+                "FPR Unprotected Group": "P(y_pred is favorable|y_true is unfavorable, protected=False) = 0.73%",
+                "|{x|x is protected, y_true is favorable, y_pred is favorable}|": 1,
+                "|{x|x is protected, y_true is favorable}|": 1,
+                "TPR Protected Group": "P(y_pred is favorable|y_true is favorable, protected=True) = 100.00%",
+                "|{x|x is not protected, y_true is favorable, y_pred is favorable}|": 36,
+                "|{x|x is not protected, y_true is favorable}|": 66,
+                "TPR Unprotected Group": "P(y_pred is favorable|y_true is favorable, protected=False) = 54.55%",
+                "-----------": "",
+                "Formula": "Average Odds Difference = |0.5*(TPR Protected - TPR Unprotected) + 0.5*(FPR Protected - FPR Unprotected)|",
+                "Average Odds Difference": "22.36%",
+                "Score": "1"
+            },
+            "disparate_impact": {
+                "Metric Description": "Is quotient of the ratio of samples from the protected group receiving a favorable prediction divided by the ratio of samples from the unprotected group receiving a favorable prediction",
+                "Depends on": "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
+                "----------": "",
+                "|{x|x is protected, y_pred is favorable}": 1,
+                "|{x|x is protected}|": 2,
+                "Protected Favored Ratio": "P(y_hat=favorable|protected=True) = 50.00%",
+                "|{x|x is not protected, y_pred is favorable}|": 42,
+                "|{x|x is not protected}|": 886,
+                "Unprotected Favored Ratio": "P(y_hat=favorable|protected=False) = 4.74%",
+                "-----------": "",
+                "Formula": "Disparate Impact = Protected Favored Ratio / Unprotected Favored Ratio",
+                "Disparate Impact": "10.55",
+                "Score": "5"
+            },
+            "class_balance": {
+                "Metric Description": "Measures how well the training data is balanced or unbalanced",
+                "Depends on": "Training Data",
+                "Score": "5"
+            }
+        },
+        "explainability": {
+            "algorithm_class": {
+                "dep": [
+                    "Depends on",
+                    "Model"
+                ],
+                "clf_name": [
+                    "model type",
+                    "RandomForestClassifier"
+                ]
+            },
+            "correlated_features": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "pct_drop": [
+                    "Percentage of highly correlated features",
+                    "39.73%"
+                ]
+            },
+            "model_size": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "n_features": [
+                    "number of features",
+                    73
+                ]
+            },
+            "feature_relevance": {
+                "dep": [
+                    "Depends on",
+                    "Training Data and Model"
+                ],
+                "n_outliers": [
+                    "number of outliers in the importance distribution",
+                    0
+                ],
+                "pct_dist": [
+                    "percentage of feature that make up over 60% of all features importance",
+                    "24.66%"
+                ],
+                "importance": [
+                    "feature importance",
+                    {
+                        "value": [
+                            0.04418545797955489,
+                            0.04391367181411192,
+                            0.03998380294794081,
+                            0.03572167041760837,
+                            0.035296132803236124,
+                            0.03492852594415713,
+                            0.034539077745672324,
+                            0.03401932667656538,
+                            0.03385064533553205,
+                            0.03303365521224691,
+                            0.03176305540335188,
+                            0.03062865375811405,
+                            0.029661123210425477,
+                            0.027025218334448087,
+                            0.024993190742661184,
+                            0.024246209243969835,
+                            0.024047140937677805,
+                            0.02282709129774298,
+                            0.021571648665257345,
+                            0.0213563616012206,
+                            0.020799320459327326,
+                            0.018797563373469363,
+                            0.018390208102049537,
+                            0.017500154396366457,
+                            0.016365180959489717,
+                            0.01562865785544644,
+                            0.014061261197362325,
+                            0.012958618711025063,
+                            0.012655686730971253,
+                            0.011993437661930942,
+                            0.011269409973326927,
+                            0.011205244815127982,
+                            0.010629192204878301,
+                            0.01054253735057314,
+                            0.010082860411648081,
+                            0.009296753980590792,
+                            0.009157582340315168,
+                            0.007692823536819331,
+                            0.007245502035933778,
+                            0.007127117687561827,
+                            0.006455617239256679,
+                            0.006204299275338063,
+                            0.0061385708738725155,
+                            0.006096185957386542,
+                            0.005965382950475092,
+                            0.005946395051593874,
+                            0.005766458239613281,
+                            0.005613506972956463,
+                            0.0053763558452654524,
+                            0.0051233195799167235,
+                            0.004484581833521697,
+                            0.004410790975365014,
+                            0.004195620122163404,
+                            0.004185895446809566,
+                            0.0039210185200818795,
+                            0.0039013706360944995,
+                            0.003761319322181051,
+                            0.0031410450608940752,
+                            0.0028660804373308647,
+                            0.002858583951345897,
+                            0.0028129883157624568,
+                            0.0025817092503219834,
+                            0.002455650979184708,
+                            0.002304142790291686,
+                            0.0022110840218690277,
+                            0.002184000000283698,
+                            0.002182583875722075,
+                            0.001836524461381454,
+                            0.0017841089062002333,
+                            0.0014094755253550376,
+                            0.0004946773076870216,
+                            0.0001890096668662916,
+                            0.00015087275190281822
+                        ],
+                        "labels": [
+                            "skb:consume_skb",
+                            "raw_syscalls:sys_exit",
+                            "sched:sched_wakeup",
+                            "skb:consume_skb.1",
+                            "raw_syscalls:sys_enter",
+                            "skb:skb_copy_datagram_iovec",
+                            "qdisc:qdisc_dequeue",
+                            "fib:fib_table_lookup",
+                            "random:urandom_read",
+                            "qdisc:qdisc_dequeue.1",
+                            "net:netif_rx",
+                            "irq:softirq_entry",
+                            "net:net_dev_xmit",
+                            "net:net_dev_queue",
+                            "writeback:writeback_mark_inode_dirty",
+                            "writeback:writeback_dirty_inode",
+                            "timer:timer_start",
+                            "sched:sched_switch",
+                            "timer:hrtimer_start",
+                            "ipi:ipi_raise",
+                            "kmem:kfree",
+                            "kmem:kmalloc",
+                            "rpm:rpm_resume",
+                            "random:mix_pool_bytes_nolock",
+                            "cs",
+                            "tcp:tcp_probe",
+                            "preemptirq:irq_enable",
+                            "kmem:mm_page_alloc",
+                            "block:block_dirty_buffer",
+                            "skb:kfree_skb",
+                            "kmem:mm_page_alloc_zone_locked",
+                            "irq:irq_handler_entry",
+                            "skb:kfree_skb.1",
+                            "kmem:mm_page_free",
+                            "block:block_touch_buffer",
+                            "clk:clk_set_rate",
+                            "pagemap:mm_lru_insertion",
+                            "jbd2:jbd2_handle_start",
+                            "page-faults",
+                            "sched:sched_process_wait",
+                            "signal:signal_deliver",
+                            "kmem:kmem_cache_free",
+                            "seconds",
+                            "kmem:kmem_cache_alloc",
+                            "writeback:writeback_dirty_page",
+                            "workqueue:workqueue_activate_work",
+                            "tcp:tcp_destroy_sock",
+                            "cpu-migrations",
+                            "filemap:mm_filemap_add_to_page_cache",
+                            "writeback:wbc_writepage",
+                            "sched:sched_process_exec",
+                            "sock:inet_sock_set_state",
+                            "gpio:gpio_value",
+                            "mmc:mmc_request_start",
+                            "signal:signal_generate",
+                            "random:get_random_bytes",
+                            "block:block_bio_backmerge",
+                            "writeback:writeback_write_inode",
+                            "sched:sched_process_free",
+                            "rpm:rpm_suspend",
+                            "writeback:writeback_dirty_inode_enqueue",
+                            "task:task_newtask",
+                            "block:block_bio_remap",
+                            "block:block_getrq",
+                            "writeback:writeback_single_inode",
+                            "kmem:mm_page_pcpu_drain",
+                            "writeback:sb_clear_inode_writeback",
+                            "writeback:writeback_written",
+                            "block:block_unplug",
+                            "writeback:global_dirty_state",
+                            "jbd2:jbd2_start_commit",
+                            "writeback:writeback_pages_written",
+                            "connectivity"
+                        ]
+                    }
+                ]
+            }
+        },
+        "robustness": {
+            "confidence_score": {
+                "confidence_score": [
+                    "Average confidence score",
+                    "88.62%"
+                ],
+                "depends_on": [
+                    "Depends on",
+                    "Model and Data"
+                ]
+            },
+            "clique_method": {
+                "error_bound": [
+                    "Average error bound",
+                    "0.16"
+                ],
+                "error": [
+                    "Error",
+                    "1.0"
+                ],
+                "depends_on": [
+                    "Depends on",
+                    "Model"
+                ]
+            },
+            "loss_sensitivity": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can only be calculated on Keras models."
+                ]
+            },
+            "clever_score": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can only be calculated on Keras models."
+                ]
+            },
+            "er_fast_gradient_attack": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can be calculated on either SVC or Logistic Regression models."
+                ]
+            },
+            "er_carlini_wagner_attack": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can be calculated on either SVC or Logistic Regression models."
+                ]
+            },
+            "er_deepfool_attack": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can be calculated on either SVC or Logistic Regression models."
+                ]
+            }
+        },
+        "methodology": {
+            "normalization": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "Training_mean": [
+                    "Mean of the training data",
+                    "58926.01"
+                ],
+                "Training_std": [
+                    "Standard deviation of the training data",
+                    "18991.71"
+                ],
+                "Test_mean": [
+                    "Mean of the test data",
+                    "58257.23"
+                ],
+                "Test_std": [
+                    "Standard deviation of the test data",
+                    "18825.27"
+                ],
+                "normalization": [
+                    "Normalization",
+                    "None"
+                ]
+            },
+            "missing_data": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "null_values": [
+                    "Number of the null values",
+                    "0"
+                ]
+            },
+            "regularization": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "regularization_technique": [
+                    "Regularization technique",
+                    "none"
+                ]
+            },
+            "train_test_split": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "train_test_split": [
+                    "Train test split",
+                    "80.00/20.00"
+                ]
+            },
+            "factsheet_completeness": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "model_name": [
+                    "Factsheet Property model name",
+                    "present"
+                ],
+                "purpose_description": [
+                    "Factsheet Property purpose description",
+                    "present"
+                ],
+                "domain_description": [
+                    "Factsheet Property domain description",
+                    "present"
+                ],
+                "training_data_description": [
+                    "Factsheet Property training data description",
+                    "present"
+                ],
+                "model_information": [
+                    "Factsheet Property model information",
+                    "present"
+                ],
+                "authors": [
+                    "Factsheet Property authors",
+                    "present"
+                ],
+                "contact_information": [
+                    "Factsheet Property contact information",
+                    "present"
+                ]
+            }
+        }
+    }
+}

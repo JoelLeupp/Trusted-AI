@@ -20,7 +20,7 @@ def scenario_dropdown_options():
         options.append({"label": scenario_name, "value": scenario_id})
     return options
 
-def load_scenario(scenario_id):
+def load_scenario(scenario_id, unsupervised = False):
     """Example Google style docstrings.
 
     This module demonstrates documentation as specified by the `Google Python
@@ -54,7 +54,7 @@ def load_scenario(scenario_id):
        http://google.github.io/styleguide/pyguide.html
 
     """
-    scenario_path = get_scenario_path(scenario_id)
+    scenario_path = get_scenario_path(scenario_id, unsupervised)
     scenario_factsheet = read_scenario_factsheet(scenario_id)
     scenario_description = scenario_factsheet.get("description", "")
     scenario_link = scenario_factsheet.get("link", "")
@@ -106,7 +106,7 @@ def display_scenario(scenario_id, scenario_name, scenario_link, scenario_descrip
     sections.append(html.Hr())
     return html.Div(sections, id="{}_scenario".format(scenario_id))
 
-def display_scenarios():
+def display_scenarios(unsupervised = False):
     """This function open and closes the dialog window
         where the user can create new scenarios
 
@@ -120,12 +120,11 @@ def display_scenarios():
         returns true if the dialog was previously closed.
 
     """
-
-    scenario_ids = get_scenario_ids()
+    scenario_ids = get_scenario_ids(unsupervised)
     sections = []
     for scenario_id in scenario_ids:
         scenario_name = id_to_name(scenario_id)
-        scenario_link, scenario_description, scenario_solutions = load_scenario(scenario_id)
+        scenario_link, scenario_description, scenario_solutions = load_scenario(scenario_id, unsupervised)
         sections.append(display_scenario(scenario_id, scenario_name, scenario_link, scenario_description, scenario_solutions))
     return sections  
   
@@ -263,7 +262,7 @@ layout = html.Div([
         dbc.Row([
             dbc.Col([
                 create_scenario_dialog,
-                html.H1("Scenarios", className="text-center", style={"text-transform": "uppercase"}),
+                html.H1("Scenarios Supervised", className="text-center", style={"text-transform": "uppercase"}),
             ], width=12),
             dbc.Col(
                 html.Div(
@@ -278,6 +277,26 @@ layout = html.Div([
                     "borderRadius": "6px",
                     "backgroundColor": SECONDARY_COLOR
                 }   
+            ),
+        ]),
+        dbc.Row([
+            dbc.Col([
+                create_scenario_dialog,
+                html.H1("Scenarios Unsupervised", className="text-center", style={"text-transform": "uppercase"}),
+            ], width=12),
+            dbc.Col(
+                html.Div(
+                    children=[
+                        html.Div(children=display_scenarios(unsupervised=True), id="scenario_display_unsupervised", style={"backgroundColor": SECONDARY_COLOR}),
+                   ]
+                ),
+                className="mb-5 mt-5",
+                width=12,
+                style={
+                    "border": "1px solid #d8d8d8",
+                    "borderRadius": "6px",
+                    "backgroundColor": SECONDARY_COLOR
+                }
             ),
         ])
     ])
