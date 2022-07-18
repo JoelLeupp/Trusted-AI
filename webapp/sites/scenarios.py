@@ -60,8 +60,16 @@ def load_scenario(scenario_id):
     scenario_link = scenario_factsheet.get("link", "")
     #scenario_link = load_scenario_link(scenario_path)
     #scenario_description = load_scenario_description(scenario_path)
-    scenario_solutions = [f.name for f in os.scandir(os.path.join(scenario_path, SOLUTIONS_FOLDER)) if f.is_dir() and not f.name.startswith('.')]
-    return scenario_link, scenario_description, scenario_solutions
+
+    all_solutions = []
+
+    if os.path.isdir(os.path.join(scenario_path, SOLUTIONS_FOLDER)):
+        all_solutions = all_solutions + [f.name for f in os.scandir(os.path.join(scenario_path, SOLUTIONS_FOLDER)) if f.is_dir() and not f.name.startswith('.')]
+
+    if os.path.isdir(os.path.join(scenario_path, SOLUTIONS_FOLDER_UNSUPERVISED)):
+        all_solutions = all_solutions + [f.name for f in os.scandir(os.path.join(scenario_path, SOLUTIONS_FOLDER_UNSUPERVISED)) if f.is_dir() and not f.name.startswith('.')]
+
+    return scenario_link, scenario_description, all_solutions
   
 
 def display_scenario(scenario_id, scenario_name, scenario_link, scenario_description, scenario_solutions):
@@ -112,6 +120,7 @@ def display_scenarios():
         returns true if the dialog was previously closed.
 
     """
+
     scenario_ids = get_scenario_ids()
     sections = []
     for scenario_id in scenario_ids:
