@@ -162,7 +162,7 @@ def clique_method(model, train_data, test_data, thresholds, factsheet):
         Error bound
         Error
     """
-    with open('configs/mappings/robustness/default.json', 'r') as f:
+    with open('configs/supervised/mappings/robustness/default.json', 'r') as f:
           default_map = json.loads(f.read())
     
     if thresholds == default_map["score_clique_method"]["thresholds"]["value"]:

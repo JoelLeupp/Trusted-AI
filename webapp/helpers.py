@@ -1,5 +1,7 @@
 import os
 import dash_daq as daq
+import joblib
+
 from config import SCENARIOS_FOLDER_PATH
 import glob
 import pickle
@@ -291,6 +293,22 @@ def read_train(solution_set_path):
         train = None
     
     return train
+
+
+def read_outliers(solution_set_path):
+    if solution_set_path is None:
+        return
+    outliers_file = glob.glob(os.path.join(solution_set_path, OUTLIERS_DATA_FILE_NAME_REGEX))[0]
+    ext = os.path.splitext(outliers_file)[1]
+    if ext == ".pkl":
+        with open(outliers_file, 'rb') as file:
+            outliers = pickle.load(file)
+    elif ext == ".csv":
+        outliers = pd.read_csv(outliers_file)
+    else:
+        outliers = None
+
+    return outliers
 
 # Load .joblib or .pickle model
 def read_model(solution_set_path):
@@ -638,6 +656,15 @@ def read_solution(solution_set_path):
     factsheet = read_factsheet(solution_set_path)
                 
     return test, train, model, factsheet
+
+def read_solution_unsupervised(solution_set_path):
+    test = read_test(solution_set_path)
+    train = read_train(solution_set_path)
+    outliers = read_outliers(solution_set_path)
+    model = read_model(solution_set_path)
+    factsheet = read_factsheet(solution_set_path)
+
+    return test, train, outliers, model, factsheet
    
 def create_info_modal(module_id, name, content, example):
     modal = html.Div(
@@ -849,7 +876,7 @@ def pillar_section(pillar, metrics):
     
 def mapping_panel(pillar):
     
-    with open('configs/mappings/{}/default.json'.format(pillar), 'r') as f:
+    with open('configs/supervised/mappings/{}/default.json'.format(pillar), 'r') as f:
                 mapping  = json.loads(f.read())
     
     map_panel = []
@@ -874,8 +901,8 @@ def mapping_panel(pillar):
     map_panel.append(html.Div([html.Label("Load saved mappings",style={"margin-left":10}),
                             dcc.Dropdown(
                                 id='mapping-dropdown-{}'.format(pillar),
-                                options=list(map(lambda name:{'label': name[:-5], 'value': "configs/mappings/{}/{}".format(pillar,name)} ,os.listdir("configs/mappings/{}".format(pillar)))),
-                                value='configs/mappings/{}/default.json'.format(pillar),
+                                options=list(map(lambda name:{'label': name[:-5], 'value': "configs/supervised/mappings/{}/{}".format(pillar,name)} ,os.listdir("configs/supervised/mappings/{}".format(pillar)))),
+                                value='configs/supervised/mappings/{}/default.json'.format(pillar),
                                 style={'width': 200},
                                 className = pillar
                             )],style={"margin-left":"30%","margin-bottom":15}))

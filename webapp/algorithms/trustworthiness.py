@@ -45,7 +45,7 @@ def get_final_score(model, train_data, test_data, config_weights, mappings_confi
     config_robustness = mappings_config["robustness"]
     config_methodology = mappings_config["methodology"]
     
-    with open('configs/mappings/default.json', 'r') as f:
+    with open('configs/supervised/mappings/default.json', 'r') as f:
           default_map = json.loads(f.read())
     #print("mapping is default:")
     #print(default_map == mappings_config)
@@ -81,13 +81,13 @@ def get_final_score(model, train_data, test_data, config_weights, mappings_confi
 
     return final_scores, scores, properties
 
-def get_final_score_unsupervised(model, train_data, test_data, config_weights, mappings_config, factsheet, solution_set_path, recalc=False):
+def get_final_score_unsupervised(model, train_data, test_data, outliers_data, config_weights, mappings_config, factsheet, solution_set_path, recalc=False):
     config_fairness = mappings_config["fairness"]
     config_explainability = mappings_config["explainability"]
     config_robustness = mappings_config["robustness"]
     config_methodology = mappings_config["methodology"]
 
-    with open('configs_unsupervised/mappings/default.json', 'r') as f:
+    with open('configs/unsupervised/mappings/default.json', 'r') as f:
         default_map = json.loads(f.read())
     # print("mapping is default:")
     # print(default_map == mappings_config)

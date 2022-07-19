@@ -21,6 +21,7 @@ SCENARIOS_FOLDER_PATH_UNSUPERVISED = "scenarios\\unsupervised"
 SOLUTIONS_FOLDER = "solutions"
 SOLUTIONS_FOLDER_UNSUPERVISED = "solutions_unsupervised"
 TRAINING_DATA_FILE_NAME_REGEX = "train.*"
+OUTLIERS_DATA_FILE_NAME_REGEX = "outliers.*"
 TEST_DATA_FILE_NAME_REGEX = "test.*"
 MODEL_REGEX = "model.*"
 PICKLE_FILE_EXTENSIONS = [".sav", ".pkl", ".pickle"]
@@ -62,10 +63,10 @@ METHODOLOGY_COLOR = '#118ab2'
 CONFIG_COLOR = "rgba(255,228,181,0.5)"
 
 # === CONFIGURATION ===
-METRICS_CONFIG_PATH = "configs/metrics"
-METRICS_CONFIG_PATH_UNSUPERVISED = "configs_unsupervised/metrics"
+METRICS_CONFIG_PATH = "configs/supervised/metrics"
+METRICS_CONFIG_PATH_UNSUPERVISED = "configs/unsupervised/metrics"
 DEFAULT_METRICS_FILE ="default.json"
-WEIGHTS_CONFIG_PATH = "configs/weights"
+WEIGHTS_CONFIG_PATH = "configs/supervised/weights"
 DEFAULT_WEIGHTS_FILE = "default.json"
 
 XAXIS_TICKANGLE = 30

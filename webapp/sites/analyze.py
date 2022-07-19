@@ -42,14 +42,14 @@ mappings_config = dict(fairness=config_fairness["parameters"], explainability=co
 
 metric_description = {**config_fairness["metrics"], **config_explainability["metrics"], **config_robustness["metrics"], **config_methodology["metrics"]}
 
-with open('configs/weights/default.json', 'w') as outfile:
+with open('configs/supervised/weights/default.json', 'w') as outfile:
                 json.dump(weight_config, outfile, indent=4)
 
-with open('configs/mappings/default.json', 'w') as outfile:
+with open('configs/supervised/mappings/default.json', 'w') as outfile:
                 json.dump(mappings_config, outfile, indent=4)
 
 for s in SECTIONS[1:]:
-    with open('configs/mappings/{}/default.json'.format(s), 'w') as outfile:
+    with open('configs/supervised/mappings/{}/default.json'.format(s), 'w') as outfile:
                 json.dump(mappings_config[s], outfile, indent=4)
 charts = []
 
@@ -75,14 +75,14 @@ mappings_config_unsupervised = dict(fairness=config_fairness["parameters"], expl
 
 metric_description_unsupervised = {**config_fairness["metrics"], **config_explainability["metrics"], **config_robustness["metrics"], **config_methodology["metrics"]}
 
-with open('configs_unsupervised/weights/default.json', 'w') as outfile:
+with open('configs/unsupervised/weights/default.json', 'w') as outfile:
                 json.dump(weight_config_unsupervised, outfile, indent=4)
 
-with open('configs_unsupervised/mappings/default.json', 'w') as outfile:
+with open('configs/unsupervised/mappings/default.json', 'w') as outfile:
                 json.dump(mappings_config_unsupervised, outfile, indent=4)
 
 for s in SECTIONS[1:]:
-    with open('configs_unsupervised/mappings/{}/default.json'.format(s), 'w') as outfile:
+    with open('configs/unsupervised/mappings/{}/default.json'.format(s), 'w') as outfile:
                 json.dump(mappings_config_unsupervised[s], outfile, indent=4)
 charts = []
 
@@ -183,7 +183,7 @@ for pillar in SECTIONS[1:]:
             Input("modal-saved-{}".format(pillar), "is_open"),
             State("mapping-dropdown-{}".format(pillar), "className"))
     def update_options(n, pillar):
-        options = list(map(lambda name:{'label': name[:-5], 'value': "configs/mappings/{}/{}".format(pillar,name)} ,listdir_nohidden("configs/mappings/{}".format(pillar))))
+        options = list(map(lambda name:{'label': name[:-5], 'value': "configs/supervised/mappings/{}/{}".format(pillar,name)} ,listdir_nohidden("configs/supervised/mappings/{}".format(pillar))))
         return options
     
     @app.callback(
@@ -221,18 +221,18 @@ for pillar in SECTIONS[1:]:
                
                 inputs[name] = res
             
-            with open('configs/mappings/{}/default.json'.format(pillar),'r') as f:
+            with open('configs/supervised/mappings/{}/default.json'.format(pillar),'r') as f:
                 config_file = json.loads(f.read())
                 
             for i in mapping_panel(pillar)[1]:
                  metric, param = i.split("-")
                  config_file[metric][param]["value"] = inputs[i]
-            with open('configs/mappings/{}/{}.json'.format(pillar,conf_name), 'w') as outfile:
+            with open('configs/supervised/mappings/{}/{}.json'.format(pillar,conf_name), 'w') as outfile:
                 json.dump(config_file, outfile, indent=4)
                     
-            return not is_open, 'configs/mappings/{}/{}.json'.format(pillar,conf_name)
+            return not is_open, 'configs/supervised/mappings/{}/{}.json'.format(pillar,conf_name)
         else:
-            return is_open, 'configs/mappings/{}/default.json'.format(pillar)
+            return is_open, 'configs/supervised/mappings/{}/default.json'.format(pillar)
 
 for s in SECTIONS:
     @app.callback(
@@ -318,7 +318,7 @@ def store_mappings_config(n1, n2, n3, n4, *args):
            
         inputs[name] = res
         
-    with open('configs/mappings/default.json','r') as f:
+    with open('configs/supervised/mappings/default.json','r') as f:
             config_file = json.loads(f.read())
     
     
@@ -1051,25 +1051,24 @@ def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,
     if not solution_set_dropdown:
         return None
 
-    print("unsupervised", unsupervised)
     if unsupervised:
-        with open('configs_unsupervised/weights/default.json', 'r') as f:
+        with open('configs/unsupervised/weights/default.json', 'r') as f:
             default_weight = json.loads(f.read())
-        with open('configs_unsupervised/mappings/default.json', 'r') as f:
+        with open('configs/unsupervised/mappings/default.json', 'r') as f:
             default_map = json.loads(f.read())
 
         weight_config = default_weight
         mappings_config = default_map
 
-        test, train, model, factsheet = read_solution(solution_set_dropdown)
-        final_score, results, properties = get_final_score_unsupervised(model, train, test, weight_config, mappings_config,
+        test, train, outliers, model, factsheet = read_solution_unsupervised(solution_set_dropdown)
+        final_score, results, properties = get_final_score_unsupervised(model, train, test, outliers, weight_config, mappings_config,
                                                            factsheet, solution_set_dropdown, recalc)
         trust_score = get_trust_score(final_score, weight_config["pillars"])
 
     else:
-        with open('configs/weights/default.json', 'r') as f:
+        with open('configs/supervised/weights/default.json', 'r') as f:
             default_weight = json.loads(f.read())
-        with open('configs/mappings/default.json', 'r') as f:
+        with open('configs/supervised/mappings/default.json', 'r') as f:
             default_map = json.loads(f.read())
 
         if not config_weights:

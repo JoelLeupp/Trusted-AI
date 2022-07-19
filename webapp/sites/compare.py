@@ -125,8 +125,8 @@ def map_dropdown(pillar):
         html.Br(),
         html.Div(dcc.Dropdown(
                     id='{}-dropdown-compare'.format(pillar),
-                    options=list(map(lambda name:{'label': name[:-5], 'value': "configs/mappings/{}/{}".format(pillar,name)} ,os.listdir("configs/mappings/{}".format(pillar)))),
-                    value='configs/mappings/{}/default.json'.format(pillar)
+                    options=list(map(lambda name:{'label': name[:-5], 'value': "configs/supervised/mappings/{}/{}".format(pillar,name)} ,os.listdir("configs/supervised/mappings/{}".format(pillar)))),
+                    value='configs/supervised/mappings/{}/default.json'.format(pillar)
                 ), 
                  style={'width': "20%", 'display': 'inline-block',"vertical-align": "top",'margin-left': "40%"})
         ]
@@ -165,6 +165,13 @@ layout = html.Div([
                       color = TRUST_COLOR,
                       style={"float": "right",'margin-left': "44%"}
                     ),
+            daq.BooleanSwitch(id='toggle_supervised_unsupervised_compare',
+                      on=False,
+                      label="enable Unsupervised",
+                      labelPosition="top",
+                      color = TRUST_COLOR,
+                      style={"float": "right",'margin-left': "44%"}
+                    ),
             html.Br(),
             dbc.Col(html.Div(
                 [html.Br(),
@@ -173,8 +180,8 @@ layout = html.Div([
                 html.Br(),
                 html.Div(dcc.Dropdown(
                             id='config-dropdown-compare',
-                            options=list(map(lambda name:{'label': name[:-5], 'value': 'configs/weights/{}'.format(name)} ,os.listdir("configs/weights"))),
-                            value='configs/weights/default.json'
+                            options=list(map(lambda name:{'label': name[:-5], 'value': 'configs/supervised/weights/{}'.format(name)} ,os.listdir("configs/supervised/weights"))),
+                            value='configs/supervised/weights/default.json'
                         ), 
                          style={'width': "20%", 'display': 'inline-block',"vertical-align": "top",'margin-left': "40%"}),
                 html.Div(list(map(lambda pillar: map_dropdown(pillar) , pillars))),
@@ -182,13 +189,6 @@ layout = html.Div([
                     ],style={"background-color": "rgba(255,228,181,0.5)",'padding-bottom': 20," margin-left": "auto", "margin-right": "auto"}), 
                 width=12,style={'display': 'none'},id="compare-config"),
             dcc.Store(id='result-1'),
-            daq.BooleanSwitch(id='toggle_supervised_unsupervised_compare',
-                      on=False,
-                      label="enable Unsupervised Mode",
-                      labelPosition="top",
-                      color = TRUST_COLOR,
-                      style={"float": "right",'margin-left': "44%"}
-                    ),
             dbc.Col([dcc.Dropdown(
                     id='scenario_dropdown_compare',
                     options= get_scenario_options(),
@@ -440,11 +440,11 @@ def store_result_1(solution_set_dropdown, n, weight, map_fairness, map_explainab
     if not solution_set_dropdown:
         return None
     if unsupervised:
-        weight = "configs_unsupervised/weights/default.json"
-        map_fairness = "configs_unsupervised/mappings/fairness/default.json"
-        map_explainability = "configs_unsupervised/mappings/explainability/default.json"
-        map_robustness = "configs_unsupervised/mappings/robustness/default.json"
-        map_methodology = "configs_unsupervised/mappings/methodology/default.json"
+        weight = "configs/unsupervised/weights/default.json"
+        map_fairness = "configs/unsupervised/mappings/fairness/default.json"
+        map_explainability = "configs/unsupervised/mappings/explainability/default.json"
+        map_robustness = "configs/unsupervised/mappings/robustness/default.json"
+        map_methodology = "configs/unsupervised/mappings/methodology/default.json"
 
         with open(weight, 'r') as f:
             weights_config = json.loads(f.read())
@@ -455,8 +455,8 @@ def store_result_1(solution_set_dropdown, n, weight, map_fairness, map_explainab
             with open(map_conf, 'r') as f:
                 mappings_config[pillar] = json.loads(f.read())
 
-        test, train, model, factsheet = read_solution(solution_set_dropdown)
-        final_score, results, properties = get_final_score_unsupervised(model, train, test, weights_config, mappings_config,
+        test, train, outliers, model, factsheet = read_solution_unsupervised(solution_set_dropdown)
+        final_score, results, properties = get_final_score_unsupervised(model, train, test, outliers, weights_config, mappings_config,
                                                            factsheet, solution_set_dropdown)
         trust_score = get_trust_score(final_score, weights_config["pillars"])
 
@@ -498,11 +498,11 @@ def store_result_2(solution_set_dropdown, n, weight, map_fairness, map_explainab
     if not solution_set_dropdown:
         return None
     if unsupervised:
-        weight = "configs_unsupervised/weights/default.json"
-        map_fairness = "configs_unsupervised/mappings/fairness/default.json"
-        map_explainability = "configs_unsupervised/mappings/explainability/default.json"
-        map_robustness = "configs_unsupervised/mappings/robustness/default.json"
-        map_methodology = "configs_unsupervised/mappings/methodology/default.json"
+        weight = "configs/unsupervised/weights/default.json"
+        map_fairness = "configs/unsupervised/mappings/fairness/default.json"
+        map_explainability = "configs/unsupervised/mappings/explainability/default.json"
+        map_robustness = "configs/unsupervised/mappings/robustness/default.json"
+        map_methodology = "configs/unsupervised/mappings/methodology/default.json"
 
         with open(weight, 'r') as f:
             weights_config = json.loads(f.read())
@@ -1052,7 +1052,7 @@ def update_figure_2(data):
         Input("toggle_config_compare","on"))
 def update_options(trig):
     output = []
-    output.append(list(map(lambda name:{'label': name[:-5], 'value': 'configs/weights/{}'.format(name)} ,os.listdir("configs/weights"))))
-    output = output + list(map(lambda pillar: list(map(lambda name:{'label': name[:-5], 'value': "configs/mappings/{}/{}".format(pillar,name)} ,
-                                                       os.listdir("configs/mappings/{}".format(pillar)))), pillars))
+    output.append(list(map(lambda name:{'label': name[:-5], 'value': 'configs/supervised/weights/{}'.format(name)} ,os.listdir("configs/supervised/weights"))))
+    output = output + list(map(lambda pillar: list(map(lambda name:{'label': name[:-5], 'value': "configs/supervised/mappings/{}/{}".format(pillar,name)} ,
+                                                       os.listdir("configs/supervised/mappings/{}".format(pillar)))), pillars))
     return output
