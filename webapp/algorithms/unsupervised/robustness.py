@@ -58,7 +58,6 @@ def clever_score(model, train_data, test_data, thresholds):
         Returns:
             Clever score
     """
-    '''
     try:
         classifier = KerasClassifier(model, False)
 
@@ -78,19 +77,3 @@ def clever_score(model, train_data, test_data, thresholds):
         print(e)
         return result(score=np.nan, properties={"non_computable": info("Non Computable Because",
                                                                        "Can only be calculated on Keras models.")})
-    '''
-    classifier = KerasClassifier(model, False)
-
-    min_score = 100
-
-    randomX = X_test.sample(10)
-    randomX = np.array(randomX)
-
-    for x in randomX:
-        temp = clever_u(classifier=classifier, x=x, nb_batches=1, batch_size=1, radius=500, norm=1)
-        if min_score > temp:
-            min_score = temp
-    score = np.digitize(min_score, thresholds) + 1
-    return result(score=int(score), properties={"clever_score": info("CLEVER Score", "{:.2f}".format(min_score)),
-                                                "depends_on": info("Depends on", "Model")})
-
