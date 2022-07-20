@@ -11,10 +11,16 @@ import json
 from config import *
 from math import pi
 import sklearn.metrics as metrics
-from algorithms.fairness import analyse as analyse_fairness
-from algorithms.explainability import analyse as analyse_explainability
-from algorithms.robustness import analyse as analyse_robustness
-from algorithms.methodology import analyse as analyse_methodology
+from algorithms.supervised.fairness import analyse as analyse_fairness
+from algorithms.supervised.explainability import analyse as analyse_explainability
+from algorithms.supervised.robustness import analyse as analyse_robustness
+from algorithms.supervised.methodology import analyse as analyse_methodology
+
+from algorithms.unsupervised.fairness import analyse as analyse_fairness_unsupervised
+from algorithms.unsupervised.explainability import analyse as analyse_explainability_unsupervised
+from algorithms.unsupervised.robustness import analyse as analyse_robustness_unsupervised
+from algorithms.unsupervised.methodology import analyse as analyse_methodology_unsupervised
+
 import collections
 from helpers import *
 
@@ -37,6 +43,27 @@ def trusting_AI_scores(model, train_data, test_data, factsheet, config_fairness,
         # write_into_factsheet(factsheet, solution_set_path)
     
         return  result(score=scores, properties=properties)
+
+
+def trusting_AI_scores_unsupervised(model, train_data, test_data, outliers_data, factsheet, config_fairness, config_explainability,
+                       config_robustness, methodology_config, solution_set_path):
+    # if "scores" in factsheet.keys() and "properties" in factsheet.keys():
+    #     scores = factsheet["scores"]
+    #     properties = factsheet["properties"]
+    # else:
+    output = dict(
+        fairness=analyse_fairness_unsupervised(model, train_data, test_data, outliers_data, factsheet, config_fairness),
+        explainability=analyse_explainability_unsupervised(model, train_data, test_data, outliers_data, config_explainability, factsheet),
+        robustness=analyse_robustness_unsupervised(model, train_data, test_data, outliers_data, config_robustness, factsheet),
+        methodology=analyse_methodology_unsupervised(model, train_data, test_data, outliers_data, factsheet, methodology_config)
+    )
+    scores = dict((k, v.score) for k, v in output.items())
+    properties = dict((k, v.properties) for k, v in output.items())
+    # factsheet["scores"] = scores
+    # factsheet["properties"] = properties
+    # write_into_factsheet(factsheet, solution_set_path)
+
+    return result(score=scores, properties=properties)
 
 # calculate final score with weigths
 def get_final_score(model, train_data, test_data, config_weights, mappings_config, factsheet, solution_set_path, recalc=False):
@@ -96,18 +123,21 @@ def get_final_score_unsupervised(model, train_data, test_data, outliers_data, co
             scores = factsheet["scores"]
             properties = factsheet["properties"]
         else:
-            result = trusting_AI_scores(model, train_data, test_data, factsheet, config_fairness, config_explainability,
+            print("======================================================== no scores ======================================")
+            result = trusting_AI_scores_unsupervised(model, train_data, test_data, outliers_data, factsheet, config_fairness, config_explainability,
                                         config_robustness, config_methodology, solution_set_path)
             scores = result.score
             factsheet["scores"] = scores
             properties = result.properties
             factsheet["properties"] = properties
             try:
+                print("======================================================== write into factsheet ======================================")
+
                 write_into_factsheet(factsheet, solution_set_path)
             except Exception as e:
                 print("ERROR in write_into_factsheet: {}".format(e))
     else:
-        result = trusting_AI_scores(model, train_data, test_data, factsheet, config_fairness, config_explainability,
+        result = trusting_AI_scores_unsupervised(model, train_data, test_data, outliers_data, factsheet, config_fairness, config_explainability,
                                     config_robustness, config_methodology, solution_set_path)
         scores = result.score
         properties = result.properties
