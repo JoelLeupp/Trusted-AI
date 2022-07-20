@@ -183,7 +183,7 @@ def get_callbacks(app):
         for name, val in zip(list(filter(lambda ids: ids[:2]=="w_", input_ids)), args):
             inputs[name] = float(val)
             
-        with open('configs/weights/default.json','r') as f:
+        with open('configs/supervised/weights/default.json','r') as f:
                 config_file = json.loads(f.read())
         
         
@@ -219,7 +219,7 @@ def get_callbacks(app):
         
         if n_clicks and config is not None:
             config_file = json.loads(config)
-            with open('configs/weights/'+ conf_name+'.json', 'w') as outfile:
+            with open('configs/supervised/weights/'+ conf_name+'.json', 'w') as outfile:
                 json.dump(config_file, outfile, indent=4)
             return not is_open
         else:
@@ -232,7 +232,7 @@ def get_callbacks(app):
                 Input('config-dropdown', 'value'))
     def update_config(conf_name):
         
-        with open('configs/weights/' + conf_name ,'r') as f:
+        with open('configs/supervised/weights/' + conf_name ,'r') as f:
                 config = json.loads(f.read())
                 
         output = []
@@ -256,5 +256,5 @@ def get_callbacks(app):
             Output("config-dropdown", "options"),
             Input("save-success", "n_clicks"))
     def update_options(trig):
-        options = list(map(lambda name:{'label': name[:-5], 'value': name} ,os.listdir("configs/weights")))
+        options = list(map(lambda name:{'label': name[:-5], 'value': name} ,os.listdir("configs/supervised/weights")))
         return options
