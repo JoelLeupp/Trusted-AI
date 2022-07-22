@@ -741,8 +741,8 @@ def list_of_metrics(pillar):
 def create_metric_details_section(metric_id, i, section_n = 1, is_open=True, score=np.nan):
     metric_name = metric_id.replace("_", " ")
     if math.isnan(score):
-        return html.Div([
 
+        return html.Div([
             html.Div([
                 html.H4("", id="{}_score".format(metric_id), style={"float": "right"}),
                 html.H4("- {}".format(metric_name)),

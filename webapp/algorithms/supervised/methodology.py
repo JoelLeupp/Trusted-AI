@@ -43,12 +43,13 @@ def normalization_score(model, train_data, test_data, factsheet, mappings):
     test_mean = np.mean(np.mean(X_test))
     test_std = np.mean(np.std(X_test))
 
-    properties = {"dep" :info('Depends on','Training and Testing Data'),
+    properties = {
+        "dep": info('Depends on','Training and Testing Data'),
         "Training_mean": info("Mean of the training data", "{:.2f}".format(train_mean)),
-                  "Training_std": info("Standard deviation of the training data", "{:.2f}".format(train_std)),
-                  "Test_mean": info("Mean of the test data", "{:.2f}".format(test_mean)),
-                  "Test_std": info("Standard deviation of the test data", "{:.2f}".format(test_std))
-                  }
+        "Training_std": info("Standard deviation of the training data", "{:.2f}".format(train_std)),
+        "Test_mean": info("Mean of the test data", "{:.2f}".format(test_mean)),
+        "Test_std": info("Standard deviation of the test data", "{:.2f}".format(test_std))
+    }
     if not (any(X_train < 0) or any(X_train > 1)) and not (any(X_test < 0) or any(X_test > 1)):
         score = mappings["training_and_test_normal"]
         properties["normalization"] = info("Normalization", "Training and Testing data are normalized")

@@ -26,12 +26,6 @@ def analyse(model, training_dataset, test_dataset, outliers_dataset, factsheet, 
         regularization   = regularization_score(model, training_dataset, test_dataset, factsheet, methodology_config, print_details = False),
         train_test_split = train_test_split_score(model, training_dataset, test_dataset, factsheet, train_test_split_mapping, print_details = False),
         factsheet_completeness= factsheet_completeness_score(model, training_dataset, test_dataset, factsheet, methodology_config, print_details = False),
-
-        #normalization=result(score=int(1), properties={}),
-        #missing_data=result(score=int(1), properties={}),
-        #regularization=result(score=int(1), properties={}),
-        #train_test_split=result(score=int(1), properties={}),
-        #factsheet_completeness=result(score=int(1), properties={})
     )
 
     scores = dict((k, v.score) for k, v in output.items())

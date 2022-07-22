@@ -600,7 +600,6 @@ def update_fairness_configuration(protected_feature, protected_values, target_co
     Output("explainability_details", 'children'),
     Input('result', 'data'), prevent_initial_call=True)
 def explainability_details(data):
-    print("data: ", data)
     if not data:
         return []
     result = json.loads(data)
@@ -610,7 +609,6 @@ def explainability_details(data):
     sections = [html.H3("▶ Explainability Metrics")]
     comp_list = []
     non_comp_list = []
-    print("metrics: ", metrics)
     for i in range(len(metrics)):
             metric_id = metrics[i]
             score = result["results"]["explainability"][metric_id]
@@ -630,8 +628,9 @@ def explainability_details(data):
 
 @app.callback(
     list(map(lambda o: Output("{}_details".format(o), 'children'), explainability_metrics)),
-    Input('result', 'data'), prevent_initial_call=False)    
-def metric_detail(data):
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+def metric_detail(data, unsupervised):
   if data is None:
       return [], [], [], []
   else:
@@ -645,7 +644,7 @@ def metric_detail(data):
           else:
               prop = []
               for k, p in metric_properties.items():
-           
+
                   if k == "importance" :
                         importance = p[1]
                         pct_dist = metric_properties["pct_dist"][1]
@@ -666,7 +665,7 @@ def metric_detail(data):
                   prop.append(html.Br())
               output.append(html.Div(prop))
       return output
-     
+
 '''
 The following function updates
 '''
@@ -797,6 +796,41 @@ def normalization(data):
             return metric_detail_div(metric_properties), []
         return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["methodology"]["normalization"]))
 
+#permutation feature importance
+@app.callback(
+    [Output("permutation_feature_importance_details", 'children'), Output("permutation_feature_importance_score", 'children')],
+    [Input('result', 'data')])
+def perm_feat_importance_details(data):
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["explainability"]["permutation_feature_importance"]
+        metric_scores = result["results"]
+
+        if math.isnan(metric_scores["explainability"]["permutation_feature_importance"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["explainability"]["permutation_feature_importance"]))
+
+'''
+#model size unsupervised
+@app.callback(
+    [Output("model_size_details", 'children'), Output("model_size_score", 'children')],
+    [Input('result', 'data')])
+def model_size_details(data):
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["explainability"]["model_size"]
+        metric_scores = result["results"]
+
+        if math.isnan(metric_scores["explainability"]["model_size"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["explainability"]["model_size"]))
+'''
 @app.callback(
     [Output("test_accuracy_details", 'children'), Output("test_accuracy_score", 'children')],
     [Input('result', 'data')])
@@ -895,7 +929,6 @@ def toggle_pillar_section_visibility(path):
     Output('analysis_section', 'style')],
     [Input('solution_set_dropdown', 'value')], prevent_initial_call=True)
 def analyze_solution_completeness(solution_set_path):
-    print(solution_set_path)
     button = []
     alerts = []
     style={'display': 'none'}
@@ -995,10 +1028,11 @@ def show_properties(data, solution_set_path, unsupervised):
     if data is None:
         return []
     else:
-        test_data, training_data, model, factsheet = read_solution(solution_set_path)
         if not unsupervised:
+            test_data, training_data, model, factsheet = read_solution(solution_set_path)
             properties = get_properties_section(training_data, test_data, factsheet)
         else:
+            test_data, training_data, outliers_data, model, factsheet = read_solution_unsupervised(solution_set_path)
             properties = get_properties_section_unsupervised(training_data, test_data, factsheet)
 
         if properties is None:
@@ -1121,7 +1155,6 @@ def update_figure(data, trig, unsupervised):
     if data is None:
         return [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, "", "", "", "", ""]
     result = json.loads(data)
-    print(result)
     final_score, results, properties = result["final_score"] , result["results"], result["properties"]
     trust_score = result["trust_score"]
     pillars = list(map(lambda x: x.upper(),list(final_score.keys())))
@@ -1164,11 +1197,9 @@ def update_figure(data, trig, unsupervised):
             values = nonNanValues
         print(categories)
         if not unsupervised:
-            print("metric_desription: ", metric_description)
             desc = list(map(lambda x: metric_description[x.lower().replace(' ','_')], categories))
         else:
             desc = list(map(lambda x: metric_description_unsupervised[x.lower().replace(' ','_')], categories))
-            print("metric_desription_unsupervised: ", metric_description_unsupervised)
 
         bar_chart_pillar = go.Figure(data=[go.Bar(x=categories, y=values, customdata = desc, marker_color=colors[n],hovertemplate = "(%{x}: %{y})<br>%{customdata}<extra></extra>")])
         bar_chart_pillar.update_yaxes(range=[0, 5], fixedrange=True)
@@ -1228,69 +1259,87 @@ def robustness_details(data):
 
 @app.callback(
 [Output("er_deepfool_attack_details", 'children'), Output("er_deepfool_attack_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def Deepfool_Attack_metric_detail(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["er_deepfool_attack"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["er_deepfool_attack"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_deepfool_attack"]))
+Input('result', 'data'),
+State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+def Deepfool_Attack_metric_detail(data, unsupervised):
+    if unsupervised:
+        return [], []
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["robustness"]["er_deepfool_attack"]
+        metric_scores = result["results"]
+        if math.isnan(metric_scores["robustness"]["er_deepfool_attack"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_deepfool_attack"]))
 
 @app.callback(
 [Output("er_carlini_wagner_attack_details", 'children'), Output("er_carlini_wagner_attack_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def carlini_wagner_attack_analysis(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["er_carlini_wagner_attack"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["er_carlini_wagner_attack"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_carlini_wagner_attack"]))
+Input('result', 'data'),
+State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+def carlini_wagner_attack_analysis(data, unsupervised):
+    if unsupervised:
+        return [],[]
+
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["robustness"]["er_carlini_wagner_attack"]
+        metric_scores = result["results"]
+        if math.isnan(metric_scores["robustness"]["er_carlini_wagner_attack"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_carlini_wagner_attack"]))
 
 @app.callback(
-[Output("er_fast_gradient_attack_details", 'children'), Output("er_fast_gradient_attack_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def fast_gradient_attack_analysis(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["er_fast_gradient_attack"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["er_fast_gradient_attack"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_fast_gradient_attack"]))
+    [Output("er_fast_gradient_attack_details", 'children'), Output("er_fast_gradient_attack_score", 'children')],
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+def fast_gradient_attack_analysis(data, unsupervised):
+    if unsupervised:
+        return [],[]
+
+        if data is None:
+            return [], []
+        else:
+            result = json.loads(data)
+            properties = result["properties"]
+            metric_properties = properties["robustness"]["er_fast_gradient_attack"]
+            metric_scores = result["results"]
+            if math.isnan(metric_scores["robustness"]["er_fast_gradient_attack"]):
+                return metric_detail_div(metric_properties), []
+            return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_fast_gradient_attack"]))
 
 @app.callback(
-[Output("clique_method_details", 'children'), Output("clique_method_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def clique_method_analysis(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["clique_method"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["clique_method"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["clique_method"]))
+    [Output("clique_method_details", 'children'), Output("clique_method_score", 'children')],
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+def clique_method_analysis(data, unsupervised):
+    if unsupervised:
+        return [], []
 
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["robustness"]["clique_method"]
+        metric_scores = result["results"]
+        if math.isnan(metric_scores["robustness"]["clique_method"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["clique_method"]))
 
 @app.callback(
     [Output("confidence_score_details", 'children'), Output("confidence_score_score", 'children')],
-    Input('result', 'data'), prevent_initial_call=False)
-def confidence_analysis(data):
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+def confidence_analysis(data, unsupervised):
+    if unsupervised:
+        return [], []
+
     if data is None:
         return [], []
     else:
@@ -1305,8 +1354,12 @@ def confidence_analysis(data):
 
 @app.callback(
     [Output("loss_sensitivity_details", 'children'), Output("loss_sensitivity_score", 'children')],
-    Input('result', 'data'), prevent_initial_call=False)
-def loss_sensitivity_analysis(data):
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+def loss_sensitivity_analysis(data, unsupervised):
+    if unsupervised:
+        return [], []
+
     if data is None:
         return [], []
     else:

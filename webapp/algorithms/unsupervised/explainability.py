@@ -1,8 +1,12 @@
 # === Explainability ===
+import statistics
+
 import numpy as np
 import pandas as pd
 import json
 import collections
+import keras
+from sklearn.ensemble import IsolationForest
 
 result = collections.namedtuple('result', 'score properties')
 info = collections.namedtuple('info', 'description value')
@@ -15,21 +19,28 @@ def analyse(clf, train_data, test_data, outliers_data, config, factsheet):
     #clf_type_score = config["score_algorithm_class"]["clf_type_score"]["value"]
     ms_thresholds = config["score_model_size"]["thresholds"]["value"]
     cf_thresholds = config["score_correlated_features"]["thresholds"]["value"]
+    pfi_thresholds = config["score_permutation_feature_importance"]["thresholds"]["value"]
     high_cor = config["score_correlated_features"]["high_cor"]["value"]
     #fr_thresholds = config["score_feature_relevance"]["thresholds"]["value"]
     #threshold_outlier = config["score_feature_relevance"]["threshold_outlier"]["value"]
     #penalty_outlier = config["score_feature_relevance"]["penalty_outlier"]["value"]
 
     print_details = True
+
+    if isKerasAutoencoder(clf):
+        outlier_thresh = get_threshold_mse_iqr(clf, train_data)
+    else:
+        outlier_thresh = 0
+
     output = dict(
         #algorithm_class     = algorithm_class_score(clf, clf_type_score),
         correlated_features = correlated_features_score(train_data, test_data, thresholds=cf_thresholds, high_cor=high_cor, print_details=print_details),
         model_size          = model_size_score(train_data, ms_thresholds, print_details=print_details),
-        #permutation_feature_importance   = permutation_feature_importance_score(clf, train_data ,target_column=target_column, thresholds=fr_thresholds, threshold_outlier =threshold_outlier,penalty_outlier=penalty_outlier),
+        permutation_feature_importance   = permutation_feature_importance_score(clf, outliers_data, outlier_thresh, thresholds = pfi_thresholds, print_details = print_details),
 
         #correlated_features = result(score=int(1), properties={}),
         #model_size = result(score=int(1), properties={}),
-        permutation_feature_importance = result(score=int(1), properties={})
+        #permutation_feature_importance = result(score=int(1), properties={})
     )
 
     scores = dict((k, v.score) for k, v in output.items())
@@ -86,66 +97,100 @@ def model_size_score(test_data, thresholds = np.array([10,30,100,500]), print_de
     return result(score=int(dist_score), properties={"dep" :info('Depends on','Training Data'),
         "n_features": info("number of features", test_data.shape[1]-1)})
 
-def permutation_feature_importance_score(clf, train_data, target_column=None, threshold_outlier = 0.03, penalty_outlier = 0.5, thresholds = [0.05, 0.1, 0.2, 0.3]):
-    
-    pd.options.mode.chained_assignment = None  
-    train_data = train_data.copy()
-    if target_column:
-        X_train = train_data.drop(target_column, axis=1)
-        y_train = train_data[target_column]
-    else:
-        X_train = train_data.iloc[:,:-1]
-        y_train = train_data.iloc[:,-1: ]
-        
-    scale_factor = 1.5
-    distri_threshold = 0.6
-    if (type(clf).__name__ == 'LogisticRegression') or (type(clf).__name__ == 'LinearRegression'): 
-        #normalize 
-        #for feature in X_train.columns:
-        #    X_train.loc[feature] = X_train[feature] / X_train[feature].std()
-        clf.max_iter =1000
-        clf.fit(X_train, y_train.values.ravel())
-        importance = clf.coef_[0]
-        #pd.DataFrame(columns=feat_labels,data=importance.reshape(1,len(importance))).plot.bar()
-        
-    elif  (type(clf).__name__ == 'RandomForestClassifier') or (type(clf).__name__ == 'DecisionTreeClassifier'):
-         importance=clf.feature_importances_
-         
-    else:
-        return result(score= np.nan, properties={"dep" :info('Depends on','Training Data and Model')}) 
-   
-    # absolut values
-    importance = abs(importance)
-    
-    feat_labels = X_train.columns
-    indices = np.argsort(importance)[::-1]
-    feat_labels = feat_labels[indices]
+def permutation_feature_importance_score(model, outliers_data, outlier_thresh, thresholds = [0.4,0.3,0.2,0.1,0], print_details = False):
 
-    importance = importance[indices]
-    
-    # calculate quantiles for outlier detection
-    q1, q2, q3 = np.percentile(importance, [25, 50 ,75])
-    lower_threshold , upper_threshold = q1 - scale_factor*(q3-q1),  q3 + scale_factor*(q3-q1) 
-    
-    #get the number of outliers defined by the two thresholds
-    n_outliers = sum(map(lambda x: (x < lower_threshold) or (x > upper_threshold), importance))
-    
-    # percentage of features that concentrate distri_threshold percent of all importance
-    pct_dist = sum(np.cumsum(importance) < 0.6) / len(importance)
-    
-    dist_score = np.digitize(pct_dist, thresholds, right=False) + 1 
-    
-    if n_outliers/len(importance) >= threshold_outlier:
-        dist_score -= penalty_outlier
-    
-    score =  max(dist_score,1)
-    properties = {"dep" :info('Depends on','Training Data and Model'),
-        "n_outliers":  info("number of outliers in the importance distribution",int(n_outliers)),
-                  "pct_dist":  info("percentage of feature that make up over 60% of all features importance", "{:.2f}%".format(100*pct_dist)),
-                  "importance":  info("feature importance", {"value": list(importance), "labels": list(feat_labels)})
-                  }
-    
+    print("PEEEEEEEEEEERMUTAAAAAAAAAAAAAAAATIOOOOOOOOON")
+    features = list(outliers_data.columns)
+
+    shuffles = 1
+    feature_importance = {}
+    num_redundant_feat = 0
+    num_datapoints = outliers_data.shape[0]
+
+    accuracy_no_permutation = compute_outlier_matrix(model, outliers_data, outlier_thresh, print_details)
+
+
+    for i, feature in enumerate(features):
+        feature_importance[feature] = []
+        outliers_data_copy = outliers_data.copy()
+
+        for _ in range(shuffles):
+            print(i, feature)
+            # compute outlier detection with permutation
+            outliers_data_copy[feature] = np.random.permutation(outliers_data[feature])
+            accuracy_permutation = compute_outlier_matrix(model, outliers_data_copy, outlier_thresh, print_details)
+
+            num_diff_val = np.sum(accuracy_no_permutation != accuracy_permutation)
+
+            permutation = num_diff_val / num_datapoints
+            print("permutation: ", permutation)
+            feature_importance[feature].append(permutation)
+
+        feature_importance[feature] = statistics.mean(feature_importance[feature])
+        if (feature_importance[feature] == 0):
+            num_redundant_feat += 1
+
+    ratio_redundant_feat = num_redundant_feat / len(feature_importance)
+    feature_importance_desc = list(dict(sorted(feature_importance.items(), key=lambda item: item[1])).keys())[::-1]
+
+    score = np.digitize(ratio_redundant_feat, thresholds, right=True)
+    print("SCOOOOOOOOOOOOOOORE: ", score)
+    properties = {
+        "dep": info('Depends on', 'Training Data and Model'),
+        "num_redundant_features": info("number of redundant features", num_redundant_feat),
+        "num_features": info("number of features", len(feature_importance)),
+        "ratio_redundant_features": info("ratio of redundant features", ratio_redundant_feat),
+        "importance": info("feature importance descending", {"value": feature_importance_desc})
+    }
+
     return result(score=int(score), properties=properties)
-    # import seaborn as sns
-    # sns.boxplot(data=importance)
-    
+
+def isKerasAutoencoder(model):
+    return isinstance(model, keras.engine.functional.Functional)
+
+def isIsolationForest(model):
+    return isinstance(model, IsolationForest)
+
+#Get anomaly threshold from "autoencoder" setting the threshold in Q1,Q3+-1.5IQR
+def get_threshold_mse_iqr(autoencoder,train_data):
+    train_predicted = autoencoder.predict(train_data)
+    mse = np.mean(np.power(train_data - train_predicted, 2), axis=1)
+    iqr = np.quantile(mse,0.75) - np.quantile(mse, 0.25) # interquartile range
+    up_bound = np.quantile(mse,0.75) + 1.5*iqr
+    bottom_bound = np.quantile(mse,0.25) - 1.5*iqr
+    thres = [up_bound,bottom_bound]
+    return thres
+
+#Predict outliers in "df" using "autoencoder" model and "threshold_mse" as anomaly limit
+def detect_outliers(autoencoder, df, threshold_mse):
+    if(len(threshold_mse)==2):
+        return detect_outliers_range(autoencoder, df, threshold_mse)
+    pred=autoencoder.predict(df)
+    mse = np.mean(np.power(df - pred, 2), axis=1)
+    #plt.hist(mse, bins=100)
+    #plt.show()
+    outliers = [np.array(mse) < threshold_mse]
+    return outliers
+
+def detect_outliers_range(autoencoder, df, threshold_mse):
+    pred=autoencoder.predict(df)
+    mse = np.mean(np.power(df - pred, 2), axis=1)
+    up_bound = threshold_mse[0]
+    bottom_bound = threshold_mse[1]
+    outliers = [(np.array(mse) < up_bound)&(np.array(mse) > bottom_bound)]
+    return outliers
+
+def compute_outlier_matrix(model, data, outlier_thresh, print_details=False):
+    if isKerasAutoencoder(model):
+        mad_outliers = detect_outliers(model, data, outlier_thresh)[0]
+
+    elif isIsolationForest(model):
+        mad_outliers = model.predict(data)
+
+    else:
+        mad_outliers = model.predict(data)
+
+    if print_details:
+        print("\t outlier matrix: ", mad_outliers)
+
+    return mad_outliers
