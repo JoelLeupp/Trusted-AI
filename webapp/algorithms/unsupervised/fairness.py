@@ -4,7 +4,6 @@ import keras
 from sklearn.ensemble import IsolationForest
 from keras.models import Sequential
 
-
 np.random.seed(0)
 from helpers import *
 from scipy.stats import chisquare
@@ -50,10 +49,10 @@ def analyse(model, training_dataset, test_dataset, outliers_dataset, factsheet, 
     output = dict(
         underfitting = underfitting_score(model, training_dataset, test_dataset, factsheet, underfitting_thresholds, outlier_thresh, print_details),
         overfitting = overfitting_score(model, training_dataset, test_dataset, outliers_dataset, factsheet, outlier_percentage, overfitting_thresholds, outlier_thresh, print_details),
-        #statistical_parity_difference = statistical_parity_difference_score(model, training_dataset, factsheet, statistical_parity_difference_thresholds, print_details),
+        statistical_parity_difference = statistical_parity_difference_score(model, training_dataset, factsheet, statistical_parity_difference_thresholds, print_details),
         #disparate_impact=disparate_impact_score(model, test_dataset, factsheet, disparate_impact_thresholds, print_details),
 
-        statistical_parity_difference = result(score=int(1), properties={}),
+        #statistical_parity_difference = result(score=int(1), properties={}),
         disparate_impact = result(score=int(1), properties={}),
     )
     
@@ -89,7 +88,6 @@ def underfitting_score(model, training_dataset, test_dataset, factsheet, thresho
 
         detection_ratio_train = compute_outlier_ratio(model, training_dataset, outlier_thresh)
         detection_ratio_val = compute_outlier_ratio(model, test_dataset, outlier_thresh)
-        #detection_ratio_val = compute_outlier_ratio(model, val_data, outlier_thresh)
 
         perc_diff = abs(detection_ratio_train - detection_ratio_val)
         score = np.digitize(perc_diff, thresholds, right=False) + 1
@@ -202,7 +200,7 @@ def overfitting_score(model, training_dataset, test_dataset, outliers_dataset, f
 
 
 # --- Statistical Parity Difference ---
-def statistical_parity_difference_score(model, training_dataset, factsheet, thresholds):
+def statistical_parity_difference_score(model, training_dataset, factsheet, thresholds, print_details=False):
     """This function scores the computed statistical parity difference
     on a scale from 1 (very bad) to 5 (very good)
 
@@ -219,79 +217,80 @@ def statistical_parity_difference_score(model, training_dataset, factsheet, thre
         1 means that the statistical parity difference is very unfair/ high.
 
     """
-    try: 
-        
-        score = np.nan
-        properties = {}
-        properties["Metric Description"] = "The spread between the percentage of observations from the majority group receiving a favorable outcome compared to the protected group. The closes this spread is to zero the better."
-        properties["Depends on"] = "Training Data, Factsheet (Definition of Protected Group and Favorable Outcome)"
-        statistical_parity_difference, spdm_properties = statistical_parity_difference_metric(model, training_dataset, factsheet)
+    try:
+        #df_train_data.reset_index(drop=True, inplace=True)
+        #X_train = scaler.transform(df_train_data)
+        protected_feature, protected_values = load_fairness_config_unsupervised(factsheet)
 
-        properties['----------'] = ''
-        properties = properties|spdm_properties
-        properties['-----------'] = ''
-        properties["Formula"] =  "Statistical Parity Difference = |Favored Protected Group Ratio - Favored Unprotected Group Ratio|"
-        properties["Statistical Parity Difference"] = "{:.2f}%".format(statistical_parity_difference*100)
-        
-        score = np.digitize(abs(statistical_parity_difference), thresholds, right=False) + 1 
-        
-        properties["Score"] = str(score)
-        return result(score=int(score), properties=properties)
-    except Exception as e:
-        print("ERROR in statistical_parity_difference_score(): {}".format(e))
-        return result(score=np.nan, properties={"Non computable because": str(e)})
-
-    
-def statistical_parity_difference_metric(model, training_dataset, factsheet):
-    """This function computes the statistical parity metric.
-    It separates the data into a protected and an unprotected group 
-    based on the given definition for protected groups.
-    Then it computes the ratio of individuals receiving a favorable outcome
-    divided by the total number of observations in the group.
-    This is done both for the protected and unprotected group.
-
-    Args:
-        model: ML-model.
-        training_dataset: pd.DataFrame containing the used training data.
-        factsheet: json document containing all information about the particular solution.
-
-    Returns:
-        1. The ratio of people from the unprotected group receiving a favorable outcome.
-        2. The ratio of people from the protected group receiving a favorable outcome.
-        3. The statistical parity differenc as the difference of the previous two values.
-
-    """
-    try: 
-        properties = {}
-        protected_feature, protected_values, target_column, favorable_outcomes = load_fairness_config(factsheet)
-        
         minority = training_dataset[training_dataset[protected_feature].isin(protected_values)]
         minority_size = len(minority)
         majority = training_dataset[~training_dataset[protected_feature].isin(protected_values)]
         majority_size = len(majority)
 
-        favored_minority = minority[minority[target_column].isin(favorable_outcomes)]
-        favored_minority_size = len(favored_minority)
+        if isKerasAutoencoder(model):
+            thresh = get_threshold_mse_iqr(model, training_dataset)
+            mad_outliers = detect_outliers(model, training_dataset, thresh)
+            outlier_indices = [i for i, el in enumerate(mad_outliers[0].tolist()) if el == False]
 
-        favored_minority_ratio = favored_minority_size/minority_size
+        elif isIsolationForest(model):
+            mad_outliers = model.predict(training_dataset)
+            outlier_indices = [i for i, el in enumerate(mad_outliers.tolist()) if el == -1]
 
-        favored_majority = majority[majority[target_column].isin(favorable_outcomes)]
-        favored_majority_size = len(favored_majority)
-        favored_majority_ratio = favored_majority_size/majority_size
-        
-        properties["|{x|x is protected, y_true is favorable}|"] = favored_minority_size
-        properties["|{x|x is protected}|"] = minority_size
-        properties["Favored Protected Group Ratio"] =  "P(y_true is favorable|protected=True) = {:.2f}%".format(favored_minority_ratio*100)
-        properties["|{x|x is not protected, y_true is favorable}|"] = favored_majority_size
-        properties["|{x|x is not protected}|"] = majority_size
-        properties["Favored Unprotected Group Ratio"] =  "P(y_true is favorable|protected=False) = {:.2f}%".format(favored_majority_ratio*100)
-        
+        else:
+            mad_outliers = model.predict(training_dataset)
+            outlier_indices = [i for i, el in enumerate(mad_outliers.tolist()) if el == 1]
+
+        minority_indices = minority.index.tolist()
+        majority_indices = majority.index.tolist()
+
+        # measure num of outliers in majority group by intersection of indices
+        num_outliers_minority = len(list(set(minority_indices) & set(outlier_indices)))
+        num_outliers_majority = len(list(set(majority_indices) & set(outlier_indices)))
+
+        favored_minority_ratio = num_outliers_minority / minority_size
+        favored_majority_ratio = num_outliers_majority / majority_size
+
         statistical_parity_difference = abs(favored_minority_ratio - favored_majority_ratio)
-        return statistical_parity_difference, properties
+
+        if print_details:
+            print("\t protected feature: ", protected_feature)
+            print("\t protected values: ", protected_values)
+            print("\t group size: ", len(majority_indices), len(minority_indices))
+            print("\t num outlier: ", num_outliers_majority, num_outliers_minority)
+            print("\t outlier ratios: %.4f " % favored_majority_ratio, "%.4f " % favored_minority_ratio)
+            print("\t statistical_parity_difference: %.4f" % statistical_parity_difference)
+
+
+        properties = {}
+        properties["Metric Description"] = "The spread between the percentage of detected outliers in the majority group compared to the protected group. The closes this spread is to zero the better."
+        properties["Depends on"] = "Training Data, Factsheet (Definition of Protected Group and Favorable Outcome)"
+
+        properties['----------'] = ''
+        properties["protected feature: "] = protected_feature
+        properties["protected values: "] = str(protected_values)
+        properties['-----------'] = ''
+        properties["Formula"] =  "Statistical Parity Difference = |Favored Protected Group Ratio - Favored Unprotected Group Ratio|"
+        properties["Statistical Parity Difference"] = "{:.2f}%".format(statistical_parity_difference*100)
+
+        properties["|{x|x is protected, y_true is favorable}|"] = num_outliers_minority
+        properties["|{x|x is protected}|"] = minority_size
+        properties["Favored Protected Group Ratio"] = "P(y_true is favorable|protected=True) = {:.2f}%".format(
+            num_outliers_minority/minority_size * 100)
+        properties["|{x|x is not protected, y_true is favorable}|"] = num_outliers_majority
+        properties["|{x|x is not protected}|"] = majority_size
+        properties["Favored Unprotected Group Ratio"] = "P(y_true is favorable|protected=False) = {:.2f}%".format(
+            num_outliers_majority/majority_size * 100)
+
+        score = np.digitize(statistical_parity_difference, thresholds, right=False) + 1
+
+        properties["Score"] = str(score)
+        return result(score=int(score), properties=properties)
+
     except Exception as e:
-        print("ERROR in statistical_parity_difference_metric(): {}".format(e))
-        raise
-  
+        print("ERROR in statistical_parity_difference_score(): {}".format(e))
+        return result(score=np.nan, properties={"Non computable because": str(e)})
+
+
 # --- Disparate Impact ---
 def disparate_impact_score(model, test_dataset, factsheet, thresholds):
     """This function computes the disparate impact score.
@@ -508,3 +507,4 @@ def get_threshold_mse_iqr(autoencoder,train_data):
     bottom_bound = np.quantile(mse,0.25) - 1.5*iqr
     thres = [up_bound,bottom_bound]
     return thres
+

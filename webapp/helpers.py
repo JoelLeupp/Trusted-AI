@@ -948,3 +948,18 @@ def load_fairness_config(factsheet):
         raise MissingFairnessDefinitionError(message)
     
     return protected_feature, protected_values, target_column, favorable_outcomes
+
+def load_fairness_config_unsupervised(factsheet):
+    message = ""
+    protected_feature = factsheet.get("fairness", {}).get("protected_feature", '')
+    if not protected_feature:
+        message += "Definition of protected feature is missing."
+
+    protected_values = factsheet.get("fairness", {}).get("protected_values", [])
+    if not protected_values:
+        message += "Definition of protected_values is missing."
+
+    if message:
+        raise MissingFairnessDefinitionError(message)
+
+    return protected_feature, protected_values

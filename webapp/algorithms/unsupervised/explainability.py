@@ -134,7 +134,6 @@ def permutation_feature_importance_score(model, outliers_data, outlier_thresh, t
     feature_importance_desc = list(dict(sorted(feature_importance.items(), key=lambda item: item[1])).keys())[::-1]
 
     score = np.digitize(ratio_redundant_feat, thresholds, right=True)
-    print("SCOOOOOOOOOOOOOOORE: ", score)
     properties = {
         "dep": info('Depends on', 'Training Data and Model'),
         "num_redundant_features": info("number of redundant features", num_redundant_feat),

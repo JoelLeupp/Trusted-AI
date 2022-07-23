@@ -1431,7 +1431,7 @@ def download_report(n_clicks, solution_set_path, is_open, data, weight, map_f, m
     [Input('uploaded_scenario_id', 'data'),
     Input('uploaded_solution_id', 'data')])
 def set_uploaded_model(scenario_id, solution_id):
-    if scenario_id and solution_id :
+    if scenario_id and solution_id:
         solution_path = get_solution_path(scenario_id, solution_id)
         return scenario_id, solution_path
     else:
