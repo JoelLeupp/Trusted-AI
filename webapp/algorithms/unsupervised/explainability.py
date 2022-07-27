@@ -15,15 +15,11 @@ info = collections.namedtuple('info', 'description value')
 def analyse(clf, train_data, test_data, outliers_data, config, factsheet):
     
     #function parameters
-    target_column = factsheet["general"].get("target_column")
     #clf_type_score = config["score_algorithm_class"]["clf_type_score"]["value"]
     ms_thresholds = config["score_model_size"]["thresholds"]["value"]
     cf_thresholds = config["score_correlated_features"]["thresholds"]["value"]
     pfi_thresholds = config["score_permutation_feature_importance"]["thresholds"]["value"]
     high_cor = config["score_correlated_features"]["high_cor"]["value"]
-    #fr_thresholds = config["score_feature_relevance"]["thresholds"]["value"]
-    #threshold_outlier = config["score_feature_relevance"]["threshold_outlier"]["value"]
-    #penalty_outlier = config["score_feature_relevance"]["penalty_outlier"]["value"]
 
     print_details = True
 
@@ -99,7 +95,6 @@ def model_size_score(test_data, thresholds = np.array([10,30,100,500]), print_de
 
 def permutation_feature_importance_score(model, outliers_data, outlier_thresh, thresholds = [0.4,0.3,0.2,0.1,0], print_details = False):
 
-    print("PEEEEEEEEEEERMUTAAAAAAAAAAAAAAAATIOOOOOOOOON")
     features = list(outliers_data.columns)
 
     shuffles = 1

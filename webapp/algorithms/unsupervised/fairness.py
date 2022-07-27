@@ -50,10 +50,11 @@ def analyse(model, training_dataset, test_dataset, outliers_dataset, factsheet, 
         underfitting = underfitting_score(model, training_dataset, test_dataset, factsheet, underfitting_thresholds, outlier_thresh, print_details),
         overfitting = overfitting_score(model, training_dataset, test_dataset, outliers_dataset, factsheet, outlier_percentage, overfitting_thresholds, outlier_thresh, print_details),
         statistical_parity_difference = statistical_parity_difference_score(model, training_dataset, factsheet, statistical_parity_difference_thresholds, print_details),
-        #disparate_impact=disparate_impact_score(model, test_dataset, factsheet, disparate_impact_thresholds, print_details),
+        #TODO use test_dataset for disparate impact
+        disparate_impact=disparate_impact_score(model, training_dataset, factsheet, disparate_impact_thresholds, print_details),
 
         #statistical_parity_difference = result(score=int(1), properties={}),
-        disparate_impact = result(score=int(1), properties={}),
+        #disparate_impact = result(score=int(1), properties={}),
     )
     
     scores = dict((k, v.score) for k, v in output.items())
@@ -218,8 +219,6 @@ def statistical_parity_difference_score(model, training_dataset, factsheet, thre
 
     """
     try:
-        #df_train_data.reset_index(drop=True, inplace=True)
-        #X_train = scaler.transform(df_train_data)
         protected_feature, protected_values = load_fairness_config_unsupervised(factsheet)
 
         minority = training_dataset[training_dataset[protected_feature].isin(protected_values)]
@@ -292,7 +291,7 @@ def statistical_parity_difference_score(model, training_dataset, factsheet, thre
 
 
 # --- Disparate Impact ---
-def disparate_impact_score(model, test_dataset, factsheet, thresholds):
+def disparate_impact_score(model, test_dataset, factsheet, thresholds, print_details = False):
     """This function computes the disparate impact score.
     It divides the ratio of favored people within the protected group by
     the ratio of favored people within the unprotected group in order
@@ -301,7 +300,6 @@ def disparate_impact_score(model, test_dataset, factsheet, thresholds):
 
     Args:
         model: ML-model.
-        training_dataset: pd.DataFrame containing the used training data.
         test_dataset: pd.DataFrame containing the used test data.
         factsheet: json document containing all information about the particular solution.
 
@@ -313,27 +311,73 @@ def disparate_impact_score(model, test_dataset, factsheet, thresholds):
 
     """
     try:
-        score = np.nan
+        protected_feature, protected_values = load_fairness_config_unsupervised(factsheet)
+        minority = test_dataset[test_dataset[protected_feature].isin(protected_values)]
+        minority_size = len(minority)
+        majority = test_dataset[~test_dataset[protected_feature].isin(protected_values)]
+        majority_size = len(majority)
+
+        if isKerasAutoencoder(model):
+            thresh = get_threshold_mse_iqr(model, test_dataset)
+            mad_outliers = detect_outliers(model, test_dataset, thresh)
+            outlier_indices = [i for i, el in enumerate(mad_outliers[0].tolist()) if el == False]
+
+        elif isIsolationForest(model):
+            mad_outliers = model.predict(test_dataset)
+            outlier_indices = [i for i, el in enumerate(mad_outliers.tolist()) if el == -1]
+
+        else:
+            mad_outliers = model.predict(test_dataset)
+            outlier_indices = [i for i, el in enumerate(mad_outliers.tolist()) if el == 1]
+
+        minority_indices = minority.index.tolist()
+        majority_indices = majority.index.tolist()
+
+        # measure num of outliers in majority group by intersection of indices
+        num_outliers_minority = len(list(set(minority_indices) & set(outlier_indices)))
+        num_outliers_majority = len(list(set(majority_indices) & set(outlier_indices)))
+
+        favored_minority_ratio = num_outliers_minority / minority_size
+        favored_majority_ratio = num_outliers_majority / majority_size
+
+        disparate_impact = abs(favored_minority_ratio - favored_majority_ratio)
+
+        if print_details:
+            print("\t protected feature: ", protected_feature)
+            print("\t protected values: ", protected_values)
+            print("\t group size: ", len(majority_indices), len(minority_indices))
+            print("\t num outlier: ", num_outliers_majority, num_outliers_minority)
+            print("\t outlier ratios: %.4f " % favored_majority_ratio, "%.4f " % favored_minority_ratio)
+            print("\t disparate_impact: %.4f" % disparate_impact)
+
         properties = {}
-        properties["Metric Description"] = "Is quotient of the ratio of samples from the protected group receiving a favorable prediction divided by the ratio of samples from the unprotected group receiving a favorable prediction"
+        properties[
+            "Metric Description"] = "Is quotient of the ratio of samples from the protected group detected as outliers divided by the ratio of samples from the unprotected group detected as outliers"
         properties["Depends on"] = "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)"
-        disparate_impact, dim_properties = disparate_impact_metric(model, test_dataset, factsheet)
-        
-        properties["----------"] = ''
-        properties = properties|dim_properties
+        properties['----------'] = ''
+        properties["protected feature: "] = protected_feature
+        properties["protected values: "] = str(protected_values)
         properties['-----------'] = ''
-        
         properties["Formula"] = "Disparate Impact = Protected Favored Ratio / Unprotected Favored Ratio"
-        properties["Disparate Impact"] = "{:.2f}".format(disparate_impact)
+        properties["Disparate Impact"] = "{:.2f}%".format(disparate_impact * 100)
 
-        score = np.digitize(disparate_impact, thresholds, right=False)+1
-            
+        properties["|{x|x is protected, y_true is favorable}|"] = num_outliers_minority
+        properties["|{x|x is protected}|"] = minority_size
+        properties["Favored Protected Group Ratio"] = "P(y_true is favorable|protected=True) = {:.2f}%".format(
+            num_outliers_minority / minority_size * 100)
+        properties["|{x|x is not protected, y_true is favorable}|"] = num_outliers_majority
+        properties["|{x|x is not protected}|"] = majority_size
+        properties["Favored Unprotected Group Ratio"] = "P(y_true is favorable|protected=False) = {:.2f}%".format(
+            num_outliers_majority / majority_size * 100)
+
+        score = np.digitize(disparate_impact, thresholds, right=False) + 1
+
         properties["Score"] = str(score)
-        return result(score=int(score), properties=properties) 
-    except Exception as e:
-        print("ERROR in disparate_impact_score(): {}".format(e))
-        return result(score=np.nan, properties={"Non computable because": str(e)})
+        return result(score=int(score), properties=properties)
 
+    except Exception as e:
+        print("ERROR in statistical_parity_difference_score(): {}".format(e))
+        return result(score=np.nan, properties={"Non computable because": str(e)})
 
 def disparate_impact_metric(model, test_dataset, factsheet):
     """This function computes the disparate impact metric.
