@@ -66,9 +66,6 @@ def load_scenario(scenario_id, unsupervised = False):
     if os.path.isdir(os.path.join(scenario_path, SOLUTIONS_FOLDER)):
         all_solutions = all_solutions + [f.name for f in os.scandir(os.path.join(scenario_path, SOLUTIONS_FOLDER)) if f.is_dir() and not f.name.startswith('.')]
 
-    if os.path.isdir(os.path.join(scenario_path, SOLUTIONS_FOLDER_UNSUPERVISED)):
-        all_solutions = all_solutions + [f.name for f in os.scandir(os.path.join(scenario_path, SOLUTIONS_FOLDER_UNSUPERVISED)) if f.is_dir() and not f.name.startswith('.')]
-
     return scenario_link, scenario_description, all_solutions
   
 

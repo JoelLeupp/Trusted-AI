@@ -516,8 +516,8 @@ def store_result_2(solution_set_dropdown, n, weight, map_fairness, map_explainab
         # mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"],
         #                robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
         print(map_explainability)
-        test, train, model, factsheet = read_solution(solution_set_dropdown)
-        final_score, results, properties = get_final_score_unsupervised(model, train, test, weights_config, mappings_config,
+        test, train, outliers, model, factsheet = read_solution_unsupervised(solution_set_dropdown)
+        final_score, results, properties = get_final_score_unsupervised(model, train, test, outliers, weights_config, mappings_config,
                                                            factsheet, solution_set_dropdown)
         trust_score = get_trust_score(final_score, weights_config["pillars"])
 

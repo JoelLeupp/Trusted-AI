@@ -75,7 +75,7 @@ def correlated_features_score(train_data, test_data, thresholds=[0.05, 0.16, 0.2
         print("\t feat. to drop", to_drop)
 
     properties= {
-        "dep" : info('Depends on','Training Data'),
+        "dep" : info('Depends on', 'Training Data, Test Data'),
         "pct_drop" : info("Percentage of highly correlated features", "{:.2f}%".format(100*pct_drop))
     }
     
@@ -90,7 +90,7 @@ def model_size_score(test_data, thresholds = np.array([10,30,100,500]), print_de
         print("\t MODEL SIZE DETAILS")
         print("\t num of features: ", test_data.shape[1])
 
-    return result(score=int(dist_score), properties={"dep" :info('Depends on','Training Data'),
+    return result(score=int(dist_score), properties={"dep" :info('Depends on','Test Data'),
         "n_features": info("number of features", test_data.shape[1]-1)})
 
 def permutation_feature_importance_score(model, outliers_data, outlier_thresh, thresholds = [0.4,0.3,0.2,0.1,0], print_details = False):
@@ -130,7 +130,7 @@ def permutation_feature_importance_score(model, outliers_data, outlier_thresh, t
 
     score = np.digitize(ratio_redundant_feat, thresholds, right=True)
     properties = {
-        "dep": info('Depends on', 'Training Data and Model'),
+        "dep": info('Depends on', 'Model, Outliers Data'),
         "num_redundant_features": info("number of redundant features", num_redundant_feat),
         "num_features": info("number of features", len(feature_importance)),
         "ratio_redundant_features": info("ratio of redundant features", ratio_redundant_feat),

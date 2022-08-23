@@ -1,7 +1,7 @@
 import os
 import dash_daq as daq
 import joblib
-
+import keras
 from config import SCENARIOS_FOLDER_PATH
 import glob
 import pickle
@@ -34,6 +34,8 @@ from reportlab.lib.colors import *
 from base64 import b64encode
 from textwrap import wrap
 import timeit
+
+from joblib import load
 
 PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
 
@@ -260,7 +262,7 @@ def get_solution_path(scenario_id, solution_id):
     return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id, SOLUTIONS_FOLDER, solution_id)
 
 def get_solution_unsupervised_path(scenario_id, solution_id):
-    return os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id, SOLUTIONS_FOLDER_UNSUPERVISED, solution_id)
+    return os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id, SOLUTIONS_FOLDER, solution_id)
 
 def get_factsheet_path(scenario_id, solution_id):
     return os.path.join(get_solution_path(scenario_id, solution_id), FACTSHEET_NAME)
@@ -324,7 +326,9 @@ def read_model(solution_set_path):
         model = load_model(model_file)
         return model
     if file_extension == ".joblib": #Check if a .joblib file needs to be loaded
-        return joblib.load(model_file)
+        print("model_file: ", model_file)
+        load(model_file)
+        return load(model_file)
 
 # === FACTSHEET ===
 '''
