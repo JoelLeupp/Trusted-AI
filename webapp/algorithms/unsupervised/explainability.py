@@ -93,11 +93,11 @@ def model_size_score(test_data, thresholds = np.array([10,30,100,500]), print_de
     return result(score=int(dist_score), properties={"dep" :info('Depends on','Test Data'),
         "n_features": info("number of features", test_data.shape[1]-1)})
 
-def permutation_feature_importance_score(model, outliers_data, outlier_thresh, thresholds = [0.4,0.3,0.2,0.1,0], print_details = False):
+def permutation_feature_importance_score(model, outliers_data, outlier_thresh, thresholds = [0.2,0.15,0.1,0.05], print_details = False):
 
     features = list(outliers_data.columns)
 
-    shuffles = 1
+    shuffles = 8
     feature_importance = {}
     num_redundant_feat = 0
     num_datapoints = outliers_data.shape[0]
@@ -127,8 +127,9 @@ def permutation_feature_importance_score(model, outliers_data, outlier_thresh, t
 
     ratio_redundant_feat = num_redundant_feat / len(feature_importance)
     feature_importance_desc = list(dict(sorted(feature_importance.items(), key=lambda item: item[1])).keys())[::-1]
+    print(thresholds)
 
-    score = np.digitize(ratio_redundant_feat, thresholds, right=True)
+    score = np.digitize(ratio_redundant_feat, thresholds, right=True)+1
     properties = {
         "dep": info('Depends on', 'Model, Outliers Data'),
         "num_redundant_features": info("number of redundant features", num_redundant_feat),

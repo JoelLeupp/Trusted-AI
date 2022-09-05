@@ -83,14 +83,14 @@ def underfitting_score(model, training_dataset, test_dataset, factsheet, thresho
     """
     try:
         properties = {}
-        properties['Metric Description'] = "Computes the difference of outlier ratio in the training and test data."
+        properties['Metric Description'] = "Computes the difference of outlier detection ratio in the training and test data."
         properties['Depends on'] = 'Model, Train Data, Test Data'
         score = 0
 
         detection_ratio_train = compute_outlier_ratio(model, training_dataset, outlier_thresh)
-        detection_ratio_val = compute_outlier_ratio(model, test_dataset, outlier_thresh)
+        detection_ratio_test = compute_outlier_ratio(model, test_dataset, outlier_thresh)
 
-        perc_diff = abs(detection_ratio_train - detection_ratio_val)
+        perc_diff = abs(detection_ratio_train - detection_ratio_test)
         score = np.digitize(perc_diff, thresholds, right=False) + 1
 
         if print_details:
@@ -98,10 +98,12 @@ def underfitting_score(model, training_dataset, test_dataset, factsheet, thresho
             print("\t model is AutoEncoder: ", isKerasAutoencoder(model))
             print("\t model is IsolationForest: ", isIsolationForest(model))
             print("\t detected outlier ratio in training data: %.4f" % detection_ratio_train)
-            print("\t detected outlier ratio in validation data: %.4f" % detection_ratio_val)
+            print("\t detected outlier ratio in validation data: %.4f" % detection_ratio_test)
             print("\t absolute difference: %.4f" % perc_diff)
 
-        properties["Test Accuracy"] = "{:.2f}%".format(detection_ratio_val*100)
+        properties["Train Data Outlier Detection Ratio"] = "{:.2f}%".format(detection_ratio_train*100)
+        properties["Test Data Outlier Detection Ratio"] = "{:.2f}%".format(detection_ratio_test*100)
+        properties["Absolute Difference"] = "{:.2f}%".format(perc_diff*100)
 
         if score == 5:
             properties["Conclusion"] = "Model is not underfitting"
@@ -155,8 +157,9 @@ def overfitting_score(model, training_dataset, test_dataset, outliers_dataset, f
         perc_diff = abs(detection_ratio_train - detection_ratio_test)
         underfitting_score = np.digitize(perc_diff, [0.1,0.05,0.025,0.01], right=False) + 1
 
-        #if underfitting_score >= 3:
-        if 3 >= 3:
+        overfitting_score = np.nan
+
+        if underfitting_score >= 3:
             # compute outlier ratio in outlier dataset
             detection_ratio_outliers = compute_outlier_ratio(model, outliers_dataset, outlier_thresh)
 
@@ -195,7 +198,9 @@ def overfitting_score(model, training_dataset, test_dataset, outliers_dataset, f
             properties["Score"] = str(overfitting_score)
             return result(int(overfitting_score), properties=properties)
         else:
-            return result(overfitting_score, properties={"Non computable because": "The test accuracy is to low and if the model is underfitting to much it can't be overfitting at the same time."})
+            properties = {"Non computable because": "The test accuracy is to low and if the model is underfitting to much it can't be overfitting at the same time."}
+            properties["Outliers Detection Accuracy"] = "{:.2f}%".format(compute_outlier_ratio(model, outliers_dataset, outlier_thresh)*100)
+            return result(overfitting_score, properties= properties )
     except Exception as e:
         print("ERROR in overfitting_score(): {}".format(e))
         return result(score=np.nan, properties={"Non computable because": str(e)}) 
@@ -371,7 +376,7 @@ def disparate_impact_score(model, test_dataset, factsheet, thresholds, print_det
         properties["Favored Unprotected Group Ratio"] = "P(y_true is favorable|protected=False) = {:.2f}%".format(
             num_outliers_majority / majority_size * 100)
 
-        score = np.digitize(disparate_impact, thresholds, right=False) + 1
+        score = np.digitize(disparate_impact, thresholds, right=True) + 1
 
         properties["Score"] = str(score)
         return result(score=int(score), properties=properties)

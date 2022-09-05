@@ -134,7 +134,7 @@ def map_dropdown(pillar):
 
 @app.callback(
     [Output("solution_set_dropdown-1", 'options'),Output("solution_set_dropdown-2", 'options')],
-    [Input('scenario_dropdown_compare', 'value'), Input('toggle_supervised_unsupervised_compare', 'on')], prevent_initial_call=False)
+    [Input('scenario_dropdown_compare', 'value'), Input('toggle_supervised_unsupervised', 'on')], prevent_initial_call=False)
 def load_solution_sets(scenario_id, unsupervised):
     if scenario_id and not unsupervised:
         return get_scenario_solutions_options(scenario_id), get_scenario_solutions_options(scenario_id)
@@ -146,7 +146,7 @@ def load_solution_sets(scenario_id, unsupervised):
 
 @app.callback(
     Output("scenario_dropdown_compare", "options"),
-    Input('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call = True
+    Input('toggle_supervised_unsupervised', 'on')
 )
 def toggle_mode_compare(unsupervised):
 
@@ -165,13 +165,13 @@ layout = html.Div([
                       color = TRUST_COLOR,
                       style={"float": "right",'margin-left': "44%"}
                     ),
-            daq.BooleanSwitch(id='toggle_supervised_unsupervised_compare',
-                      on=False,
-                      label="enable Unsupervised",
-                      labelPosition="top",
-                      color = TRUST_COLOR,
-                      style={"float": "right",'margin-left': "44%"}
-                    ),
+            # daq.BooleanSwitch(id='toggle_supervised_unsupervised_compare',
+            #           on=False,
+            #           label="enable Unsupervised",
+            #           labelPosition="top",
+            #           color = TRUST_COLOR,
+            #           style={"float": "right",'margin-left': "44%"}
+            #        ),
             html.Br(),
             dbc.Col(html.Div(
                 [html.Br(),
@@ -435,7 +435,7 @@ def toggle_pillar_section_visibility_2(path):
 @app.callback(Output('result-1', 'data'),
               [Input('solution_set_dropdown-1', 'value'),
               Input("apply-config-compare", "n_clicks")],
-              [State('config-dropdown-compare', 'value')] +  [State('{}-dropdown-compare'.format(pillar),"value") for pillar in pillars],  State('toggle_supervised_unsupervised_compare', 'on'))
+              [State('config-dropdown-compare', 'value')] +  [State('{}-dropdown-compare'.format(pillar),"value") for pillar in pillars],  State('toggle_supervised_unsupervised', 'on'))
 def store_result_1(solution_set_dropdown, n, weight, map_fairness, map_explainability, map_robustness, map_methodology, unsupervised):
     if not solution_set_dropdown:
         return None
@@ -493,7 +493,7 @@ def store_result_1(solution_set_dropdown, n, weight, map_fairness, map_explainab
               [Input('solution_set_dropdown-2', 'value'),
                Input("apply-config-compare", "n_clicks")],
               [State('config-dropdown-compare', 'value')] +  [State('{}-dropdown-compare'.format(pillar),"value") for pillar in pillars],
-              State('toggle_supervised_unsupervised_compare', 'on'))
+              State('toggle_supervised_unsupervised', 'on'))
 def store_result_2(solution_set_dropdown, n, weight, map_fairness, map_explainability, map_robustness, map_methodology, unsupervised):
     if not solution_set_dropdown:
         return None
@@ -660,7 +660,7 @@ def show_general_description_2(scenario_id, solution_set_path):
 
 @app.callback(Output('performance_metrics_section-1', 'children'),
           Input('solution_set_dropdown-1', 'value'),
-              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+              State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=True)
 def show_performance_metrics_1(solution_set_path, unsupervised):
     if unsupervised:
         return []
@@ -710,7 +710,7 @@ def show_performance_metrics_1(solution_set_path, unsupervised):
 
 @app.callback(Output('performance_metrics_section-2', 'children'),
           Input('solution_set_dropdown-2', 'value'),
-              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+              State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=True)
 def show_performance_metrics_2(solution_set_path, unsupervised):
     if unsupervised:
         return []
@@ -760,7 +760,7 @@ def show_performance_metrics_2(solution_set_path, unsupervised):
 
 @app.callback(Output('properties_section-1', 'children'),
               Input('solution_set_dropdown-1', 'value'),
-              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+              State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=True)
 def show_properties_1(solution_set_path, unsupervised):
     if not solution_set_path:
         return []
@@ -810,7 +810,7 @@ def show_properties_1(solution_set_path, unsupervised):
 
 @app.callback(Output('properties_section-2', 'children'),
               Input('solution_set_dropdown-2', 'value'),
-              State('toggle_supervised_unsupervised_compare', 'on'), prevent_initial_call=True)
+              State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=True)
 def show_properties_2(solution_set_path, unsupervised):
     if not solution_set_path:
         return []

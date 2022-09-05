@@ -629,7 +629,7 @@ def explainability_details(data):
 @app.callback(
     list(map(lambda o: Output("{}_details".format(o), 'children'), explainability_metrics)),
     Input('result', 'data'),
-    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def metric_detail(data, unsupervised):
   if data is None:
       return [], [], [], []
@@ -971,7 +971,7 @@ def display_confirm(n_clicks):
     
 @app.callback(Output('performance_metrics_section', 'children'),
               Input('solution_set_dropdown', 'value'),
-              State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=True)
+              State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=True)
 def show_performance_metrics(solution_set_path, unsupervised):
     if unsupervised:
         return []
@@ -1023,7 +1023,7 @@ def show_performance_metrics(solution_set_path, unsupervised):
 @app.callback(Output('properties_section', 'children'),
               [Input('result', 'data'),
                State('solution_set_dropdown', 'value'),
-               State('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call=True)
+               State('toggle_supervised_unsupervised', 'on')], prevent_initial_call=True)
 def show_properties(data, solution_set_path, unsupervised):
     if data is None:
         return []
@@ -1079,7 +1079,7 @@ def show_properties(data, solution_set_path, unsupervised):
           [Input('solution_set_dropdown', 'value'),
            Input("input-config","data"),Input('input-mappings', 'data')],
           [State("recalc","on"),
-           State('toggle_supervised_unsupervised_analyze', 'on')], prevent_initial_call = True)
+           State('toggle_supervised_unsupervised', 'on')], prevent_initial_call = True)
 def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,recalc, unsupervised):
 
     if not solution_set_dropdown:
@@ -1147,7 +1147,7 @@ def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,
        Output('robustness_star_rating', 'children'),
        Output('methodology_star_rating', 'children')],
       [Input('result', 'data'),Input("hidden-trigger", "value")],
-    State('toggle_supervised_unsupervised_analyze', 'on'))
+    State('toggle_supervised_unsupervised', 'on'))
 def update_figure(data, trig, unsupervised):
     global charts
     charts = []
@@ -1260,7 +1260,7 @@ def robustness_details(data):
 @app.callback(
 [Output("er_deepfool_attack_details", 'children'), Output("er_deepfool_attack_score", 'children')],
 Input('result', 'data'),
-State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def Deepfool_Attack_metric_detail(data, unsupervised):
     if unsupervised:
         return [], []
@@ -1278,7 +1278,7 @@ def Deepfool_Attack_metric_detail(data, unsupervised):
 @app.callback(
 [Output("er_carlini_wagner_attack_details", 'children'), Output("er_carlini_wagner_attack_score", 'children')],
 Input('result', 'data'),
-State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def carlini_wagner_attack_analysis(data, unsupervised):
     if unsupervised:
         return [],[]
@@ -1297,7 +1297,7 @@ def carlini_wagner_attack_analysis(data, unsupervised):
 @app.callback(
     [Output("er_fast_gradient_attack_details", 'children'), Output("er_fast_gradient_attack_score", 'children')],
     Input('result', 'data'),
-    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def fast_gradient_attack_analysis(data, unsupervised):
     if unsupervised:
         return [],[]
@@ -1316,7 +1316,7 @@ def fast_gradient_attack_analysis(data, unsupervised):
 @app.callback(
     [Output("clique_method_details", 'children'), Output("clique_method_score", 'children')],
     Input('result', 'data'),
-    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def clique_method_analysis(data, unsupervised):
     if unsupervised:
         return [], []
@@ -1335,7 +1335,7 @@ def clique_method_analysis(data, unsupervised):
 @app.callback(
     [Output("confidence_score_details", 'children'), Output("confidence_score_score", 'children')],
     Input('result', 'data'),
-    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def confidence_analysis(data, unsupervised):
     if unsupervised:
         return [], []
@@ -1355,7 +1355,7 @@ def confidence_analysis(data, unsupervised):
 @app.callback(
     [Output("loss_sensitivity_details", 'children'), Output("loss_sensitivity_score", 'children')],
     Input('result', 'data'),
-    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def loss_sensitivity_analysis(data, unsupervised):
     if unsupervised:
         return [], []
@@ -1392,7 +1392,7 @@ def clever_score(data):
 @app.callback(
     Output("solution_set_dropdown", 'options'),
     Input('scenario_dropdown', 'value'),
-    State('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call=False)
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
 def show_scenario_solution_options(scenario_id, unsupervised):
     print("unsupervised: ", unsupervised)
     if scenario_id and not unsupervised:
@@ -1439,7 +1439,7 @@ def set_uploaded_model(scenario_id, solution_id):
 
 @app.callback(
     Output("scenario_dropdown", "options"),
-    Input('toggle_supervised_unsupervised_analyze', 'on'), prevent_initial_call = True
+    Input('toggle_supervised_unsupervised', 'on'), prevent_initial_call = True
 )
 def toggle_mode_analyze(unsupervised):
 
@@ -1463,13 +1463,13 @@ layout = html.Div([
                       color = "green",
                     
                     )], style= {'display': 'Block'} if DEBUG else {"display": "None"}),
-            daq.BooleanSwitch(id='toggle_supervised_unsupervised_analyze',
-                      on=False,
-                      label="enable Unsupervised Mode",
-                      labelPosition="top",
-                      color = TRUST_COLOR,
-                      style={"float": "right",'margin-left': "44%"}
-                    ),
+            # daq.BooleanSwitch(id='toggle_supervised_unsupervised_analyze',
+            #           on=False,
+            #           label="enable Unsupervised Mode",
+            #           labelPosition="top",
+            #           color = TRUST_COLOR,
+            #           style={"float": "right",'margin-left': "44%"}
+            #         ),
             dbc.Col([html.H5("Scenario"),
                  dcc.Dropdown(
                     id='scenario_dropdown',

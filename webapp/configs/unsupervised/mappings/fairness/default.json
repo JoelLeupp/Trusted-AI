@@ -2,10 +2,10 @@
     "score_underfitting": {
         "thresholds": {
             "value": [
-                0.8,
-                0.85,
-                0.9,
-                0.95
+                0.1,
+                0.05,
+                0.025,
+                0.01
             ],
             "description": "",
             "label": ""
@@ -14,11 +14,10 @@
     "score_overfitting": {
         "thresholds": {
             "value": [
-                0.04,
-                0.03,
-                0.02,
-                0.01,
-                0
+                0.075,
+                0.05,
+                0.025,
+                0.01
             ],
             "description": "",
             "label": ""
@@ -40,8 +39,8 @@
     "score_disparate_impact": {
         "thresholds": {
             "value": [
+                0.75,
                 0.8,
-                0.85,
                 0.9,
                 0.95
             ],

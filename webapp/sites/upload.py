@@ -1,3 +1,4 @@
+import dash_daq as daq
 import dash
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -15,6 +16,7 @@ from app import app
 from config import SCENARIOS_FOLDER_PATH, PICKLE_FILE_EXTENSIONS, JOBLIB_FILE_EXTENSIONS, FACTSHEET_NAME, BASE_PATH
 from helpers import * 
 from sites import factsheet
+from keras.models import load_model
 
 # === CALLBACKS ===
 # --- Preview Callbacks --- #
@@ -23,20 +25,22 @@ from sites import factsheet
                Output('target_column_dropdown', 'options'),
                Output('protected_feature_dropdown', 'options')],
               [Input('training_data_upload', 'contents'),
-              State('training_data_upload', 'filename')], prevent_initial_call=True)
-def training_data_preview(content, name):
+              State('training_data_upload', 'filename'), State("toggle_supervised_unsupervised", "on")], prevent_initial_call=True)
+def training_data_preview(content, name, unsupervised):
 
     message = html.Div(['Drag and Drop or Select File'])
     summary = []
     options = []
     if content is not None:
+        print("IF")
         message = html.Div(name)
         df, summary, columns = parse_contents(content, name)
         print(columns)
         for c in columns:
             options.append({"label": str(c), "value": str(c)})
 
-    return [message, summary, options, options]
+        return [message, summary, options, options]
+
 
 @app.callback(Output('protected_value_dropdown_upload', 'options'),
               [Input('protected_feature_dropdown', 'value'),
@@ -69,6 +73,18 @@ def favorable_outcome_value_options(column, content, filename):
               [Input('test_data_upload', 'contents'),
               State('test_data_upload', 'filename')], prevent_initial_call=True)
 def test_data_preview(content, name):
+    message = html.Div(['Drag and Drop or Select File'])
+    summary = []
+    if content is not None:
+        message = html.Div(name)
+        df, summary, columns = parse_contents(content, name)
+    return [message, summary]
+
+@app.callback([Output('outlier_data_upload', 'children'),
+               Output('outlier_data_summary', 'children')],
+              [Input('outlier_data_upload', 'contents'),
+              Input('outlier_data_upload', 'filename')], prevent_initial_call=True)
+def outlier_data_preview(content, name):
     message = html.Div(['Drag and Drop or Select File'])
     summary = []
     if content is not None:
@@ -114,15 +130,19 @@ def validate_scenario_id(n_clicks, scenario_id):
               [Input('upload_button', 'n_clicks'),
                Input('upload_scenario_id', 'value'),
                Input('solution_name', 'value'),
-               ], prevent_initial_call=True)
-def validate_solution_name(n_clicks, scenario_id, solution_name):
+               ],
+              [State('toggle_supervised_unsupervised', 'on')], prevent_initial_call=True)
+def validate_solution_name(n_clicks, scenario_id, solution_name, unsupervised):
     if n_clicks is not None:
         if not solution_name:
             return html.H6("Please enter a name for your model", style={"color":"Red"})
         else:
             # check if a model with this name already exists for this problem set
             solution_id = name_to_id(solution_name)
-            solution_path = get_solution_path(scenario_id, solution_id)
+            if unsupervised:
+                solution_path = get_solution_unsupervised_path(scenario_id, solution_id)
+            else:
+                solution_path = get_solution_path(scenario_id, solution_id)
             print("solution_path {}".format(solution_path))
             if os.path.isdir(solution_path):
                 return html.H6("A model with this name already exists", style={"color":"Red"})
@@ -131,13 +151,19 @@ def validate_solution_name(n_clicks, scenario_id, solution_name):
             
 @app.callback(Output('training_data_alert', 'children'),
                [Input('upload_button', 'n_clicks'),
-                Input('training_data_upload', 'contents')], prevent_initial_call=True
-                )
+                Input('training_data_upload', 'contents')], prevent_initial_call=True)
 def validate_training_data(n_clicks, training_data):
+    print("VALIDATE TRAIN")
+    print(n_clicks)
+    print(training_data)
     if n_clicks is not None:
         if training_data is None:
+            print("NONE")
+
             return html.H6("No training data uploaded", style={"color":"Red"})
         else:
+            print("ELSE")
+
             return None
         
 @app.callback(Output('test_data_alert', 'children'),
@@ -148,6 +174,17 @@ def validate_test_data(n_clicks, test_data):
     if n_clicks is not None:
         if test_data is None:
             return html.H6("No test data uploaded", style={"color":"Red"})
+        else:
+            return None
+
+@app.callback(Output('outlier_data_alert', 'children'),
+               [Input('upload_button', 'n_clicks'),
+                Input('outlier_data_upload', 'contents')], prevent_initial_call=True
+                )
+def validate_outlier_data(n_clicks, outlier_data):
+    if n_clicks is not None:
+        if outlier_data is None:
+            return html.H6("No outlier data uploaded", style={"color":"Red"})
         else:
             return None
 
@@ -191,6 +228,8 @@ def validate_model(n_clicks, model):
                State('training_data_upload', 'filename'),
                State('test_data_upload', 'contents'),
                State('test_data_upload', 'filename'),
+               State('outlier_data_upload', 'contents'),
+               State('outlier_data_upload', 'filename'),
                State('protected_feature_dropdown', 'value'),
                State('protected_value_dropdown_upload', 'value'),
                State('target_column_dropdown', 'value'),
@@ -199,7 +238,8 @@ def validate_model(n_clicks, model):
                State('factsheet_upload', 'filename'),
                State('model_upload', 'contents'),
                State('model_upload', 'filename'),
-], prevent_initial_call=True)             
+               State('toggle_supervised_unsupervised', 'on'),
+], prevent_initial_call=True)
 def upload_data(
     n_clicks,
     created_factsheet,
@@ -210,6 +250,8 @@ def upload_data(
     training_data_filename,
     test_data,
     test_data_filename,
+    outlier_data,
+    outlier_data_filename,
     protected_feature,
     protected_values,
     target_column,
@@ -217,26 +259,33 @@ def upload_data(
     factsheet,
     factsheet_filename,
     model,
-    model_filename):
+    model_filename,
+    unsupervised):
     if n_clicks is None:
         return "", "", ""
     else:
-        if None in (scenario_id, solution_name, training_data, test_data, model):   
+        if None in (scenario_id, solution_name, training_data, test_data, model):
             return html.H5("Please provide all necessary data", style={"color":"Red"},  className="text-center"), '', ''
         else:
             # Create directory within the problem set to contain the data
             solution_id = name_to_id(solution_name)
-            solution_path = get_solution_path(scenario_id, solution_id)
+            if unsupervised:
+                solution_path = get_solution_unsupervised_path(scenario_id, solution_id)
+            else:
+                solution_path = get_solution_path(scenario_id, solution_id)
             # Check if directory does not exists yet
             if not os.path.isdir(solution_path):
                 os.mkdir(solution_path)
-                
+
                 # Upload all the data to the new directory.
                 # Saving Training Data
                 save_training_data(solution_path, training_data_filename, training_data)
-                
+
                 # Saving Test Data
                 save_test_data(solution_path, test_data_filename, test_data)
+
+                if unsupervised:
+                    save_outlier_data(solution_path, outlier_data_filename, outlier_data)
 
                 if created_factsheet:
                     new_factsheet = created_factsheet
@@ -248,20 +297,20 @@ def upload_data(
                     new_factsheet["fairness"] = {}
                 new_factsheet["general"]["target_column"] = target_column
                 new_factsheet["general"]["description"] = general_description
-                
+
                 new_factsheet["fairness"]["protected_feature"] = protected_feature
                 new_factsheet["fairness"]["protected_values"] = protected_values
                 new_factsheet["fairness"]["favorable_outcomes"] = favorable_outcomes
-                
+
                 # Saving Factsheet
                 save_factsheet(solution_path, FACTSHEET_NAME, factsheet, new_factsheet)
-  
+
                 # Saving Model
                 save_model(solution_path, model_filename, model)
 
-            else: 
+            else:
                 return html.H4("Directory already exists", style={"color":"Red"}, className="text-center"), '', ''
-                      
+
             return dcc.Location(pathname="{}/analyze".format(BASE_PATH), id="someid_doesnt_matter"), scenario_id, solution_id
 
 modals = ["upload_scenario_id", "solution_name", "general_description", "training_data", "test_data", "target_column_name" ,"factsheet", "model"]
@@ -277,6 +326,7 @@ for m in modals:
         return is_open
 
 def save_training_data(path, name, content):
+    print("SAVE TRAIN")
     file_name, file_extension = os.path.splitext(name)
     data = content.encode("utf8").split(b";base64,")[1]
     with open(os.path.join(path, "train" + file_extension), "wb") as fp:
@@ -287,20 +337,54 @@ def save_test_data(path, name, content):
     data = content.encode("utf8").split(b";base64,")[1]
     with open(os.path.join(path, "test" + file_extension), "wb") as fp:
         fp.write(base64.decodebytes(data))
+
+def save_outlier_data(path, name, content):
+    file_name, file_extension = os.path.splitext(name)
+    data = content.encode("utf8").split(b";base64,")[1]
+    with open(os.path.join(path, "outliers" + file_extension), "wb") as fp:
+        fp.write(base64.decodebytes(data))
   
 def save_model(path, name, content):
     file_name, file_extension = os.path.splitext(name)
     content_type, content_string = content.split(',')
     decoded = base64.b64decode(content_string)
-    
+
+    print("*************************************", file_extension)
     if file_extension in PICKLE_FILE_EXTENSIONS:
         model = pd.read_pickle(io.BytesIO(decoded))
         pickle.dump(model, open(os.path.join(path, "model" + file_extension), 'wb'))
         
-    if file_extension == JOBLIB_FILE_EXTENSIONS:
+    elif file_extension in JOBLIB_FILE_EXTENSIONS:
+        print("JOOOOOOOOOOOOOOBLIIIIIIIIIB")
         model = load(io.BytesIO(decoded))
-        dump(model, os.path.join(path, "model" + file_extension)) 
-            
+        dump(model, os.path.join(path, "model" + file_extension))
+
+    else:
+        print("NOOOOOOOOOOOOOOOOOOOOOO")
+
+
+
+
+@app.callback(
+    [Output("upload_scenario_id", "options"),
+     Output("conditional_outlier", "style"),
+     Output("conditional_output_target", "style"),
+     Output("conditional_output_fav_out", "style")],
+    Input('toggle_supervised_unsupervised', 'on')
+)
+def toggle_mode_upload(unsupervised):
+    display = {"display": "inline",
+               'width': '100%',
+               'height': '60px',
+               'textAlign': 'center',
+               }
+    hide = {"display": "none"}
+    if unsupervised:
+        return get_scenario_options(unsupervised), display, hide, hide
+    else:
+        return get_scenario_options(unsupervised), hide, display, display
+
+
 # === SITE ===
 #scenarios = [{'label': f.name, 'value': f.path} for f in os.scandir(SCENARIOS_FOLDER_PATH) if f.is_dir()]
 
@@ -349,33 +433,38 @@ layout = dbc.Container([
             style={'width': '100%', 'height': 100},
         )], className="mb-4"),
     ]),
-    
-    html.Div([
+        # --- TRAIN DATA UPLOAD --- #
+
         html.Div([
-            create_info_modal("training_data", "Training Data", "Please upload the training data that was used to train the model. Csv and pickle (pkl) files are accepted.", ""),
-            html.Div(id="training_data_alert"),
-            html.H3(["4. Training Data", html.Sup("*")]),
-            html.H5("Please upload the training data")
-        ], className="text-center"),
-    dcc.Upload(
-        id='training_data_upload',
-        children=html.Div([
-            'Drag and Drop or Select File'
-        ]),
-        style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-            'margin': '10px',
-            'backgroundColor': '#FFFFFF'
-        })],
-        className="mb-4"
-    ),
-    html.Div(id='training_data_summary'),
+            html.Div([
+                create_info_modal("training_data", "Training Data",
+                                  "Please upload the training data that was used to train the model. Csv and pickle (pkl) files are accepted.",
+                                  ""),
+                html.Div(id="training_data_alert"),
+                html.H3(["4. Training Data", html.Sup("*")]),
+                html.H5("Please upload the training data"),
+                dcc.Upload(
+                    id='training_data_upload',
+                    children=[
+                        'Drag and Drop or Select a File'
+                    ],
+                    style={
+                        'width': '100%',
+                        'height': '60px',
+                        'lineHeight': '60px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '5px',
+                        'textAlign': 'center',
+                        'backgroundColor': '#FFFFFF'
+                    }
+                ),
+                html.Div(id='training_data_summary'),
+                # (csv and pickle files are accepted).
+                # "Please place the label to the last column of the dataframe."
+            ], className="text-center"),
+        ],
+            className="mb-4"),
     
     # --- TEST DATA UPLOAD --- #
     
@@ -407,7 +496,39 @@ layout = dbc.Container([
         ], className="text-center"),
     ],
             className="mb-4"),
-        
+
+    # --- OUTLIER DATA UPLOAD --- #
+    html.Div([
+                 html.Div(
+                 [
+                     create_info_modal("outlier_data", "Outlier Data",
+                                       "Please upload the outlier data. Csv and pickle (pkl) files are accepted.", ""),
+                     html.Div(id="outlier_data_alert"),
+                     html.Div([
+                        html.H3(["6. Outlier Data", html.Sup("*")]),
+                        html.H5("Please upload the outlier data"),
+                        dcc.Upload(
+                             id='outlier_data_upload',
+                             children=[
+                                 'Drag and Drop or Select a File'
+                             ],
+                             style={
+                                 'width': '100%',
+                                 'height': '60px',
+                                 'lineHeight': '60px',
+                                 'borderWidth': '1px',
+                                 'borderStyle': 'dashed',
+                                 'borderRadius': '5px',
+                                 'textAlign': 'center',
+                                 'backgroundColor': '#FFFFFF'
+                             }
+                         ),
+                     ],id = "conditional_outlier"),
+
+                     html.Div(id='outlier_data_summary'),
+                 ], className="text-center")
+             ]),
+
         # --- PROTECTED FEATURE --- #
         html.Div([
             create_info_modal("protected_feature", "Protected Feature", "A protected feature (like age, race, gender) is not supposed to influence he prediction.", ""),
@@ -448,7 +569,7 @@ layout = dbc.Container([
         options=[],
         placeholder='Select Target Column'
     ),
-        ], className="mb-4 text-center"),
+        ], className="mb-4 text-center", id="conditional_output_target"),
 
         
     # --- FAVORABLE OUTCOME --- #
@@ -463,7 +584,7 @@ layout = dbc.Container([
             multi=True,
             style={'width': '100%'}
         ),
-    ], className="mb-4 mt-4 text-center"),
+    ], className="mb-4 mt-4 text-center", id="conditional_output_fav_out"),
        
     # --- FACTSHEET --- #
     
