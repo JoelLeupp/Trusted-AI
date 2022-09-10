@@ -23,6 +23,10 @@ import dash
 import warnings 
 import plotly
 from dash_extensions.snippets import send_file
+import keras
+
+from algorithms.unsupervised.explainability import get_threshold_mse_iqr
+from algorithms.unsupervised.fairness import isKerasAutoencoder
 
 warnings.filterwarnings('ignore')
 
@@ -968,20 +972,28 @@ def display_confirm(n_clicks):
         return True
     else:
         return False
-    
+
 @app.callback(Output('performance_metrics_section', 'children'),
               Input('solution_set_dropdown', 'value'),
               State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=True)
 def show_performance_metrics(solution_set_path, unsupervised):
-    if unsupervised:
-        return []
     if not solution_set_path:
         return []
     else:
-        test_data, training_data, model, factsheet = read_solution(solution_set_path)
-        target_column = factsheet.get("general", {}).get("target_column", "")
+        if unsupervised:
+            test_data, training_data, outlier_data, model, factsheet = read_solution_unsupervised(solution_set_path)
+            outlier_thresh = []
+            if isKerasAutoencoder(model):
+                outlier_thresh = get_threshold_mse_iqr(model, training_data)
 
-        performance_metrics =  get_performance_metrics(model, test_data, target_column)
+            performance_metrics =  get_performance_metrics_unsupervised(model, outlier_data, outlier_thresh)
+
+        else:
+
+            test_data, training_data, model, factsheet = read_solution(solution_set_path)
+            target_column = factsheet.get("general", {}).get("target_column", "")
+            performance_metrics =  get_performance_metrics(model, test_data, target_column)
+
         performance_metrics_table = dash_table.DataTable(
                                 id='performance_metrics_table',
                                 columns=[{"name": i, "id": i} for i in performance_metrics.columns],
@@ -1006,7 +1018,7 @@ def show_performance_metrics(solution_set_path, unsupervised):
                                     {
                                         'if': {'column_id': 'key'},
                                         'fontWeight': 'bold',
-                                        'width': '30%'
+                                        'width': '60%'
                                     } 
                                 ],
                                 style_as_list_view=True,

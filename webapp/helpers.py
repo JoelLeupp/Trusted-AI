@@ -37,6 +37,8 @@ import timeit
 
 from joblib import load
 
+from algorithms.unsupervised.fairness import compute_outlier_ratio
+
 PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
 
 result = collections.namedtuple('result', 'score properties')
@@ -104,6 +106,18 @@ def get_performance_metrics(model, test_data, target_column):
     performance_metrics = performance_metrics.reset_index()
     performance_metrics['index'] = performance_metrics['index'].str.title()
     performance_metrics.rename(columns={"index":"key", 0:"value"}, inplace=True)
+    return performance_metrics
+
+
+def get_performance_metrics_unsupervised(model, outliers, out_thresh):
+    performance_metrics = pd.DataFrame({
+        "Outlier Detection Ratio": [compute_outlier_ratio(model, outliers, out_thresh)],
+    }).round(decimals=2)
+
+    performance_metrics = performance_metrics.transpose()
+    performance_metrics = performance_metrics.reset_index()
+    performance_metrics['index'] = performance_metrics['index'].str.title()
+    performance_metrics.rename(columns={"index": "key", 0: "value"}, inplace=True)
     return performance_metrics
 
 
