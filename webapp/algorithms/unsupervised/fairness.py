@@ -9,6 +9,9 @@ from helpers import *
 from scipy.stats import chisquare
 import operator
 import funcy
+import collections
+
+result = collections.namedtuple('result', 'score properties')
 
 # === Fairness Metrics ===
 def analyse(model, training_dataset, test_dataset, outliers_dataset, factsheet, config):

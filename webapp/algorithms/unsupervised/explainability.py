@@ -97,7 +97,7 @@ def permutation_feature_importance_score(model, outliers_data, outlier_thresh, t
 
     features = list(outliers_data.columns)
 
-    shuffles = 8
+    shuffles = 3
     feature_importance = {}
     num_redundant_feat = 0
     num_datapoints = outliers_data.shape[0]

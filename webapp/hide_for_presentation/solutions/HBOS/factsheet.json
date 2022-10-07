@@ -1,0 +1,330 @@
+{
+    "general": {
+        "model_name": "Mauro's HBOS",
+        "purpose_description": "Outlier Detection",
+        "domain_description": "IT Security",
+        "training_data_description": "Alberto's IT incident data",
+        "model_information": "HBOS model for IT Security Incident Outlier detection scenario",
+        "authors": "Alberto Huertas, Mauro D\u00f6rig",
+        "contact_information": "alberto.huertas@uzh.ch"
+    },
+    "fairness": {
+        "protected_feature": "seconds",
+        "protected_values": [
+            0.11021646098417641,
+            -0.0968737407384999,
+            -0.1448121822205907,
+            -0.09430420623571975,
+            0.2862768111633812,
+            -0.1860777256735605,
+            -0.17969432654010303,
+            -0.1543107337040412,
+            -0.16081065356744956,
+            -0.025709348900326234,
+            -0.137427,
+            -0.182613,
+            -0.138613,
+            -0.055384,
+            -0.140449
+        ]
+    },
+    "methodology": {
+        "regularization": "none"
+    },
+    "properties": {
+        "fairness": {
+            "underfitting": {
+                "Metric Description": "Computes the difference of outlier ratio in the training and test data.",
+                "Depends on": "Model, Train Data, Test Data",
+                "Test Accuracy": "18.73%",
+                "Conclusion": "Model is strongly underfitting",
+                "Score": "1"
+            },
+            "overfitting": {
+                "Metric Description": "Overfitting is present if the training accuracy is significantly higher than the test accuracy.this metric computes the mean value of the outlier ratio in the outlier data set and the relative outlier detection accuracy in the test data. Note that the overfitting score is only computet when there is little to no underfitting (underfitting score >= 3)",
+                "Depends on": "Model, Training Data, Test Data, Outliers Data",
+                "Outliers Accuracy": "74.70%",
+                "Test Accuracy": "18.73%",
+                "Outliers Test Accuracy Difference": "8.73%",
+                "Conclusion": "Model is strongly overfitting",
+                "Score": "1"
+            },
+            "statistical_parity_difference": {
+                "Metric Description": "The spread between the percentage of detected outliers in the majority group compared to the protected group. The closer this spread is to zero the better.",
+                "Depends on": "Training Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
+                "----------": "",
+                "protected feature: ": "seconds",
+                "protected values: ": "[0.11021646098417641, -0.0968737407384999, -0.1448121822205907, -0.09430420623571975, 0.2862768111633812, -0.1860777256735605, -0.17969432654010303, -0.1543107337040412, -0.16081065356744956, -0.025709348900326234, -0.137427, -0.182613, -0.138613, -0.055384, -0.140449]",
+                "-----------": "",
+                "Formula": "Statistical Parity Difference = |Favored Protected Group Ratio - Favored Unprotected Group Ratio|",
+                "Statistical Parity Difference": "19.60%",
+                "|{x|x is protected, y_true is favorable}|": 0,
+                "|{x|x is protected}|": 5,
+                "Favored Protected Group Ratio": "P(y_true is favorable|protected=True) = 0.00%",
+                "|{x|x is not protected, y_true is favorable}|": 941,
+                "|{x|x is not protected}|": 4800,
+                "Favored Unprotected Group Ratio": "P(y_true is favorable|protected=False) = 19.60%",
+                "Score": "1"
+            },
+            "disparate_impact": {
+                "Metric Description": "Is quotient of the ratio of samples from the protected group detected as outliers divided by the ratio of samples from the unprotected group detected as outliers",
+                "Depends on": "Model, Test Data, Factsheet (Definition of Protected Group and Favorable Outcome)",
+                "----------": "",
+                "protected feature: ": "seconds",
+                "protected values: ": "[0.11021646098417641, -0.0968737407384999, -0.1448121822205907, -0.09430420623571975, 0.2862768111633812, -0.1860777256735605, -0.17969432654010303, -0.1543107337040412, -0.16081065356744956, -0.025709348900326234, -0.137427, -0.182613, -0.138613, -0.055384, -0.140449]",
+                "-----------": "",
+                "Formula": "Disparate Impact = Protected Favored Ratio / Unprotected Favored Ratio",
+                "Disparate Impact": "0.00%",
+                "|{x|x is protected, y_true is favorable}|": 0,
+                "|{x|x is protected}|": 5,
+                "Favored Protected Group Ratio": "P(y_true is favorable|protected=True) = 0.00%",
+                "|{x|x is not protected, y_true is favorable}|": 941,
+                "|{x|x is not protected}|": 4800,
+                "Favored Unprotected Group Ratio": "P(y_true is favorable|protected=False) = 19.60%",
+                "Score": "1"
+            }
+        },
+        "explainability": {
+            "correlated_features": {
+                "dep": [
+                    "Depends on",
+                    "Training Data, Test Data"
+                ],
+                "pct_drop": [
+                    "Percentage of highly correlated features",
+                    "43.06%"
+                ]
+            },
+            "model_size": {
+                "dep": [
+                    "Depends on",
+                    "Test Data"
+                ],
+                "n_features": [
+                    "number of features",
+                    71
+                ]
+            },
+            "permutation_feature_importance": {
+                "dep": [
+                    "Depends on",
+                    "Model, Outliers Data"
+                ],
+                "num_redundant_features": [
+                    "number of redundant features",
+                    2
+                ],
+                "num_features": [
+                    "number of features",
+                    72
+                ],
+                "ratio_redundant_features": [
+                    "ratio of redundant features",
+                    0.027777777777777776
+                ],
+                "importance": [
+                    "feature importance descending",
+                    {
+                        "value": [
+                            "net:net_dev_queue",
+                            "random:mix_pool_bytes_nolock",
+                            "skb:consume_skb",
+                            "skb:consume_skb.1",
+                            "net:net_dev_xmit",
+                            "mmc:mmc_request_start",
+                            "random:urandom_read",
+                            "tcp:tcp_probe",
+                            "kmem:kmalloc",
+                            "rpm:rpm_suspend",
+                            "block:block_bio_remap",
+                            "kmem:kfree",
+                            "fib:fib_table_lookup",
+                            "rpm:rpm_resume",
+                            "raw_syscalls:sys_enter",
+                            "block:block_bio_backmerge",
+                            "qdisc:qdisc_dequeue",
+                            "writeback:writeback_dirty_inode_enqueue",
+                            "raw_syscalls:sys_exit",
+                            "qdisc:qdisc_dequeue.1",
+                            "ipi:ipi_raise",
+                            "gpio:gpio_value",
+                            "net:netif_rx",
+                            "writeback:sb_clear_inode_writeback",
+                            "timer:hrtimer_start",
+                            "tcp:tcp_destroy_sock",
+                            "block:block_getrq",
+                            "signal:signal_deliver",
+                            "sched:sched_process_exec",
+                            "sched:sched_wakeup",
+                            "sock:inet_sock_set_state",
+                            "sched:sched_process_wait",
+                            "signal:signal_generate",
+                            "page-faults",
+                            "task:task_newtask",
+                            "block:block_unplug",
+                            "sched:sched_process_free",
+                            "writeback:writeback_single_inode",
+                            "writeback:wbc_writepage",
+                            "random:get_random_bytes",
+                            "kmem:kmem_cache_alloc",
+                            "workqueue:workqueue_activate_work",
+                            "cs",
+                            "writeback:writeback_written",
+                            "writeback:writeback_dirty_inode",
+                            "skb:kfree_skb.1",
+                            "irq:irq_handler_entry",
+                            "block:block_touch_buffer",
+                            "block:block_dirty_buffer",
+                            "seconds",
+                            "sched:sched_switch",
+                            "skb:kfree_skb",
+                            "preemptirq:irq_enable",
+                            "kmem:mm_page_pcpu_drain",
+                            "writeback:writeback_mark_inode_dirty",
+                            "kmem:mm_page_alloc_zone_locked",
+                            "irq:softirq_entry",
+                            "cpu-migrations",
+                            "clk:clk_set_rate",
+                            "kmem:kmem_cache_free",
+                            "pagemap:mm_lru_insertion",
+                            "jbd2:jbd2_handle_start",
+                            "skb:skb_copy_datagram_iovec",
+                            "writeback:writeback_write_inode",
+                            "writeback:global_dirty_state",
+                            "jbd2:jbd2_start_commit",
+                            "timer:timer_start",
+                            "kmem:mm_page_free",
+                            "kmem:mm_page_alloc",
+                            "writeback:writeback_pages_written",
+                            "writeback:writeback_dirty_page",
+                            "filemap:mm_filemap_add_to_page_cache"
+                        ]
+                    }
+                ]
+            }
+        },
+        "robustness": {
+            "clever_score": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can only be calculated on Keras models."
+                ]
+            }
+        },
+        "methodology": {
+            "normalization": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "Training_mean": [
+                    "Mean of the training data",
+                    "0.00"
+                ],
+                "Training_std": [
+                    "Standard deviation of the training data",
+                    "1.00"
+                ],
+                "Test_mean": [
+                    "Mean of the test data",
+                    "-0.01"
+                ],
+                "Test_std": [
+                    "Standard deviation of the test data",
+                    "0.82"
+                ],
+                "normalization": [
+                    "Normalization",
+                    "Training data are standardized"
+                ]
+            },
+            "missing_data": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "null_values": [
+                    "Number of the null values",
+                    "0"
+                ]
+            },
+            "regularization": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "regularization_technique": [
+                    "Regularization technique",
+                    "none"
+                ]
+            },
+            "train_test_split": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "train_test_split": [
+                    "Train test split",
+                    "90.00/10.00"
+                ]
+            },
+            "factsheet_completeness": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "model_name": [
+                    "Factsheet Property model name",
+                    "present"
+                ],
+                "purpose_description": [
+                    "Factsheet Property purpose description",
+                    "present"
+                ],
+                "domain_description": [
+                    "Factsheet Property domain description",
+                    "present"
+                ],
+                "training_data_description": [
+                    "Factsheet Property training data description",
+                    "present"
+                ],
+                "model_information": [
+                    "Factsheet Property model information",
+                    "present"
+                ],
+                "authors": [
+                    "Factsheet Property authors",
+                    "present"
+                ],
+                "contact_information": [
+                    "Factsheet Property contact information",
+                    "present"
+                ]
+            }
+        }
+    },
+    "scores": {
+        "fairness": {
+            "underfitting": 1,
+            "overfitting": 1,
+            "statistical_parity_difference": 1,
+            "disparate_impact": 1
+        },
+        "explainability": {
+            "correlated_features": 1,
+            "model_size": 2,
+            "permutation_feature_importance": 0
+        },
+        "robustness": {
+            "clever_score": NaN
+        },
+        "methodology": {
+            "normalization": 4,
+            "missing_data": 5,
+            "regularization": 1,
+            "train_test_split": 2,
+            "factsheet_completeness": 5
+        }
+    }
+}
