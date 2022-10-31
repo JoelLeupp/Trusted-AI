@@ -1,0 +1,14 @@
+{
+    "score_clever_score": {
+        "thresholds": {
+            "value": [
+                0.2,
+                0.5,
+                1,
+                2.5
+            ],
+            "description": "Thresholds of how to map CLEVER score from 1-5.",
+            "label": "Score Thresholds"
+        }
+    }
+}

@@ -13,7 +13,7 @@ import glob
 import shutil
 from helpers import *
 from config import *
-from algorithms.trustworthiness import trusting_AI_scores, get_trust_score, get_final_score
+from algorithms.trustworthiness import trusting_AI_scores, get_trust_score, get_final_score, get_final_score_unsupervised
 import dash_table
 import numpy as np
 from sites import config_panel
@@ -23,39 +23,78 @@ import dash
 import warnings 
 import plotly
 from dash_extensions.snippets import send_file
+import keras
+
+from algorithms.unsupervised.explainability import get_threshold_mse_iqr
+from algorithms.unsupervised.fairness import isKerasAutoencoder
+
 warnings.filterwarnings('ignore')
 
-# === CONFIG ===
+# === CONFIG SUPERVISED ===
 config_fairness, config_explainability, config_robustness, config_methodology, config_pillars = 0, 0, 0 ,0,0
+
 for config in ["config_pillars","config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
     with open(os.path.join(METRICS_CONFIG_PATH, config + ".json")) as file:
-            exec("%s = json.load(file)" % config)
+        exec("%s = json.load(file)" % config)
 
 pillars = ['fairness', 'explainability', 'robustness', 'methodology']
-weight_config = dict(fairness=config_fairness["weights"], explainability=config_explainability["weights"], 
+weight_config = dict(fairness=config_fairness["weights"], explainability=config_explainability["weights"],
                    robustness=config_robustness["weights"], methodology=config_methodology["weights"], pillars=config_pillars)
 
-mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"], 
+mappings_config = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"],
                    robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
 
 metric_description = {**config_fairness["metrics"], **config_explainability["metrics"], **config_robustness["metrics"], **config_methodology["metrics"]}
 
-with open('configs/weights/default.json', 'w') as outfile:
+with open('configs/supervised/weights/default.json', 'w') as outfile:
                 json.dump(weight_config, outfile, indent=4)
 
-with open('configs/mappings/default.json', 'w') as outfile:
+with open('configs/supervised/mappings/default.json', 'w') as outfile:
                 json.dump(mappings_config, outfile, indent=4)
 
 for s in SECTIONS[1:]:
-    with open('configs/mappings/{}/default.json'.format(s), 'w') as outfile:
+    with open('configs/supervised/mappings/{}/default.json'.format(s), 'w') as outfile:
                 json.dump(mappings_config[s], outfile, indent=4)
 charts = []
 
-# === METRICS ===
+# === METRICS SUPERVISED===
 fairness_metrics = FAIRNESS_METRICS
 explainability_metrics = EXPLAINABILITY_METRICS
 robustness_metrics = ROBUSTNESS_METRICS
 methodology_metrics = METHODOLOGY_METRICS
+
+# === CONFIG UNSUPERVISED =========================================================================
+config_fairness, config_explainability, config_robustness, config_methodology, config_pillars = 0, 0, 0 ,0,0
+
+for config in ["config_pillars","config_fairness", "config_explainability", "config_robustness", "config_methodology"]:
+    with open(os.path.join(METRICS_CONFIG_PATH_UNSUPERVISED, config + ".json")) as file:
+        exec("%s = json.load(file)" % config)
+
+pillars = ['fairness', 'explainability', 'robustness', 'methodology']
+weight_config_unsupervised = dict(fairness=config_fairness["weights"], explainability=config_explainability["weights"],
+                   robustness=config_robustness["weights"], methodology=config_methodology["weights"], pillars=config_pillars)
+
+mappings_config_unsupervised = dict(fairness=config_fairness["parameters"], explainability=config_explainability["parameters"],
+                   robustness=config_robustness["parameters"], methodology=config_methodology["parameters"])
+
+metric_description_unsupervised = {**config_fairness["metrics"], **config_explainability["metrics"], **config_robustness["metrics"], **config_methodology["metrics"]}
+
+with open('configs/unsupervised/weights/default.json', 'w') as outfile:
+                json.dump(weight_config_unsupervised, outfile, indent=4)
+
+with open('configs/unsupervised/mappings/default.json', 'w') as outfile:
+                json.dump(mappings_config_unsupervised, outfile, indent=4)
+
+for s in SECTIONS[1:]:
+    with open('configs/unsupervised/mappings/{}/default.json'.format(s), 'w') as outfile:
+                json.dump(mappings_config_unsupervised[s], outfile, indent=4)
+charts = []
+
+# === METRICS UNSUPERVISED ===
+fairness_metrics_unsupervised = FAIRNESS_METRICS_UNSUPERVISED
+explainability_metrics_unsupervised = EXPLAINABILITY_METRICS_UNSUPERVISED
+robustness_metrics_unsupervised = ROBUSTNESS_METRICS_UNSUPERVISED
+methodology_metrics_unsupervised = METHODOLOGY_METRICS_UNSUPERVISED
 
 # === SECTIONS ===
 def general_section():
@@ -148,7 +187,7 @@ for pillar in SECTIONS[1:]:
             Input("modal-saved-{}".format(pillar), "is_open"),
             State("mapping-dropdown-{}".format(pillar), "className"))
     def update_options(n, pillar):
-        options = list(map(lambda name:{'label': name[:-5], 'value': "configs/mappings/{}/{}".format(pillar,name)} ,listdir_nohidden("configs/mappings/{}".format(pillar))))
+        options = list(map(lambda name:{'label': name[:-5], 'value': "configs/supervised/mappings/{}/{}".format(pillar,name)} ,listdir_nohidden("configs/supervised/mappings/{}".format(pillar))))
         return options
     
     @app.callback(
@@ -186,18 +225,18 @@ for pillar in SECTIONS[1:]:
                
                 inputs[name] = res
             
-            with open('configs/mappings/{}/default.json'.format(pillar),'r') as f:
+            with open('configs/supervised/mappings/{}/default.json'.format(pillar),'r') as f:
                 config_file = json.loads(f.read())
                 
             for i in mapping_panel(pillar)[1]:
                  metric, param = i.split("-")
                  config_file[metric][param]["value"] = inputs[i]
-            with open('configs/mappings/{}/{}.json'.format(pillar,conf_name), 'w') as outfile:
+            with open('configs/supervised/mappings/{}/{}.json'.format(pillar,conf_name), 'w') as outfile:
                 json.dump(config_file, outfile, indent=4)
                     
-            return not is_open, 'configs/mappings/{}/{}.json'.format(pillar,conf_name)
+            return not is_open, 'configs/supervised/mappings/{}/{}.json'.format(pillar,conf_name)
         else:
-            return is_open, 'configs/mappings/{}/default.json'.format(pillar)
+            return is_open, 'configs/supervised/mappings/{}/default.json'.format(pillar)
 
 for s in SECTIONS:
     @app.callback(
@@ -283,7 +322,7 @@ def store_mappings_config(n1, n2, n3, n4, *args):
            
         inputs[name] = res
         
-    with open('configs/mappings/default.json','r') as f:
+    with open('configs/supervised/mappings/default.json','r') as f:
             config_file = json.loads(f.read())
     
     
@@ -593,8 +632,9 @@ def explainability_details(data):
 
 @app.callback(
     list(map(lambda o: Output("{}_details".format(o), 'children'), explainability_metrics)),
-    Input('result', 'data'), prevent_initial_call=False)    
-def metric_detail(data):
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def metric_detail(data, unsupervised):
   if data is None:
       return [], [], [], []
   else:
@@ -608,7 +648,7 @@ def metric_detail(data):
           else:
               prop = []
               for k, p in metric_properties.items():
-           
+
                   if k == "importance" :
                         importance = p[1]
                         pct_dist = metric_properties["pct_dist"][1]
@@ -629,7 +669,7 @@ def metric_detail(data):
                   prop.append(html.Br())
               output.append(html.Div(prop))
       return output
-     
+
 '''
 The following function updates
 '''
@@ -760,6 +800,41 @@ def normalization(data):
             return metric_detail_div(metric_properties), []
         return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["methodology"]["normalization"]))
 
+#permutation feature importance
+@app.callback(
+    [Output("permutation_feature_importance_details", 'children'), Output("permutation_feature_importance_score", 'children')],
+    [Input('result', 'data')])
+def perm_feat_importance_details(data):
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["explainability"]["permutation_feature_importance"]
+        metric_scores = result["results"]
+
+        if math.isnan(metric_scores["explainability"]["permutation_feature_importance"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["explainability"]["permutation_feature_importance"]))
+
+'''
+#model size unsupervised
+@app.callback(
+    [Output("model_size_details", 'children'), Output("model_size_score", 'children')],
+    [Input('result', 'data')])
+def model_size_details(data):
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["explainability"]["model_size"]
+        metric_scores = result["results"]
+
+        if math.isnan(metric_scores["explainability"]["model_size"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["explainability"]["model_size"]))
+'''
 @app.callback(
     [Output("test_accuracy_details", 'children'), Output("test_accuracy_score", 'children')],
     [Input('result', 'data')])
@@ -874,7 +949,8 @@ def analyze_solution_completeness(solution_set_path):
         test_data_path = "{}/test.*".format(solution_set_path)
         training_data_path = "{}/train.*".format(solution_set_path)
         model_path = "{}/model.*".format(solution_set_path)
-        
+
+
         if not glob.glob(factsheet_path):
             alerts.append(html.H5("No factsheet provided", className="text-center", style={"color":"Red"}))
         if not glob.glob(training_data_path):
@@ -886,6 +962,7 @@ def analyze_solution_completeness(solution_set_path):
         if alerts:
             style={'display': 'none'}
             alerts.append(html.H5("Please provide a complete dataset", className="text-center", style={"color":"Red"}))
+
     return alerts, style
 
 @app.callback(Output('delete_solution_confirm', 'displayed'),
@@ -895,17 +972,28 @@ def display_confirm(n_clicks):
         return True
     else:
         return False
-    
-@app.callback(Output('performance_metrics_section', 'children'), 
-          Input('solution_set_dropdown', 'value'), prevent_initial_call=True)
-def show_performance_metrics(solution_set_path):
+
+@app.callback(Output('performance_metrics_section', 'children'),
+              Input('solution_set_dropdown', 'value'),
+              State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=True)
+def show_performance_metrics(solution_set_path, unsupervised):
     if not solution_set_path:
         return []
     else:
-        test_data, training_data, model, factsheet = read_solution(solution_set_path)
-        target_column = factsheet.get("general", {}).get("target_column", "")
+        if unsupervised:
+            test_data, training_data, outlier_data, model, factsheet = read_solution_unsupervised(solution_set_path)
+            outlier_thresh = []
+            if isKerasAutoencoder(model):
+                outlier_thresh = get_threshold_mse_iqr(model, training_data)
 
-        performance_metrics =  get_performance_metrics(model, test_data, target_column)
+            performance_metrics =  get_performance_metrics_unsupervised(model, outlier_data, outlier_thresh)
+
+        else:
+
+            test_data, training_data, model, factsheet = read_solution(solution_set_path)
+            target_column = factsheet.get("general", {}).get("target_column", "")
+            performance_metrics =  get_performance_metrics(model, test_data, target_column)
+
         performance_metrics_table = dash_table.DataTable(
                                 id='performance_metrics_table',
                                 columns=[{"name": i, "id": i} for i in performance_metrics.columns],
@@ -930,7 +1018,7 @@ def show_performance_metrics(solution_set_path):
                                     {
                                         'if': {'column_id': 'key'},
                                         'fontWeight': 'bold',
-                                        'width': '30%'
+                                        'width': '60%'
                                     } 
                                 ],
                                 style_as_list_view=True,
@@ -946,13 +1034,19 @@ def show_performance_metrics(solution_set_path):
 
 @app.callback(Output('properties_section', 'children'),
               [Input('result', 'data'),
-              State('solution_set_dropdown', 'value')], prevent_initial_call=True)
-def show_properties(data, solution_set_path):
+               State('solution_set_dropdown', 'value'),
+               State('toggle_supervised_unsupervised', 'on')], prevent_initial_call=True)
+def show_properties(data, solution_set_path, unsupervised):
     if data is None:
         return []
     else:
-        test_data, training_data, model, factsheet = read_solution(solution_set_path)
-        properties = get_properties_section(training_data, test_data, factsheet)
+        if not unsupervised:
+            test_data, training_data, model, factsheet = read_solution(solution_set_path)
+            properties = get_properties_section(training_data, test_data, factsheet)
+        else:
+            test_data, training_data, outliers_data, model, factsheet = read_solution_unsupervised(solution_set_path)
+            properties = get_properties_section_unsupervised(training_data, test_data, factsheet)
+
         if properties is None:
             return []
         properties_table = dash_table.DataTable(
@@ -995,46 +1089,58 @@ def show_properties(data, solution_set_path):
 
 @app.callback(Output('result', 'data'), 
           [Input('solution_set_dropdown', 'value'),
-          Input("input-config","data"),Input('input-mappings', 'data')],
-          State("recalc","on"))
-def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,recalc): 
-        if not solution_set_dropdown:
-            return None
-        
-        with open('configs/weights/default.json','r') as f:
-                default_weight = json.loads(f.read())
-        
-        with open('configs/mappings/default.json', 'r') as f:
-          default_map = json.loads(f.read()) 
-      
-        
+           Input("input-config","data"),Input('input-mappings', 'data')],
+          [State("recalc","on"),
+           State('toggle_supervised_unsupervised', 'on')], prevent_initial_call = True)
+def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,recalc, unsupervised):
+
+    if not solution_set_dropdown:
+        return None
+
+    if unsupervised:
+        with open('configs/unsupervised/weights/default.json', 'r') as f:
+            default_weight = json.loads(f.read())
+        with open('configs/unsupervised/mappings/default.json', 'r') as f:
+            default_map = json.loads(f.read())
+
+        weight_config = default_weight
+        mappings_config = default_map
+
+        test, train, outliers, model, factsheet = read_solution_unsupervised(solution_set_dropdown)
+        final_score, results, properties = get_final_score_unsupervised(model, train, test, outliers, weight_config, mappings_config,
+                                                           factsheet, solution_set_dropdown, recalc)
+        trust_score = get_trust_score(final_score, weight_config["pillars"])
+
+    else:
+        with open('configs/supervised/weights/default.json', 'r') as f:
+            default_weight = json.loads(f.read())
+        with open('configs/supervised/mappings/default.json', 'r') as f:
+            default_map = json.loads(f.read())
+
         if not config_weights:
-           
-                weight_config = default_weight
+            weight_config = default_weight
         else:
             weight_config = json.loads(config_weights)
-            
+
         if not config_mappings:
-            
-                mappings_config = default_map
+            mappings_config = default_map
         else:
             mappings_config = json.loads(config_mappings)
-    
+
         test, train, model, factsheet = read_solution(solution_set_dropdown)
-    
         final_score, results, properties = get_final_score(model, train, test, weight_config, mappings_config, factsheet, solution_set_dropdown, recalc)
-        
         trust_score = get_trust_score(final_score, weight_config["pillars"])
-        
-        def convert(o):
-            if isinstance(o, np.int64): return int(o)  
-           
-            
-        data = {"final_score":final_score,
-                "results":results,
-                "trust_score":trust_score,
-                "properties" : properties}
-        return json.dumps(data,default=convert)
+
+
+    def convert(o):
+        if isinstance(o, np.int64): return int(o)
+
+
+    data = {"final_score":final_score,
+            "results":results,
+            "trust_score":trust_score,
+            "properties" : properties}
+    return json.dumps(data,default=convert)
   
 @app.callback(
       [Output('bar', 'figure'),
@@ -1052,85 +1158,91 @@ def store_trust_analysis(solution_set_dropdown, config_weights, config_mappings,
        Output('explainability_star_rating', 'children'),
        Output('robustness_star_rating', 'children'),
        Output('methodology_star_rating', 'children')],
-      [Input('result', 'data'),Input("hidden-trigger", "value")])  
-def update_figure(data, trig):
-      
-      global charts
-      charts = []
-      
-      if data is None:
-          return [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, "", "", "", "", ""]
-      result = json.loads(data)
-      final_score, results, properties = result["final_score"] , result["results"], result["properties"]
-      trust_score = result["trust_score"]
-      pillars = list(map(lambda x: x.upper(),list(final_score.keys())))
-      values = list(final_score.values()) 
-        
-      colors = [FAIRNESS_COLOR, EXPLAINABILITY_COLOR, ROBUSTNESS_COLOR, METHODOLOGY_COLOR]
-      
-      # barchart
-      chart_list=[]
-      bar_chart = go.Figure(data=[go.Bar(
-          x=pillars,
-          y=values,
-          marker_color=colors
-              )])
-      bar_chart.update_yaxes(range=[0, 5], fixedrange=True)
-      bar_chart.update_layout(title_text='', title_x=0.5, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
-      chart_list.append(bar_chart)
-      charts.append(bar_chart)
-     
-      #spider
-      radar_chart = px.line_polar(r=values, theta=pillars, line_close=True, title='')
-      radar_chart.update_layout(title_x=0.5)
-      radar_chart.update_traces(fill='toself', fillcolor=TRUST_COLOR, marker_color=TRUST_COLOR, marker_line_color=TRUST_COLOR, marker_line_width=0, opacity=0.6)
-      chart_list.append(radar_chart)
-     
-      #barcharts
-      for n, (pillar , sub_scores) in enumerate(results.items()):
-          title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
-          categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
-          values = list(map(float, sub_scores.values()))
-          if np.isnan(values).any():
-              nonNanCategories = list()
-              nonNanValues = list()
-              for c, v in zip(categories, values):
-                  if not np.isnan(v):
-                      nonNanCategories.append(c)
-                      nonNanValues.append(v)
-              categories = nonNanCategories
-              values = nonNanValues
-          desc = list(map(lambda x: metric_description[x.lower().replace(' ','_')], categories))
-          bar_chart_pillar = go.Figure(data=[go.Bar(x=categories, y=values, customdata = desc, marker_color=colors[n],hovertemplate = "(%{x}: %{y})<br>%{customdata}<extra></extra>")])
-          bar_chart_pillar.update_yaxes(range=[0, 5], fixedrange=True)
-          #bar_chart_pillar.update_yaxes(fixedrange=True)
-          #bar_chart_pillar.update_yaxes(range=[0, 8])
-          bar_chart_pillar.update_layout(title_text='', title_x=0.5, xaxis_tickangle=XAXIS_TICKANGLE, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
-            
-            
-            #fig.update_layout(barmode='group', xaxis_tickangle=-45)
-          chart_list.append(bar_chart_pillar)
-          charts.append(bar_chart_pillar)
-         
-      #spider charts
-      for n, (pillar , sub_scores) in enumerate(results.items()):
-          title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
-          categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
-          val = list(map(float, sub_scores.values()))
-          exc = np.isnan(val)
-          r = np.array(val)[~exc]
-          theta=np.array(categories)[~exc]
-          radar_chart_pillar = px.line_polar(r=r, theta=theta, line_close=True, title='')
-          radar_chart_pillar.update_traces(fill='toself', fillcolor=colors[n], marker_color=colors[n],marker_line_width=1.5, opacity=0.6)
-          radar_chart_pillar.update_layout(title_x=0.5)
-          chart_list.append(radar_chart_pillar)
-      star_ratings = []
-      star_ratings.append(show_star_rating(trust_score))
-      star_ratings.append(show_star_rating(final_score["fairness"]))
-      star_ratings.append(show_star_rating(final_score["explainability"]))
-      star_ratings.append(show_star_rating(final_score["robustness"]))
-      star_ratings.append(show_star_rating(final_score["methodology"]))
-      return chart_list + star_ratings
+      [Input('result', 'data'),Input("hidden-trigger", "value")],
+    State('toggle_supervised_unsupervised', 'on'))
+def update_figure(data, trig, unsupervised):
+    global charts
+    charts = []
+
+    if data is None:
+        return [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, "", "", "", "", ""]
+    result = json.loads(data)
+    final_score, results, properties = result["final_score"] , result["results"], result["properties"]
+    trust_score = result["trust_score"]
+    pillars = list(map(lambda x: x.upper(),list(final_score.keys())))
+    values = list(final_score.values())
+
+    colors = [FAIRNESS_COLOR, EXPLAINABILITY_COLOR, ROBUSTNESS_COLOR, METHODOLOGY_COLOR]
+
+    # barchart
+    chart_list=[]
+    bar_chart = go.Figure(data=[go.Bar(
+        x=pillars,
+        y=values,
+        marker_color=colors
+            )])
+    bar_chart.update_yaxes(range=[0, 5], fixedrange=True)
+    bar_chart.update_layout(title_text='', title_x=0.5, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
+    chart_list.append(bar_chart)
+    charts.append(bar_chart)
+
+    #spider
+    radar_chart = px.line_polar(r=values, theta=pillars, line_close=True, title='')
+    radar_chart.update_layout(title_x=0.5)
+    radar_chart.update_traces(fill='toself', fillcolor=TRUST_COLOR, marker_color=TRUST_COLOR, marker_line_color=TRUST_COLOR, marker_line_width=0, opacity=0.6)
+    chart_list.append(radar_chart)
+
+    #barcharts
+    for n, (pillar , sub_scores) in enumerate(results.items()):
+        print(n, pillar, sub_scores)
+        title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
+        categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
+        values = list(map(float, sub_scores.values()))
+        if np.isnan(values).any():
+            nonNanCategories = list()
+            nonNanValues = list()
+            for c, v in zip(categories, values):
+                if not np.isnan(v):
+                    nonNanCategories.append(c)
+                    nonNanValues.append(v)
+            categories = nonNanCategories
+            values = nonNanValues
+        print(categories)
+        if not unsupervised:
+            desc = list(map(lambda x: metric_description[x.lower().replace(' ','_')], categories))
+        else:
+            desc = list(map(lambda x: metric_description_unsupervised[x.lower().replace(' ','_')], categories))
+
+        bar_chart_pillar = go.Figure(data=[go.Bar(x=categories, y=values, customdata = desc, marker_color=colors[n],hovertemplate = "(%{x}: %{y})<br>%{customdata}<extra></extra>")])
+        bar_chart_pillar.update_yaxes(range=[0, 5], fixedrange=True)
+        #bar_chart_pillar.update_yaxes(fixedrange=True)
+        #bar_chart_pillar.update_yaxes(range=[0, 8])
+        bar_chart_pillar.update_layout(title_text='', title_x=0.5, xaxis_tickangle=XAXIS_TICKANGLE, paper_bgcolor='#FFFFFF', plot_bgcolor=SECONDARY_COLOR)
+
+
+          #fig.update_layout(barmode='group', xaxis_tickangle=-45)
+        chart_list.append(bar_chart_pillar)
+        charts.append(bar_chart_pillar)
+
+    #spider charts
+    for n, (pillar , sub_scores) in enumerate(results.items()):
+        title = "<b style='font-size:32px;''>{}/5</b>".format(final_score[pillar])
+        categories = list(map(lambda x: x.replace("_",' ').title(), sub_scores.keys()))
+        val = list(map(float, sub_scores.values()))
+        exc = np.isnan(val)
+        r = np.array(val)[~exc]
+        theta=np.array(categories)[~exc]
+        radar_chart_pillar = px.line_polar(r=r, theta=theta, line_close=True, title='')
+        radar_chart_pillar.update_traces(fill='toself', fillcolor=colors[n], marker_color=colors[n],marker_line_width=1.5, opacity=0.6)
+        radar_chart_pillar.update_layout(title_x=0.5)
+        chart_list.append(radar_chart_pillar)
+    star_ratings = []
+    star_ratings.append(show_star_rating(trust_score))
+    star_ratings.append(show_star_rating(final_score["fairness"]))
+    star_ratings.append(show_star_rating(final_score["explainability"]))
+    star_ratings.append(show_star_rating(final_score["robustness"]))
+    star_ratings.append(show_star_rating(final_score["methodology"]))
+    return chart_list + star_ratings
 
 @app.callback(
     Output("robustness_details", 'children'),
@@ -1159,69 +1271,87 @@ def robustness_details(data):
 
 @app.callback(
 [Output("er_deepfool_attack_details", 'children'), Output("er_deepfool_attack_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def Deepfool_Attack_metric_detail(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["er_deepfool_attack"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["er_deepfool_attack"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_deepfool_attack"]))
+Input('result', 'data'),
+State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def Deepfool_Attack_metric_detail(data, unsupervised):
+    if unsupervised:
+        return [], []
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["robustness"]["er_deepfool_attack"]
+        metric_scores = result["results"]
+        if math.isnan(metric_scores["robustness"]["er_deepfool_attack"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_deepfool_attack"]))
 
 @app.callback(
 [Output("er_carlini_wagner_attack_details", 'children'), Output("er_carlini_wagner_attack_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def carlini_wagner_attack_analysis(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["er_carlini_wagner_attack"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["er_carlini_wagner_attack"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_carlini_wagner_attack"]))
+Input('result', 'data'),
+State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def carlini_wagner_attack_analysis(data, unsupervised):
+    if unsupervised:
+        return [],[]
+
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["robustness"]["er_carlini_wagner_attack"]
+        metric_scores = result["results"]
+        if math.isnan(metric_scores["robustness"]["er_carlini_wagner_attack"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_carlini_wagner_attack"]))
 
 @app.callback(
-[Output("er_fast_gradient_attack_details", 'children'), Output("er_fast_gradient_attack_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def fast_gradient_attack_analysis(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["er_fast_gradient_attack"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["er_fast_gradient_attack"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_fast_gradient_attack"]))
+    [Output("er_fast_gradient_attack_details", 'children'), Output("er_fast_gradient_attack_score", 'children')],
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def fast_gradient_attack_analysis(data, unsupervised):
+    if unsupervised:
+        return [],[]
+
+        if data is None:
+            return [], []
+        else:
+            result = json.loads(data)
+            properties = result["properties"]
+            metric_properties = properties["robustness"]["er_fast_gradient_attack"]
+            metric_scores = result["results"]
+            if math.isnan(metric_scores["robustness"]["er_fast_gradient_attack"]):
+                return metric_detail_div(metric_properties), []
+            return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["er_fast_gradient_attack"]))
 
 @app.callback(
-[Output("clique_method_details", 'children'), Output("clique_method_score", 'children')],
-Input('result', 'data'), prevent_initial_call=False)
-def clique_method_analysis(data):
-  if data is None:
-      return [], []
-  else:
-      result = json.loads(data)
-      properties = result["properties"]
-      metric_properties = properties["robustness"]["clique_method"]
-      metric_scores = result["results"]
-      if math.isnan(metric_scores["robustness"]["clique_method"]):
-          return metric_detail_div(metric_properties), []
-      return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["clique_method"]))
+    [Output("clique_method_details", 'children'), Output("clique_method_score", 'children')],
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def clique_method_analysis(data, unsupervised):
+    if unsupervised:
+        return [], []
 
+    if data is None:
+        return [], []
+    else:
+        result = json.loads(data)
+        properties = result["properties"]
+        metric_properties = properties["robustness"]["clique_method"]
+        metric_scores = result["results"]
+        if math.isnan(metric_scores["robustness"]["clique_method"]):
+            return metric_detail_div(metric_properties), []
+        return metric_detail_div(metric_properties), html.H4("({}/5)".format(metric_scores["robustness"]["clique_method"]))
 
 @app.callback(
     [Output("confidence_score_details", 'children'), Output("confidence_score_score", 'children')],
-    Input('result', 'data'), prevent_initial_call=False)
-def confidence_analysis(data):
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def confidence_analysis(data, unsupervised):
+    if unsupervised:
+        return [], []
+
     if data is None:
         return [], []
     else:
@@ -1236,8 +1366,12 @@ def confidence_analysis(data):
 
 @app.callback(
     [Output("loss_sensitivity_details", 'children'), Output("loss_sensitivity_score", 'children')],
-    Input('result', 'data'), prevent_initial_call=False)
-def loss_sensitivity_analysis(data):
+    Input('result', 'data'),
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def loss_sensitivity_analysis(data, unsupervised):
+    if unsupervised:
+        return [], []
+
     if data is None:
         return [], []
     else:
@@ -1269,10 +1403,15 @@ def clever_score(data):
  
 @app.callback(
     Output("solution_set_dropdown", 'options'),
-    Input('scenario_dropdown', 'value'), prevent_initial_call=False)
-def show_scenario_solution_options(scenario_id):
-    if scenario_id:
+    Input('scenario_dropdown', 'value'),
+    State('toggle_supervised_unsupervised', 'on'), prevent_initial_call=False)
+def show_scenario_solution_options(scenario_id, unsupervised):
+    print("unsupervised: ", unsupervised)
+    if scenario_id and not unsupervised:
         solutions = get_scenario_solutions_options(scenario_id)
+        return solutions
+    elif scenario_id and unsupervised:
+        solutions = get_scenario_solutions_options_unsupervised(scenario_id)
         return solutions
     else:
         return []
@@ -1297,18 +1436,28 @@ def download_report(n_clicks, solution_set_path, is_open, data, weight, map_f, m
         return is_open, data
     else:
         return is_open, data
-    
-@app.callback([Output("scenario_dropdown", 'value'), 
+
+
+@app.callback([Output("scenario_dropdown", 'value'),
                Output("solution_set_dropdown", 'value')],
     [Input('uploaded_scenario_id', 'data'),
     Input('uploaded_solution_id', 'data')])
 def set_uploaded_model(scenario_id, solution_id):
-    if scenario_id and solution_id :
+    if scenario_id and solution_id:
         solution_path = get_solution_path(scenario_id, solution_id)
         return scenario_id, solution_path
     else:
         return None, None
-      
+
+@app.callback(
+    Output("scenario_dropdown", "options"),
+    Input('toggle_supervised_unsupervised', 'on'), prevent_initial_call = True
+)
+def toggle_mode_analyze(unsupervised):
+
+    print("toggle on analyze site")
+    return get_scenario_options(unsupervised)
+
 config_panel.get_callbacks(app)
     
 # === LAYOUT ===
@@ -1326,19 +1475,25 @@ layout = html.Div([
                       color = "green",
                     
                     )], style= {'display': 'Block'} if DEBUG else {"display": "None"}),
-             dbc.Col([html.H5("Scenario"),
+            # daq.BooleanSwitch(id='toggle_supervised_unsupervised_analyze',
+            #           on=False,
+            #           label="enable Unsupervised Mode",
+            #           labelPosition="top",
+            #           color = TRUST_COLOR,
+            #           style={"float": "right",'margin-left': "44%"}
+            #         ),
+            dbc.Col([html.H5("Scenario"),
                  dcc.Dropdown(
                     id='scenario_dropdown',
                     options= get_scenario_options(),
                     value = None,
-
                     placeholder='Select Scenario'
                 )], width=12, style={"marginLeft": "0 px", "marginRight": "0 px"}, className="mb-1 mt-1"
             ),
             dbc.Col([html.H5("Solution"),
                 dcc.Dropdown(
                     id='solution_set_dropdown',
-                    options = get_scenario_solutions_options('it_sec_incident_classification'),
+                    options = [],
                     value=None,
 
                     placeholder='Select Solution'

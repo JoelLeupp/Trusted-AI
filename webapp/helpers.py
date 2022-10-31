@@ -1,5 +1,7 @@
 import os
 import dash_daq as daq
+import joblib
+import keras
 from config import SCENARIOS_FOLDER_PATH
 import glob
 import pickle
@@ -32,6 +34,10 @@ from reportlab.lib.colors import *
 from base64 import b64encode
 from textwrap import wrap
 import timeit
+
+from joblib import load
+
+from algorithms.unsupervised.fairness import compute_outlier_ratio
 
 PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
 
@@ -103,6 +109,18 @@ def get_performance_metrics(model, test_data, target_column):
     return performance_metrics
 
 
+def get_performance_metrics_unsupervised(model, outliers, out_thresh):
+    performance_metrics = pd.DataFrame({
+        "Outlier Detection Ratio": [compute_outlier_ratio(model, outliers, out_thresh)],
+    }).round(decimals=2)
+
+    performance_metrics = performance_metrics.transpose()
+    performance_metrics = performance_metrics.reset_index()
+    performance_metrics['index'] = performance_metrics['index'].str.title()
+    performance_metrics.rename(columns={"index": "key", 0: "value"}, inplace=True)
+    return performance_metrics
+
+
 def get_scenario_description(scenario_id):
     scenario_factsheet = read_scenario_factsheet(scenario_id)
     data = []
@@ -120,6 +138,25 @@ def get_properties_section(train_data, test_data, factsheet):
 
         properties = pd.DataFrame({
             "Model Type": [factsheet["explainability"]["algorithm_class"]["clf_name"][1]],
+            "Train Test Split": [factsheet["methodology"]["train_test_split"]["train_test_split"][1]],
+            "Train / Test Data Size": str(train_data.shape[0])+ " samples / "+ str(test_data.shape[0])+ " samples",
+            "Regularization Technique": [factsheet["methodology"]["regularization"]["regularization_technique"][1]],
+            "Normalization Technique": [factsheet["methodology"]["normalization"]["normalization"][1]],
+            "Number of Features": [factsheet["explainability"]["model_size"]["n_features"][1]],
+        })
+        properties = properties.transpose()
+        properties = properties.reset_index()
+        properties['index'] = properties['index'].str.title()
+        properties.rename(columns={"index": "key", 0: "value"}, inplace=True)
+        return properties
+    return None
+
+def get_properties_section_unsupervised(train_data, test_data, factsheet):
+    if "properties" in factsheet:
+        factsheet = factsheet["properties"]
+
+        properties = pd.DataFrame({
+            #"Model Type": [factsheet["explainability"]["algorithm_class"]["clf_name"][1]],
             "Train Test Split": [factsheet["methodology"]["train_test_split"]["train_test_split"][1]],
             "Train / Test Data Size": str(train_data.shape[0])+ " samples / "+ str(test_data.shape[0])+ " samples",
             "Regularization Technique": [factsheet["methodology"]["regularization"]["regularization_technique"][1]],
@@ -178,25 +215,36 @@ def name_to_id(name):
     return name.replace(" ", "_").lower()
 
 # === SCENARIOS ===
-def get_scenario_ids():
-    scenario_ids = [f.name for f in os.scandir(SCENARIOS_FOLDER_PATH) if f.is_dir() and not f.name.startswith('.')]
+def get_scenario_ids(unsupervised = False):
+    if unsupervised:
+        scenario_ids = [f.name for f in os.scandir(SCENARIOS_FOLDER_PATH_UNSUPERVISED) if f.is_dir() and not f.name.startswith('.')]
+    else:
+        scenario_ids = [f.name for f in os.scandir(SCENARIOS_FOLDER_PATH) if f.is_dir() and not f.name.startswith('.')]
     #sort scenario ids in place
     scenario_ids.sort()
     return scenario_ids
 
-def get_scenario_options():
-    scenario_ids = get_scenario_ids()
+def get_scenario_options(unsupervised = False):
+    scenario_ids = get_scenario_ids(unsupervised)
     options = [{"label": id_to_name(scenario_id), "value": scenario_id} for scenario_id in scenario_ids]
     return options
 
-def get_scenario_path(scenario_id):
-    return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id)
+def get_scenario_path(scenario_id, unsupervised = False):
+    if unsupervised:
+        return os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id)
+    else:
+        return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id)
 
 def get_solution_ids(scenario_id):
     solution_ids = [(f.name, f.path) for f in os.scandir(get_solution_path(scenario_id, "")) if f.is_dir() and not f.name.startswith('.')]
     solution_ids = sorted(solution_ids, key=lambda x: x[0])
     return solution_ids
-    
+
+def get_solution_ids_unsupervised(scenario_id):
+    solution_ids = [(f.name, f.path) for f in os.scandir(get_solution_unsupervised_path(scenario_id, "")) if f.is_dir() and not f.name.startswith('.')]
+    solution_ids = sorted(solution_ids, key=lambda x: x[0])
+    return solution_ids
+
 def get_solution_options():
     scenario_ids = get_scenario_ids()
     options = []
@@ -216,8 +264,19 @@ def get_scenario_solutions_options(scenario_id):
             options.append({"label": solution_name, "value": solution_path})
     return options
 
+def get_scenario_solutions_options_unsupervised(scenario_id):
+    options = []
+    solutions = get_solution_ids_unsupervised(scenario_id)
+    for solution_id, solution_path in solutions:
+        solution_name = id_to_name(solution_id)
+        options.append({"label": solution_name, "value": solution_path})
+    return options
+
 def get_solution_path(scenario_id, solution_id):
     return os.path.join(SCENARIOS_FOLDER_PATH, scenario_id, SOLUTIONS_FOLDER, solution_id)
+
+def get_solution_unsupervised_path(scenario_id, solution_id):
+    return os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id, SOLUTIONS_FOLDER, solution_id)
 
 def get_factsheet_path(scenario_id, solution_id):
     return os.path.join(get_solution_path(scenario_id, solution_id), FACTSHEET_NAME)
@@ -251,6 +310,22 @@ def read_train(solution_set_path):
     
     return train
 
+
+def read_outliers(solution_set_path):
+    if solution_set_path is None:
+        return
+    outliers_file = glob.glob(os.path.join(solution_set_path, OUTLIERS_DATA_FILE_NAME_REGEX))[0]
+    ext = os.path.splitext(outliers_file)[1]
+    if ext == ".pkl":
+        with open(outliers_file, 'rb') as file:
+            outliers = pickle.load(file)
+    elif ext == ".csv":
+        outliers = pd.read_csv(outliers_file)
+    else:
+        outliers = None
+
+    return outliers
+
 # Load .joblib or .pickle model
 def read_model(solution_set_path):
     model_file = glob.glob(os.path.join(solution_set_path, MODEL_REGEX))[0]
@@ -265,7 +340,9 @@ def read_model(solution_set_path):
         model = load_model(model_file)
         return model
     if file_extension == ".joblib": #Check if a .joblib file needs to be loaded
-        return joblib.load(model_file)
+        print("model_file: ", model_file)
+        load(model_file)
+        return load(model_file)
 
 # === FACTSHEET ===
 '''
@@ -597,6 +674,15 @@ def read_solution(solution_set_path):
     factsheet = read_factsheet(solution_set_path)
                 
     return test, train, model, factsheet
+
+def read_solution_unsupervised(solution_set_path):
+    test = read_test(solution_set_path)
+    train = read_train(solution_set_path)
+    outliers = read_outliers(solution_set_path)
+    model = read_model(solution_set_path)
+    factsheet = read_factsheet(solution_set_path)
+
+    return test, train, outliers, model, factsheet
    
 def create_info_modal(module_id, name, content, example):
     modal = html.Div(
@@ -673,8 +759,8 @@ def list_of_metrics(pillar):
 def create_metric_details_section(metric_id, i, section_n = 1, is_open=True, score=np.nan):
     metric_name = metric_id.replace("_", " ")
     if math.isnan(score):
-        return html.Div([
 
+        return html.Div([
             html.Div([
                 html.H4("", id="{}_score".format(metric_id), style={"float": "right"}),
                 html.H4("- {}".format(metric_name)),
@@ -808,7 +894,7 @@ def pillar_section(pillar, metrics):
     
 def mapping_panel(pillar):
     
-    with open('configs/mappings/{}/default.json'.format(pillar), 'r') as f:
+    with open('configs/supervised/mappings/{}/default.json'.format(pillar), 'r') as f:
                 mapping  = json.loads(f.read())
     
     map_panel = []
@@ -833,8 +919,8 @@ def mapping_panel(pillar):
     map_panel.append(html.Div([html.Label("Load saved mappings",style={"margin-left":10}),
                             dcc.Dropdown(
                                 id='mapping-dropdown-{}'.format(pillar),
-                                options=list(map(lambda name:{'label': name[:-5], 'value': "configs/mappings/{}/{}".format(pillar,name)} ,os.listdir("configs/mappings/{}".format(pillar)))),
-                                value='configs/mappings/{}/default.json'.format(pillar),
+                                options=list(map(lambda name:{'label': name[:-5], 'value': "configs/supervised/mappings/{}/{}".format(pillar,name)} ,os.listdir("configs/supervised/mappings/{}".format(pillar)))),
+                                value='configs/supervised/mappings/{}/default.json'.format(pillar),
                                 style={'width': 200},
                                 className = pillar
                             )],style={"margin-left":"30%","margin-bottom":15}))
@@ -880,3 +966,18 @@ def load_fairness_config(factsheet):
         raise MissingFairnessDefinitionError(message)
     
     return protected_feature, protected_values, target_column, favorable_outcomes
+
+def load_fairness_config_unsupervised(factsheet):
+    message = ""
+    protected_feature = factsheet.get("fairness", {}).get("protected_feature", '')
+    if not protected_feature:
+        message += "Definition of protected feature is missing."
+
+    protected_values = factsheet.get("fairness", {}).get("protected_values", [])
+    if not protected_values:
+        message += "Definition of protected_values is missing."
+
+    if message:
+        raise MissingFairnessDefinitionError(message)
+
+    return protected_feature, protected_values

@@ -1,0 +1,22 @@
+{
+  "parameters": {
+    "score_clever_score": {
+      "thresholds": {
+        "value": [
+          0.2,
+          0.5,
+          1,
+          2.5
+        ],
+        "description": "Thresholds of how to map CLEVER score from 1-5.",
+        "label": "Score Thresholds"
+      }
+    }
+  },
+  "weights": {
+    "clever_score"   : 0.20
+  },
+  "metrics": {
+    "clever_score"   : "This metric is designed for measuring neural networks' robustness.<br> It uses Cross Lipschitz constant estimation."
+  }
+}

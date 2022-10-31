@@ -16,9 +16,11 @@ else:
 print("DEBUG: {}".format(DEBUG))
 print("BASE_PATH: {}".format(BASE_PATH))
 
-SCENARIOS_FOLDER_PATH = "scenarios"
+SCENARIOS_FOLDER_PATH = "scenarios\\supervised"
+SCENARIOS_FOLDER_PATH_UNSUPERVISED = "scenarios\\unsupervised"
 SOLUTIONS_FOLDER = "solutions"
 TRAINING_DATA_FILE_NAME_REGEX = "train.*"
+OUTLIERS_DATA_FILE_NAME_REGEX = "outliers.*"
 TEST_DATA_FILE_NAME_REGEX = "test.*"
 MODEL_REGEX = "model.*"
 PICKLE_FILE_EXTENSIONS = [".sav", ".pkl", ".pickle"]
@@ -60,9 +62,10 @@ METHODOLOGY_COLOR = '#118ab2'
 CONFIG_COLOR = "rgba(255,228,181,0.5)"
 
 # === CONFIGURATION ===
-METRICS_CONFIG_PATH = "configs/metrics"
+METRICS_CONFIG_PATH = "configs/supervised/metrics"
+METRICS_CONFIG_PATH_UNSUPERVISED = "configs/unsupervised/metrics"
 DEFAULT_METRICS_FILE ="default.json"
-WEIGHTS_CONFIG_PATH = "configs/weights"
+WEIGHTS_CONFIG_PATH = "configs/supervised/weights"
 DEFAULT_WEIGHTS_FILE = "default.json"
 
 XAXIS_TICKANGLE = 30
@@ -75,6 +78,7 @@ NO_SCORE_FULL = "(X/5)"
 # === METRICS ===
 import os
 import json
+
 def list_of_metrics(pillar):
     metrics = []
     with open(os.path.join(METRICS_CONFIG_PATH, "config_{}.json".format(pillar))) as file:
@@ -87,3 +91,16 @@ FAIRNESS_METRICS = list_of_metrics("fairness")
 EXPLAINABILITY_METRICS = list_of_metrics("explainability")
 ROBUSTNESS_METRICS = list_of_metrics("robustness")
 METHODOLOGY_METRICS = list_of_metrics("methodology")
+
+def list_of_metrics_unsupervised(pillar):
+    metrics = []
+    with open(os.path.join(METRICS_CONFIG_PATH_UNSUPERVISED, "config_{}.json".format(pillar))) as file:
+        config_file = json.load(file)
+        for metric_name in config_file["weights"]:
+            metrics.append(metric_name.lower())
+    return metrics
+
+FAIRNESS_METRICS_UNSUPERVISED = list_of_metrics_unsupervised("fairness")
+EXPLAINABILITY_METRICS_UNSUPERVISED = list_of_metrics_unsupervised("explainability")
+ROBUSTNESS_METRICS_UNSUPERVISED = list_of_metrics_unsupervised("robustness")
+METHODOLOGY_METRICS_UNSUPERVISED = list_of_metrics_unsupervised("methodology")

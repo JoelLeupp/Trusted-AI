@@ -1,0 +1,261 @@
+{
+    "general": {
+        "model_name": "Alberto's Isolation Forest",
+        "purpose_description": "Outlier detection on IoT Data",
+        "domain_description": "IT Security",
+        "training_data_description": "training data collected by Raspberry Pi 3",
+        "model_information": "Isolation Forest",
+        "authors": "Alberto Huertas",
+        "contact_information": "mauro.doerig@uzh.ch",
+        "target_column": null,
+        "description": "Isolation Forest"
+    },
+    "methodology": {
+        "regularization": "None"
+    },
+    "fairness": {
+        "protected_feature": null,
+        "protected_values": null,
+        "favorable_outcomes": null
+    },
+    "explainability": {},
+    "robustness": {},
+    "properties": {
+        "fairness": {
+            "underfitting": {
+                "Metric Description": "Computes the difference of outlier detection ratio in the training and test data.",
+                "Depends on": "Model, Train Data, Test Data",
+                "Train Data Outlier Detection Ratio": "5.00%",
+                "Test Data Outlier Detection Ratio": "12.00%",
+                "Absolute Difference": "7.00%",
+                "Conclusion": "Model is underfitting",
+                "Score": "2"
+            },
+            "overfitting": {
+                "Non computable because": "The test accuracy is to low and if the model is underfitting to much it can't be overfitting at the same time.",
+                "Outliers Detection Accuracy": "58.23%"
+            },
+            "statistical_parity_difference": {
+                "Non computable because": "Definition of protected feature is missing.Definition of protected_values is missing."
+            },
+            "disparate_impact": {
+                "Non computable because": "Definition of protected feature is missing.Definition of protected_values is missing."
+            }
+        },
+        "explainability": {
+            "correlated_features": {
+                "dep": [
+                    "Depends on",
+                    "Training Data, Test Data"
+                ],
+                "pct_drop": [
+                    "Percentage of highly correlated features",
+                    "42.65%"
+                ]
+            },
+            "model_size": {
+                "dep": [
+                    "Depends on",
+                    "Test Data"
+                ],
+                "n_features": [
+                    "number of features",
+                    67
+                ]
+            },
+            "permutation_feature_importance": {
+                "dep": [
+                    "Depends on",
+                    "Model, Outliers Data"
+                ],
+                "num_redundant_features": [
+                    "number of redundant features",
+                    20
+                ],
+                "num_features": [
+                    "number of features",
+                    68
+                ],
+                "ratio_redundant_features": [
+                    "ratio of redundant features",
+                    0.29411764705882354
+                ],
+                "importance": [
+                    "feature importance descending",
+                    {
+                        "value": [
+                            "kmem:mm_page_alloc",
+                            "kmem:mm_page_free",
+                            "kmem:kmem_cache_free",
+                            "kmem:kmem_cache_alloc",
+                            "writeback:writeback_dirty_inode",
+                            "writeback:writeback_mark_inode_dirty",
+                            "sched:sched_process_free",
+                            "page-faults",
+                            "block:block_touch_buffer",
+                            "random:get_random_bytes",
+                            "clk:clk_set_rate",
+                            "task:task_newtask",
+                            "gpio:gpio_value",
+                            "writeback:writeback_written",
+                            "random:urandom_read",
+                            "tcp:tcp_destroy_sock",
+                            "writeback:global_dirty_state",
+                            "signal:signal_generate",
+                            "rpm:rpm_suspend",
+                            "kmem:mm_page_pcpu_drain",
+                            "ipi:ipi_raise",
+                            "raw_syscalls:sys_enter",
+                            "pagemap:mm_lru_insertion",
+                            "timer:hrtimer_start",
+                            "sched:sched_process_wait",
+                            "fib:fib_table_lookup",
+                            "writeback:writeback_pages_written",
+                            "random:mix_pool_bytes_nolock",
+                            "skb:skb_copy_datagram_iovec",
+                            "kmem:kmalloc",
+                            "net:netif_rx",
+                            "timer:timer_start",
+                            "skb:consume_skb",
+                            "cpu-migrations",
+                            "signal:signal_deliver",
+                            "sched:sched_wakeup",
+                            "sched:sched_switch",
+                            "rpm:rpm_resume",
+                            "tcp:tcp_probe",
+                            "sock:inet_sock_set_state",
+                            "net:net_dev_xmit",
+                            "kmem:mm_page_alloc_zone_locked",
+                            "block:block_bio_remap",
+                            "raw_syscalls:sys_exit",
+                            "qdisc:qdisc_dequeue",
+                            "kmem:kfree",
+                            "irq:softirq_entry",
+                            "cs",
+                            "writeback:writeback_write_inode",
+                            "writeback:writeback_single_inode",
+                            "writeback:writeback_dirty_page",
+                            "writeback:writeback_dirty_inode_enqueue",
+                            "writeback:wbc_writepage",
+                            "writeback:sb_clear_inode_writeback",
+                            "workqueue:workqueue_activate_work",
+                            "skb:kfree_skb",
+                            "sched:sched_process_exec",
+                            "preemptirq:irq_enable",
+                            "net:net_dev_queue",
+                            "mmc:mmc_request_start",
+                            "jbd2:jbd2_start_commit",
+                            "jbd2:jbd2_handle_start",
+                            "irq:irq_handler_entry",
+                            "filemap:mm_filemap_add_to_page_cache",
+                            "block:block_unplug",
+                            "block:block_getrq",
+                            "block:block_dirty_buffer",
+                            "block:block_bio_backmerge"
+                        ]
+                    }
+                ]
+            }
+        },
+        "robustness": {
+            "clever_score": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can only be calculated on Keras models."
+                ]
+            }
+        },
+        "methodology": {
+            "normalization": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "Training_mean": [
+                    "Mean of the training data",
+                    "0.00"
+                ],
+                "Training_std": [
+                    "Standard deviation of the training data",
+                    "0.93"
+                ],
+                "Test_mean": [
+                    "Mean of the test data",
+                    "0.85"
+                ],
+                "Test_std": [
+                    "Standard deviation of the test data",
+                    "11.56"
+                ],
+                "normalization": [
+                    "Normalization",
+                    "None"
+                ]
+            },
+            "missing_data": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "null_values": [
+                    "Number of the null values",
+                    "0"
+                ]
+            },
+            "regularization": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "regularization_technique": [
+                    "Regularization technique",
+                    "None"
+                ]
+            },
+            "train_test_split": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "train_test_split": [
+                    "Train test split",
+                    "89.00/11.00"
+                ]
+            },
+            "factsheet_completeness": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "model_name": [
+                    "Factsheet Property model name",
+                    "present"
+                ],
+                "purpose_description": [
+                    "Factsheet Property purpose description",
+                    "present"
+                ],
+                "domain_description": [
+                    "Factsheet Property domain description",
+                    "present"
+                ],
+                "training_data_description": [
+                    "Factsheet Property training data description",
+                    "present"
+                ],
+                "model_information": [
+                    "Factsheet Property model information",
+                    "present"
+                ],
+                "authors": [
+                    "Factsheet Property authors",
+                    "present"
+                ],
+                "contact_information": [
+                    "Factsheet Property contact information",
+                    "present"
+                ]
+            }
+        }
+    }
+}

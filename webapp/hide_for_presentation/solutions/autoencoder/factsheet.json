@@ -1,0 +1,288 @@
+{
+    "general": {
+        "model_name": "Mauro's Autoencoder",
+        "purpose_description": "Outlier Detection",
+        "domain_description": "IT Security",
+        "training_data_description": "Alberto's IT incident data",
+        "model_information": "Keras Neural Network Autoencoder for IT Security Incident Outlier detection  scenario",
+        "authors": "Alberto Huertas, Mauro D\u00f6rig",
+        "contact_information": "alberto.huertas@uzh.ch"
+    },
+    "fairness": {
+        "protected_feature": null,
+        "protected_values": null
+    },
+    "methodology": {
+        "regularization": "Other"
+    },
+    "properties": {
+        "fairness": {
+            "underfitting": {
+                "Metric Description": "Computes the difference of outlier detection ratio in the training and test data.",
+                "Depends on": "Model, Train Data, Test Data",
+                "Train Data Outlier Detection Ratio": "8.05%",
+                "Test Data Outlier Detection Ratio": "8.05%",
+                "Absolute Difference": "0.00%",
+                "Conclusion": "Model is not underfitting",
+                "Score": "5"
+            },
+            "overfitting": {
+                "Metric Description": "Overfitting is present if the training accuracy is significantly higher than the test accuracy.this metric computes the mean value of the outlier ratio in the outlier data set and the relative outlier detection accuracy in the test data. Note that the overfitting score is only computet when there is little to no underfitting (underfitting score >= 3)",
+                "Depends on": "Model, Training Data, Test Data, Outliers Data",
+                "Outliers Accuracy": "92.71%",
+                "Test Accuracy": "8.05%",
+                "Outliers Test Accuracy Difference": "1.95%",
+                "Conclusion": "Model is strongly overfitting",
+                "Score": "1"
+            },
+            "statistical_parity_difference": {
+                "Non computable because": "name 'load_fairness_config_unsupervised' is not defined"
+            },
+            "disparate_impact": {
+                "Non computable because": "name 'load_fairness_config_unsupervised' is not defined"
+            }
+        },
+        "explainability": {
+            "correlated_features": {
+                "dep": [
+                    "Depends on",
+                    "Training Data, Test Data"
+                ],
+                "pct_drop": [
+                    "Percentage of highly correlated features",
+                    "43.06%"
+                ]
+            },
+            "model_size": {
+                "dep": [
+                    "Depends on",
+                    "Test Data"
+                ],
+                "n_features": [
+                    "number of features",
+                    71
+                ]
+            },
+            "permutation_feature_importance": {
+                "dep": [
+                    "Depends on",
+                    "Model, Outliers Data"
+                ],
+                "num_redundant_features": [
+                    "number of redundant features",
+                    1
+                ],
+                "num_features": [
+                    "number of features",
+                    72
+                ],
+                "ratio_redundant_features": [
+                    "ratio of redundant features",
+                    0.013888888888888888
+                ],
+                "importance": [
+                    "feature importance descending",
+                    {
+                        "value": [
+                            "timer:timer_start",
+                            "irq:softirq_entry",
+                            "block:block_bio_backmerge",
+                            "block:block_bio_remap",
+                            "jbd2:jbd2_start_commit",
+                            "sched:sched_process_wait",
+                            "kmem:kmem_cache_free",
+                            "random:get_random_bytes",
+                            "sched:sched_process_exec",
+                            "writeback:writeback_written",
+                            "signal:signal_generate",
+                            "kmem:kmem_cache_alloc",
+                            "sched:sched_process_free",
+                            "rpm:rpm_resume",
+                            "task:task_newtask",
+                            "skb:kfree_skb.1",
+                            "writeback:writeback_single_inode",
+                            "skb:kfree_skb",
+                            "writeback:writeback_dirty_inode_enqueue",
+                            "signal:signal_deliver",
+                            "page-faults",
+                            "block:block_getrq",
+                            "rpm:rpm_suspend",
+                            "writeback:wbc_writepage",
+                            "writeback:writeback_write_inode",
+                            "writeback:sb_clear_inode_writeback",
+                            "gpio:gpio_value",
+                            "block:block_unplug",
+                            "qdisc:qdisc_dequeue.1",
+                            "qdisc:qdisc_dequeue",
+                            "tcp:tcp_destroy_sock",
+                            "sock:inet_sock_set_state",
+                            "block:block_touch_buffer",
+                            "block:block_dirty_buffer",
+                            "jbd2:jbd2_handle_start",
+                            "workqueue:workqueue_activate_work",
+                            "writeback:writeback_dirty_inode",
+                            "kmem:kfree",
+                            "writeback:writeback_mark_inode_dirty",
+                            "mmc:mmc_request_start",
+                            "tcp:tcp_probe",
+                            "pagemap:mm_lru_insertion",
+                            "random:urandom_read",
+                            "kmem:mm_page_free",
+                            "kmem:kmalloc",
+                            "kmem:mm_page_alloc",
+                            "writeback:global_dirty_state",
+                            "net:netif_rx",
+                            "timer:hrtimer_start",
+                            "net:net_dev_xmit",
+                            "irq:irq_handler_entry",
+                            "random:mix_pool_bytes_nolock",
+                            "preemptirq:irq_enable",
+                            "skb:consume_skb.1",
+                            "skb:consume_skb",
+                            "net:net_dev_queue",
+                            "writeback:writeback_pages_written",
+                            "fib:fib_table_lookup",
+                            "cpu-migrations",
+                            "cs",
+                            "ipi:ipi_raise",
+                            "kmem:mm_page_pcpu_drain",
+                            "writeback:writeback_dirty_page",
+                            "raw_syscalls:sys_exit",
+                            "sched:sched_switch",
+                            "filemap:mm_filemap_add_to_page_cache",
+                            "kmem:mm_page_alloc_zone_locked",
+                            "raw_syscalls:sys_enter",
+                            "sched:sched_wakeup",
+                            "seconds",
+                            "clk:clk_set_rate",
+                            "skb:skb_copy_datagram_iovec"
+                        ]
+                    }
+                ]
+            }
+        },
+        "robustness": {
+            "clever_score": {
+                "non_computable": [
+                    "Non Computable Because",
+                    "Can only be calculated on Keras models."
+                ]
+            }
+        },
+        "methodology": {
+            "normalization": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "Training_mean": [
+                    "Mean of the training data",
+                    "0.00"
+                ],
+                "Training_std": [
+                    "Standard deviation of the training data",
+                    "1.00"
+                ],
+                "Test_mean": [
+                    "Mean of the test data",
+                    "-0.01"
+                ],
+                "Test_std": [
+                    "Standard deviation of the test data",
+                    "0.82"
+                ],
+                "normalization": [
+                    "Normalization",
+                    "Training data are standardized"
+                ]
+            },
+            "missing_data": {
+                "dep": [
+                    "Depends on",
+                    "Training Data"
+                ],
+                "null_values": [
+                    "Number of the null values",
+                    "0"
+                ]
+            },
+            "regularization": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "regularization_technique": [
+                    "Regularization technique",
+                    "Other"
+                ]
+            },
+            "train_test_split": {
+                "dep": [
+                    "Depends on",
+                    "Training and Testing Data"
+                ],
+                "train_test_split": [
+                    "Train test split",
+                    "90.00/10.00"
+                ]
+            },
+            "factsheet_completeness": {
+                "dep": [
+                    "Depends on",
+                    "Factsheet"
+                ],
+                "model_name": [
+                    "Factsheet Property model name",
+                    "present"
+                ],
+                "purpose_description": [
+                    "Factsheet Property purpose description",
+                    "present"
+                ],
+                "domain_description": [
+                    "Factsheet Property domain description",
+                    "present"
+                ],
+                "training_data_description": [
+                    "Factsheet Property training data description",
+                    "present"
+                ],
+                "model_information": [
+                    "Factsheet Property model information",
+                    "present"
+                ],
+                "authors": [
+                    "Factsheet Property authors",
+                    "present"
+                ],
+                "contact_information": [
+                    "Factsheet Property contact information",
+                    "present"
+                ]
+            }
+        }
+    },
+    "scores": {
+        "fairness": {
+            "underfitting": 5,
+            "overfitting": 1,
+            "statistical_parity_difference": NaN,
+            "disparate_impact": NaN
+        },
+        "explainability": {
+            "correlated_features": 1,
+            "model_size": 2,
+            "permutation_feature_importance": 5
+        },
+        "robustness": {
+            "clever_score": NaN
+        },
+        "methodology": {
+            "normalization": 4,
+            "missing_data": 5,
+            "regularization": 3,
+            "train_test_split": 2,
+            "factsheet_completeness": 5
+        }
+    }
+}

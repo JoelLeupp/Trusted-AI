@@ -20,7 +20,7 @@ def scenario_dropdown_options():
         options.append({"label": scenario_name, "value": scenario_id})
     return options
 
-def load_scenario(scenario_id):
+def load_scenario(scenario_id, unsupervised = False):
     """Example Google style docstrings.
 
     This module demonstrates documentation as specified by the `Google Python
@@ -54,14 +54,20 @@ def load_scenario(scenario_id):
        http://google.github.io/styleguide/pyguide.html
 
     """
-    scenario_path = get_scenario_path(scenario_id)
+    scenario_path = get_scenario_path(scenario_id, unsupervised)
     scenario_factsheet = read_scenario_factsheet(scenario_id)
     scenario_description = scenario_factsheet.get("description", "")
     scenario_link = scenario_factsheet.get("link", "")
     #scenario_link = load_scenario_link(scenario_path)
     #scenario_description = load_scenario_description(scenario_path)
-    scenario_solutions = [f.name for f in os.scandir(os.path.join(scenario_path, SOLUTIONS_FOLDER)) if f.is_dir() and not f.name.startswith('.')]
-    return scenario_link, scenario_description, scenario_solutions
+
+    all_solutions = []
+
+
+    if os.path.isdir(os.path.join(scenario_path, SOLUTIONS_FOLDER)):
+        all_solutions = all_solutions + [f.name for f in os.scandir(os.path.join(scenario_path, SOLUTIONS_FOLDER)) if f.is_dir() and not f.name.startswith('.')]
+
+    return scenario_link, scenario_description, all_solutions
   
 
 def display_scenario(scenario_id, scenario_name, scenario_link, scenario_description, scenario_solutions):
@@ -98,7 +104,7 @@ def display_scenario(scenario_id, scenario_name, scenario_link, scenario_descrip
     sections.append(html.Hr())
     return html.Div(sections, id="{}_scenario".format(scenario_id))
 
-def display_scenarios():
+def display_scenarios(unsupervised = False):
     """This function open and closes the dialog window
         where the user can create new scenarios
 
@@ -112,12 +118,13 @@ def display_scenarios():
         returns true if the dialog was previously closed.
 
     """
-    scenario_ids = get_scenario_ids()
+    scenario_ids = get_scenario_ids(unsupervised)
     sections = []
     for scenario_id in scenario_ids:
         scenario_name = id_to_name(scenario_id)
-        scenario_link, scenario_description, scenario_solutions = load_scenario(scenario_id)
+        scenario_link, scenario_description, scenario_solutions = load_scenario(scenario_id, unsupervised)
         sections.append(display_scenario(scenario_id, scenario_name, scenario_link, scenario_description, scenario_solutions))
+        print(unsupervised, scenario_ids)
     return sections  
   
     
@@ -129,6 +136,29 @@ def display_scenarios():
     [State("create_scenario_dialog", "is_open")],
 )
 def toggle_create_scenario_modal(n1, n2, is_open):
+    """This function open and closes the dialog window
+        where the user can create new scenarios
+
+    Args:
+        n1: number of clicks on the open button.
+        n2: number of clicks on the submit button.
+        is_open: current state of the modal.
+
+    Returns:
+        Returns false if the dialog was previously open and
+        returns true if the dialog was previously closed.
+
+    """
+    if n1 or n2:
+        return not is_open
+    return is_open\
+
+@app.callback(
+    Output("create_scenario_dialog_unsupervised", "is_open"),
+    [Input("open_create_scenario_dialog_unsupervised", "n_clicks"), Input("submit_create_scenario_dialog_unsupervised", "n_clicks")],
+    [State("create_scenario_dialog_unsupervised", "is_open")],
+)
+def toggle_create_scenario_modal_unsupervised(n1, n2, is_open):
     """This function open and closes the dialog window
         where the user can create new scenarios
 
@@ -183,6 +213,46 @@ for scenario_id in get_scenario_ids():
         else:
             return {"display": "block"}
 
+for scenario_id in get_scenario_ids(unsupervised=True):
+    # @app.callback(
+    #    Output("{}_scenario".format(scenario_id), "style"),
+    #    Input("delete_{}_button".format(scenario_id), "n_clicks"),
+    #    prevent_initial_call=True
+    # )
+    # def toggle_detail_section(n_clicks):
+    #    print("DELETE {} SCENARIO".format(scenario_id))
+    #    if n_clicks:
+    #        return {'display': 'None'}
+
+    @app.callback(Output('delete_{}_confirm'.format(scenario_id), 'displayed'),
+                  Input('delete_{}_button'.format(scenario_id), 'n_clicks'), prevent_initial_call=True)
+    def display_delete_scenario_confirm(n_clicks):
+        if n_clicks:
+            return True
+        else:
+            return False
+
+
+    @app.callback(
+        Output("{}_scenario".format(scenario_id), "style"),
+        Input("delete_{}_button".format(scenario_id), "n_clicks"),
+        prevent_initial_call=True
+    )
+    def delete_scenario(submit_n_clicks):
+        if submit_n_clicks:
+            print("Trying to delete the {} scenario".format(scenario_id))
+            scenario_path = get_scenario_path(scenario_id, unsupervised = True)
+            try:
+                shutil.rmtree(scenario_path, ignore_errors=False)
+                return {"display": "none"}
+            except Exception as e:
+                print(e)
+                raise
+        else:
+            return {"display": "block"}
+
+
+
 @app.callback(
     [Output("scenario_display", "children"),
      Output("scenario_name", "value"), 
@@ -206,6 +276,33 @@ def create_scenario(n_clicks, scenario_display, scenario_name, scenario_link, sc
         f.close()
         scenario_display = scenario_display + [display_scenario(scenario_id, scenario_name, scenario_link, scenario_description, [])]
         
+    return scenario_display, "", "", ""
+
+
+@app.callback(
+    [Output("scenario_display_unsupervised", "children"),
+     Output("scenario_name_unsupervised", "value"),
+     Output("scenario_link_unsupervised", "value"),
+     Output("scenario_description_unsupervised", "value")],
+    [Input('submit_create_scenario_dialog_unsupervised', 'n_clicks')],
+    [State('scenario_display_unsupervised', 'children'),
+     State('scenario_name_unsupervised', 'value'),
+     State('scenario_link_unsupervised', 'value'),
+     State('scenario_description_unsupervised', 'value')], prevent_initial_call=True)
+def create_scenario_unsupervised(n_clicks, scenario_display, scenario_name, scenario_link, scenario_description):
+    if scenario_name:
+        # Create folder to contain all solutions
+        scenario_id = name_to_id(scenario_name)
+        res = os.makedirs(os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id, "solutions"))
+        f = open(os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id, SCENARIO_DESCRIPTION_FILE), "w")
+        f.write(scenario_description)
+        f.close()
+        f = open(os.path.join(SCENARIOS_FOLDER_PATH_UNSUPERVISED, scenario_id, SCENARIO_LINK_FILE), "w")
+        f.write(scenario_link)
+        f.close()
+        scenario_display = scenario_display + [
+            display_scenario(scenario_id, scenario_name, scenario_link, scenario_description, [])]
+
     return scenario_display, "", "", ""
 
 # === LAYOUT ===
@@ -248,13 +345,52 @@ create_scenario_dialog = html.Div(
         ),
     ]
 )
+create_scenario_dialog_unsupervised = html.Div(
+    [
+        dbc.Button(
+            html.I(className="fas fa-plus-circle"),
+            id="open_create_scenario_dialog_unsupervised",
+            n_clicks=0,
+            style={"float": "right"}
+        ),
+        dbc.Modal(
+            [
+                dbc.ModalHeader("Create a unsupervised scenario"),
+                dbc.ModalBody(
+                dbc.Form([
+    dbc.FormGroup([
+        dbc.FormText(
+            "A scenario acts as a container for multiple different solutions.",
+            color="secondary",
+        ),
+        dbc.Label("Name", html_for="scenario_name_unsupervised"),
+        dbc.Input(type="text", id="scenario_name_unsupervised", placeholder="", debounce=True),
+        dbc.Label("Link", html_for="scenario_link_unsupervised"),
+        dbc.Input(type="url", id="scenario_link_unsupervised", placeholder="", debounce=True),
+        dbc.Label("Description", html_for="scenario_name_unsupervised"),
+        dcc.Textarea(
+            id='scenario_description_unsupervised',
+            value='',
+            style={'width': '100%', 'height': 100},
+        ),
+        dbc.Button(
+            "Create", id="submit_create_scenario_dialog_unsupervised", className="ml-auto", n_clicks=0, style={"float": "right"}
+        )
+    ])
+])),
+            ],
+            id="create_scenario_dialog_unsupervised",
+            is_open=False,
+        ),
+    ]
+)
 
 layout = html.Div([
     dbc.Container([
         dbc.Row([
             dbc.Col([
                 create_scenario_dialog,
-                html.H1("Scenarios", className="text-center", style={"text-transform": "uppercase"}),
+                html.H1("Supervised Scenarios", className="text-center", style={"text-transform": "uppercase"}),
             ], width=12),
             dbc.Col(
                 html.Div(
@@ -269,6 +405,26 @@ layout = html.Div([
                     "borderRadius": "6px",
                     "backgroundColor": SECONDARY_COLOR
                 }   
+            ),
+        ]),
+        dbc.Row([
+            dbc.Col([
+                create_scenario_dialog_unsupervised,
+                html.H1("Unsupervised Scenarios", className="text-center", style={"text-transform": "uppercase"}),
+            ], width=12),
+            dbc.Col(
+                html.Div(
+                    children=[
+                        html.Div(children=display_scenarios(unsupervised=True), id="scenario_display_unsupervised", style={"backgroundColor": SECONDARY_COLOR}),
+                   ]
+                ),
+                className="mb-5 mt-5",
+                width=12,
+                style={
+                    "border": "1px solid #d8d8d8",
+                    "borderRadius": "6px",
+                    "backgroundColor": SECONDARY_COLOR
+                }
             ),
         ])
     ])

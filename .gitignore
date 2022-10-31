@@ -7,10 +7,10 @@ webapp/report.pdf
 
 webapp/scenarios/*
 !webapp/scenarios/compas_recidivism
-!webapp/scenarios/credit_card_approval
+!webapp/delete/credit_card_approval
 !webapp/scenarios/german_credit_scoring
 !webapp/scenarios/it_sec_anomaly_detection
-!webapp/scenarios/it_sec_incident_classification
+!webapp/delete/it_sec_incident_classification
 
 webapp/scenarios/compas_recidivism/solutions/*
 !webapp/scenarios/compas_recidivism/solutions/alberto*
@@ -18,11 +18,11 @@ webapp/scenarios/compas_recidivism/solutions/*
 !webapp/scenarios/compas_recidivism/solutions/joel*
 !webapp/scenarios/compas_recidivism/solutions/melike*
 
-webapp/scenarios/credit_card_approval/solutions/*
-!webapp/scenarios/credit_card_approval/solutions/alberto*
-!webapp/scenarios/credit_card_approval/solutions/jan*
-!webapp/scenarios/credit_card_approval/solutions/joel*
-!webapp/scenarios/credit_card_approval/solutions/melike*
+webapp/delete/credit_card_approval/solutions/*
+!webapp/delete/credit_card_approval/solutions/alberto*
+!webapp/delete/credit_card_approval/solutions/jan*
+!webapp/delete/credit_card_approval/solutions/joel*
+!webapp/delete/credit_card_approval/solutions/melike*
 
 webapp/scenarios/german_credit_scoring/solutions/*
 !webapp/scenarios/german_credit_scoring/solutions/alberto*
@@ -36,11 +36,11 @@ webapp/scenarios/it_sec_anomaly_detection/solutions/*
 !webapp/scenarios/it_sec_anomaly_detection/solutions/joel*
 !webapp/scenarios/it_sec_anomaly_detection/solutions/melike*
 
-webapp/scenarios/it_sec_incident_classification/solutions/*
-!webapp/scenarios/it_sec_incident_classification/solutions/alberto*
-!webapp/scenarios/it_sec_incident_classification/solutions/jan*
-!webapp/scenarios/it_sec_incident_classification/solutions/joel*
-!webapp/scenarios/it_sec_incident_classification/solutions/melike*
+webapp/delete/it_sec_incident_classification/solutions/*
+!webapp/delete/it_sec_incident_classification/solutions/alberto*
+!webapp/delete/it_sec_incident_classification/solutions/jan*
+!webapp/delete/it_sec_incident_classification/solutions/joel*
+!webapp/delete/it_sec_incident_classification/solutions/melike*
 
 
 

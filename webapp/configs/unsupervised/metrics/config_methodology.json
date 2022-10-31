@@ -1,0 +1,66 @@
+{
+  "parameters": {
+    "score_normalization": {
+      "mappings": {
+        "value": {
+          "None": 1,
+          "training_normal": 2,
+          "training_and_test_normal": 3,
+          "training_standardized": 4,
+          "training_and_test_standardize": 5
+        },
+        "description": "Dictionary of how to map different normalization types to scores between 1-5.",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_missing_data": {
+      "mappings": {
+        "value": {
+          "null_values_exist": 1,
+          "no_null_values": 5
+        },
+        "description": "Dictionary of how to map missing data to scores between 1-5.",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_regularization": {
+      "parameter_regularization_technique": {
+        "value": "The value of the parameter_XY",
+        "description": "The description of the paramter and its impact"
+      }
+    },
+    "score_train_test_split": {
+      "mappings": {
+        "value": {
+          "50-60 95-97": 1,
+          "60-75 90-95": 2,
+          "70-75 85-90":  3,
+          "75-79 81-85": 4,
+          "79-81": 5
+        },
+        "description": "Thresholds of how to map the train-test split to a score between 1-5.",
+        "label": "Score Thresholds"
+      }
+    },
+    "score_factsheet_completeness": {
+      "parameter_split": {
+        "value": "The value of the parameter_XY",
+        "description": "The description of the paramter and its impact"
+      }
+    }
+  },
+    "weights": {
+        "normalization": 0.2,
+        "missing_data": 0.2,
+        "regularization": 0.2,
+        "train_test_split": 0.2,
+        "factsheet_completeness": 0.2
+    },
+	 "metrics": {
+        "normalization": "This metric checks if and how the data was normalized.",
+        "missing_data": "This metrics checks if the dataset has missing data<br>and how the missing values were treated",
+        "regularization": "This metric checks whether a regularization technique was used during the training process",
+        "train_test_split": "This metric looks at the train/test split that was used in the training process<br>and checks if that split is done in an acceptable way, idealy 80/20",
+        "factsheet_completeness": "This metric checks if the factsheet is complete<br>and has all the obligatory properties included"
+    }
+}

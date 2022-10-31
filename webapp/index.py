@@ -38,6 +38,17 @@ navbar = dbc.Navbar(
                 ),
                 href=get_url_path(''),
             ),
+            daq.BooleanSwitch(id='toggle_supervised_unsupervised',
+                      on=False,
+                      label="",
+                      labelPosition="left",
+                      color = 	'#abf7b1',
+                    vertical=True,
+
+        style={"float": "middle",
+                             'margin-left': "44%",
+                             'left': '80px'},
+                    ),
             dbc.NavbarToggler(id="navbar-toggler"),
             dbc.Collapse(
                 dbc.Nav(
@@ -58,6 +69,17 @@ navbar = dbc.Navbar(
     dark=True,
     className="mb-4",
 )
+@app.callback(
+    Output("toggle_supervised_unsupervised", "label"),
+    [Input("toggle_supervised_unsupervised", "on")],
+)
+def change_toggle_label(unsupervised):
+    if unsupervised:
+        label = "UNSUPERVISED"
+    else:
+        label = "SUPERVISED"
+
+    return label
 
 @app.callback(
     Output("navbar-collapse", "is_open"),
@@ -74,7 +96,8 @@ app.layout = html.Div([
     navbar,
     html.Div(id='page_content'),
     dcc.Store(id='uploaded_scenario_id', storage_type='session'),
-    dcc.Store(id='uploaded_solution_id', storage_type='session')
+    dcc.Store(id='uploaded_solution_id', storage_type='session'),
+    dcc.Store(id='mode', storage_type='local', data=False)
 ])
     
 @app.callback(Output('page_content', 'children'), [Input('url', 'pathname')])
